@@ -1,43 +1,33 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="favicon.png">
-    <title>الفضاء الرقمي الموحد</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="favicon.png">
+<title>الفضاء الرقمي الموحد</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <header class="top-bar">
     <button class="menu-btn" id="menuBtn" onclick="toggleMenu()" disabled>
         <span class="material-icons">menu</span>
     </button>
-
     <div class="app-title">
         <h2 id="selectedTitle">
-            <span class="material-icons">school</span>
-            فضاء الخدمات – متوسطة الشهيد بكير تركي محمد بن حسن (المدية)
+            <span class="material-icons">school</span> فضاء الخدمات – متوسطة الشهيد بكير تركي محمد بن حسن (المدية)
         </h2>
         <p class="welcome-text" id="welcomeText">
             مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.
         </p>
     </div>
-
     <div class="dropdown-menu" id="dropdownMenu"></div>
 </header>
 
 <main class="container">
-
     <div id="loginModal" class="modal">
         <div class="modal-content login-content">
-
-            <h3>
-                <span class="material-icons">login</span>
-                تسجيل الدخول
-            </h3>
-
+            <h3><span class="material-icons">login</span> تسجيل الدخول</h3>
             <div class="login-field">
                 <label>نوع المستخدم</label>
                 <select id="userTypeSelect">
@@ -47,50 +37,38 @@
                     <option value="parent">أولياء الأمور</option>
                 </select>
             </div>
-            
-<div id="schoolKeyBlock" style="display:none;">
-    <div class="login-field">
-        <label>رمز المؤسسة الموحد</label>
-        <input type="password" id="schoolKeyInput">
-    </div>
-
-    <button id="schoolKeyBtn" class="login-btn">
-        <span class="material-icons btn-icon">arrow_forward</span>
-        متابعة
-    </button>
-</div>
-            
+            <div id="schoolKeyBlock" style="display:none;">
+                <div class="login-field">
+                    <label>رمز المؤسسة الموحد</label>
+                    <input type="password" id="schoolKeyInput">
+                </div>
+                <button id="schoolKeyBtn" class="login-btn">
+                    <span class="material-icons btn-icon">arrow_forward</span> متابعة
+                </button>
+            </div>
             <div id="employeeBlock" style="display:none;">
                 <div class="login-field">
                     <label>اختر اسم ولقب الموظف</label>
                     <select id="employeeSelect">
-                        <option value="">-- اختر اسم ولقب الموظف --</option>
+                        <option value="">-- اختر الاسم واللقب --</option>
                     </select>
                 </div>
             </div>
-
             <div id="authBlock" style="display:none;">
                 <div class="login-field">
                     <label>كلمة المرور</label>
                     <input type="password" id="loginPassword">
                 </div>
             </div>
-
             <button id="continueBtn" class="login-btn" style="display:none;">
-                <span class="material-icons btn-icon">arrow_forward</span>
-                متابعة
+                <span class="material-icons btn-icon">arrow_forward</span> متابعة
             </button>
-
             <button id="loginBtn" class="login-btn" style="display:none;">
-                <span class="material-icons btn-icon">login</span>
-                تسجيل الدخول
+                <span class="material-icons btn-icon">login</span> تسجيل الدخول
             </button>
-
         </div>
     </div>
-
     <div id="mainContent"></div>
-
 </main>
 
 <footer class="app-footer">
