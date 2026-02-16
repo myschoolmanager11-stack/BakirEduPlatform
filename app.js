@@ -48,38 +48,52 @@ document.addEventListener("DOMContentLoaded", function () {
     const continueBtn = document.getElementById("continueBtn");
     const loginBtn = document.getElementById("loginBtn");
     const loginPassword = document.getElementById("loginPassword");
-    const loginModal = document.getElementById("loginModal");
-    const menuBtn = document.getElementById("menuBtn");
-    const dropdownMenu = document.getElementById("dropdownMenu");
     const schoolKeyBlock = document.getElementById("schoolKeyBlock");
     const schoolKeyInput = document.getElementById("schoolKeyInput");
     const schoolKeyBtn = document.getElementById("schoolKeyBtn");
 
-    function getFileLink(fileId) { return `${GAS_SCRIPT_URL}?id=${fileId}`; }
-
-    async function loadEmployeeList(type) {
-        let fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
-        let r = await fetch(getFileLink(fileId));
-        let list = (await r.text()).replace(/\r/g,"").split("\n").map(x=>x.trim()).filter(x=>x);
-        employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-        list.forEach(e => {
-            let opt = document.createElement("option");
-            opt.value = e; opt.textContent = e;
-            employeeSelect.appendChild(opt);
-        });
-    }
-
-    async function loadPasswords() {
-        let r = await fetch(getFileLink(CONFIG.Password_File_ID));
-        PASSWORDS = (await r.text()).replace(/\r/g,"").split("\n").map(x=>x.trim()).filter(x=>x);
+    function getFileLink(fileId) {
+        return `${GAS_SCRIPT_URL}?id=${fileId}`;
     }
 
     async function loadSchoolKey() {
-        let r = await fetch(getFileLink(CONFIG.SchoolKey_File_ID));
-        SCHOOL_KEY = (await r.text()).trim();
+        try {
+            let r = await fetch(getFileLink(CONFIG.SchoolKey_File_ID));
+            SCHOOL_KEY = (await r.text()).trim();
+            if(!SCHOOL_KEY) throw "رمز المؤسسة فارغ أو الملف غير متاح";
+        } catch (err) {
+            alert("خطأ في تحميل رمز المؤسسة: " + err);
+            console.error(err);
+        }
     }
 
-    // ===== الأحداث =====
+    async function loadEmployeeList(type) {
+        let fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
+        try {
+            let r = await fetch(getFileLink(fileId));
+            let list = (await r.text()).replace(/\r/g,"").split("\n").map(x=>x.trim()).filter(x=>x);
+            employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+            list.forEach(e => {
+                let opt = document.createElement("option");
+                opt.value = e; opt.textContent = e;
+                employeeSelect.appendChild(opt);
+            });
+        } catch (err) {
+            alert("خطأ في تحميل قائمة الموظفين: " + err);
+            console.error(err);
+        }
+    }
+
+    async function loadPasswords() {
+        try {
+            let r = await fetch(getFileLink(CONFIG.Password_File_ID));
+            PASSWORDS = (await r.text()).replace(/\r/g,"").split("\n").map(x=>x.trim()).filter(x=>x);
+        } catch(err) {
+            alert("خطأ في تحميل كلمات المرور: " + err);
+            console.error(err);
+        }
+    }
+
     userTypeSelect.addEventListener("change", function() {
         employeeBlock.style.display = "none";
         authBlock.style.display = "none";
@@ -97,18 +111,28 @@ document.addEventListener("DOMContentLoaded", function () {
         if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
 
         await loadSchoolKey();
-        if(schoolKeyInput.value!==SCHOOL_KEY) return alert("رمز المؤسسة غير صحيح");
+        if(!SCHOOL_KEY) return; // لم يتم تحميل الرمز
 
+        if(schoolKeyInput.value !== SCHOOL_KEY){
+            return alert("رمز المؤسسة غير صحيح");
+        }
+
+        // رمز صحيح، إظهار القائمة
         schoolKeyBlock.style.display = "none";
         employeeBlock.style.display = "block";
 
         await loadEmployeeList(userTypeSelect.value);
         await loadPasswords();
-    });
 
-    employeeSelect.addEventListener("change", function(){
-        if(this.value!=="") { authBlock.style.display="block"; loginBtn.style.display="flex"; }
-        else { authBlock.style.display="none"; loginBtn.style.display="none"; }
+        employeeSelect.addEventListener("change", function(){
+            if(this.value!=="") {
+                authBlock.style.display = "block";
+                loginBtn.style.display = "flex";
+            } else {
+                authBlock.style.display = "none";
+                loginBtn.style.display = "none";
+            }
+        });
     });
 
     loginBtn.addEventListener("click", function(){
@@ -117,21 +141,17 @@ document.addEventListener("DOMContentLoaded", function () {
         openSession(userTypeSelect.value);
     });
 
-    window.toggleMenu = function() {
-        dropdownMenu.style.display = dropdownMenu.style.display==="block"?"none":"block";
-    };
-
     function openSession(type) {
-        loginModal.style.display = "none";
-        menuBtn.disabled = false;
-        dropdownMenu.style.display = "none";
+        document.getElementById("loginModal").style.display = "none";
+        document.getElementById("menuBtn").disabled = false;
+        document.getElementById("dropdownMenu").style.display = "none";
         document.getElementById("welcomeText").textContent =
             "مرحبًا بك 👋 لاختيار خدماتنا استخدم القائمة الجانبية.";
         fillMenu(type);
-        Array.from(dropdownMenu.children).forEach(el => el.classList.remove("show"));
     }
 
     function fillMenu(type) {
+        const dropdownMenu = document.getElementById("dropdownMenu");
         dropdownMenu.innerHTML = "";
         const MENUS = {
             parent: ["assignment","mail","event","calendar_today","description","folder","campaign","call","logout","delete_sweep"],
@@ -169,9 +189,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function logout() {
-        dropdownMenu.style.display = "none";
-        menuBtn.disabled = true;
-        loginModal.style.display = "flex";
+        document.getElementById("dropdownMenu").style.display = "none";
+        document.getElementById("menuBtn").disabled = true;
+        document.getElementById("loginModal").style.display = "flex";
         document.getElementById("welcomeText").textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
     }
+
+    window.toggleMenu = function() {
+        const dropdownMenu = document.getElementById("dropdownMenu");
+        dropdownMenu.style.display = dropdownMenu.style.display==="block"?"none":"block";
+    };
 });
