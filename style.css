@@ -45,7 +45,7 @@ body {
 
 .app-title { flex: 1; text-align: center; }
 
-.welcome-text { font-size: 10px; opacity: 0.9; }
+.welcome-text { font-size: 12px; opacity: 0.9; }
 
 .modal {
     position: fixed;
@@ -127,6 +127,7 @@ body {
     from { transform: translateX(0); }
     to   { transform: translateX(-100%); }
 }
+
 
 
 
