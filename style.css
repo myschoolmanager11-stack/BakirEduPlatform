@@ -26,16 +26,13 @@ body {
     background: #ff9800;
     border: none;
     color: white;
-    font-size: 20px;
-    padding: 6px;
+    font-size: 18px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     cursor: pointer;
     transition: 0.3s;
-    width: 38px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
 }
 
 .menu-btn:hover {
@@ -127,6 +124,7 @@ body {
     from { transform: translateX(0); }
     to   { transform: translateX(-100%); }
 }
+
 
 
 
