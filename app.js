@@ -114,23 +114,49 @@ document.addEventListener("DOMContentLoaded", function () {
     fillMenu(type);
   }
 
-  function fillMenu(type) {
+ function fillMenu(type) {
+    const dropdownMenu = document.getElementById("dropdownMenu");
     dropdownMenu.innerHTML = "";
-
     const MENUS = {
-      parent: ["📋 سجل الغيابات","🚪 تسجيل الخروج"],
-      teacher: ["📋 القوائم","🚪 تسجيل الخروج"],
-      consultation: ["📊 المتابعة","🚪 تسجيل الخروج"]
+        parent: ["assignment","mail","event","calendar_today","description","folder","campaign","call","logout","delete_sweep"],
+        teacher: ["assignment","description","hourglass_top","send","calendar_today","calendar_view_week","description","folder","campaign","call","logout","delete_sweep"],
+        consultation: ["assignment","hourglass_top","bar_chart","calendar_today","calendar_view_week","description","folder","campaign","call","logout","delete_sweep"]
     };
+    const LABELS = {
+        assignment: "سجل الغيابات",
+        mail: "سجل المراسلات الإدارية",
+        event: "جدول استقبال الأولياء",
+        calendar_today: "جدول التوقيت الأسبوعي للتلاميذ",
+        description: "رزنامة الفروض والاختبارات",
+        folder: "استمارات ووثائق مختلفة",
+        campaign: "إعلانات",
+        call: "اتصل بنا",
+        logout: "تسجيل الخروج",
+        delete_sweep: "مسح جميع الروابط المحفوظة",
+        hourglass_top: "الغائبون قبل اليوم",
+        send: "إرسال غيابات اليوم",
+        calendar_view_week: "جدول التوقيت الأسبوعي للتلاميذ",
+        bar_chart: "متابعة غيابات اليوم"
+    };
+    MENUS[type].forEach((icon, idx) => {
+        let div = document.createElement("div");
+        let span = document.createElement("span");
+        span.className = "material-icons"; 
+        span.textContent = icon;
+        div.appendChild(span);
+        let label = document.createElement("span");
+        label.textContent = LABELS[icon] || icon;
+        div.appendChild(label);
 
-    MENUS[type].forEach(item => {
-      let div = document.createElement("div");
-      div.textContent = item;
-      if (item.includes("تسجيل الخروج"))
-        div.onclick = logout;
-      dropdownMenu.appendChild(div);
+        if(icon==="logout") div.onclick = logout;
+
+        dropdownMenu.appendChild(div);
+
+        // عرض تدريجي للعناصر
+        setTimeout(()=> div.classList.add("show"), idx*80);
     });
-  }
+}
+
 
   function logout() {
     dropdownMenu.style.display = "none";
@@ -210,3 +236,4 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
 });
+
