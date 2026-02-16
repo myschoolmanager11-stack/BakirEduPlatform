@@ -140,6 +140,20 @@ body {
     transform: translateX(0);
 }
 
+/* إضافة في style.css */
+.modal-content input, .modal-content textarea {
+    width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px;
+    border-radius: 8px; border: 1px solid #ccc; font-size: 14px; box-sizing: border-box;
+}
+.modal-content textarea { min-height: 100px; resize: vertical; }
+.modal-content button {
+    width: 100%; padding: 12px; border: none; border-radius: 8px;
+    background: #0197c3; color: white; font-size: 15px; cursor: pointer; transition: 0.3s;
+}
+.modal-content button:hover { background: #007da3; }
+.modal-content .subtitle { text-align:center; margin-bottom:15px; color:#555; }
+
+
 .app-footer {
     background: rgba(255, 255, 255, 0); /* شفاف بالكامل */
     color: #0197c3;      /* لون الخط */
@@ -165,6 +179,7 @@ body {
     from { transform: translateX(0); }
     to { transform: translateX(-100%); }
 }
+
 
 
 
