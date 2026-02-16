@@ -4,7 +4,8 @@
 body {
     margin: 0;
     font-family: "Segoe UI", Roboto, sans-serif;
-    background: #eef1f8;
+    background: url('background.png') no-repeat center center fixed; /* ضع صورة تعبر عن محتوى البوابة */
+    background-size: cover;
     direction: rtl;
     display: flex;
     flex-direction: column;
@@ -155,4 +156,5 @@ body {
     from { transform: translateX(0); }
     to { transform: translateX(-100%); }
 }
+
 
