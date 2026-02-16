@@ -78,13 +78,22 @@ document.addEventListener("DOMContentLoaded", function () {
         PASSWORDS = (await r.text()).replace(/\r/g,"").split("\n").map(x=>x.trim()).filter(x=>x);
     }
 
-    function openSession(type) {
-        loginModal.style.display = "none";
-        menuBtn.disabled = false;
-        dropdownMenu.style.display = "none";
-        document.getElementById("welcomeText").textContent = "مرحبًا بك 👋 لاختيار خدماتنا استخدم القائمة الجانبية.";
-        fillMenu(type);
-    }
+   function openSession(type) {
+    loginModal.style.display = "none";
+    menuBtn.disabled = false; // تفعيل زر القائمة
+    dropdownMenu.style.display = "none";
+
+    // تغيير النص الترحيبي
+    document.getElementById("welcomeText").textContent =
+        "مرحبًا بك 👋 لاختيار خدماتنا استخدم القائمة الجانبية.";
+
+    // تعبئة القائمة
+    fillMenu(type);
+
+    // إخفاء عناصر fade-in السابقة إن وجدت
+    Array.from(dropdownMenu.children).forEach(el => el.classList.remove("show"));
+}
+
 
     function fillMenu(type) {
         dropdownMenu.innerHTML = "";
@@ -147,15 +156,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
     continueBtn.addEventListener("click", function(){ openSession("parent"); });
 
-    schoolKeyBtn.addEventListener("click", async function(){
-        if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
-        await loadSchoolKey();
-        if(schoolKeyInput.value!==SCHOOL_KEY) return alert("رمز المؤسسة غير صحيح");
-        schoolKeyBlock.style.display="none";
-        employeeBlock.style.display="block";
-        await loadEmployeeList(userTypeSelect.value);
-        await loadPasswords();
+   schoolKeyBtn.addEventListener("click", async function(){
+    if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة الذي تم منحك إياه من طرف إدارة المؤسسة");
+    await loadSchoolKey();
+    if(schoolKeyInput.value!==SCHOOL_KEY) return alert("رمز المؤسسة غير صحيح");
+
+    // إخفاء حقل رمز المدرسة
+    schoolKeyBlock.style.display = "none";
+
+    // إظهار قائمة الموظفين
+    employeeBlock.style.display = "block";
+
+    // تحميل قائمة الموظفين (أساتذة أو مشرفين)
+    await loadEmployeeList(userTypeSelect.value);
+
+    // تحميل كلمات المرور
+    await loadPasswords();
+
+    // التأكد من ظهور حقل كلمة المرور عند اختيار الموظف
+    employeeSelect.addEventListener("change", function(){
+        if(this.value!=="") {
+            authBlock.style.display="block";  // إظهار كلمة المرور
+            loginBtn.style.display="flex";
+        } else {
+            authBlock.style.display="none";
+            loginBtn.style.display="none";
+        }
     });
+});
+
 
     employeeSelect.addEventListener("change", function(){
         if(this.value!=="") { authBlock.style.display="block"; loginBtn.style.display="flex"; }
@@ -167,3 +196,4 @@ document.addEventListener("DOMContentLoaded", function () {
         openSession(userTypeSelect.value);
     });
 });
+
