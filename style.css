@@ -1,6 +1,3 @@
-* {
-    box-sizing: border-box;
-}
 body {
     margin: 0;
     font-family: "Segoe UI", Roboto, sans-serif;
@@ -18,8 +15,8 @@ body {
 }
 
 .top-bar {
-    background: rgba(63, 81, 181, 0.7); /* شفاف جزئي */
-    color: #fff; /* يمكن تعديل اللون حسب ألوان الخلفية */
+    background: #ffffff; /* أبيض */
+    color: #0197c3;      /* لون الخط */
     padding: 12px;
     display: flex;
     align-items: center;
@@ -52,7 +49,7 @@ body {
 .welcome-text {
     font-size: 14px;
     font-weight: bold;
-    color: #fff; /* أبيض لتباين مع الخلفية */
+    color: #0197c3; /* لون الخط متناسق مع القائمة */
     opacity: 0.95;
 }
 
@@ -127,12 +124,12 @@ body {
     opacity: 0;
     transform: translateX(20px);
     transition: all 0.4s ease;
-    color: #fff; /* لون النص أبيض لتباين جيد مع الخلفية */
+    color: #0197c3;      /* لون النص */
     font-weight: 600;
 }
 
 .dropdown-menu div:hover {
-    background: rgba(255,255,255,0.2); /* لون شفاف عند المرور */
+    background: rgba(1, 151, 195, 0.1); /* لون خلفية عند المرور */
 }
 
 .dropdown-menu div.show {
@@ -141,8 +138,8 @@ body {
 }
 
 .app-footer {
-    background: rgba(63, 81, 181, 0.7); /* شفاف جزئي */
-    color: #fff;
+    background: #ffffff; /* أبيض */
+    color: #0197c3;      /* لون الخط */
     padding: 10px 0;
     overflow: hidden;
     font-weight: 600;
@@ -153,7 +150,7 @@ body {
     white-space: nowrap;
     padding-left: 100%;
     animation: marqueeRTL 18s linear infinite;
-    color: #fff; /* نص متناسق */
+    color: #0197c3;      /* لون النص */
     font-weight: bold;
 }
 
@@ -161,6 +158,7 @@ body {
     from { transform: translateX(0); }
     to { transform: translateX(-100%); }
 }
+
 
 
 
