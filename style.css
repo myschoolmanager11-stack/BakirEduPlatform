@@ -123,8 +123,10 @@ body {
     opacity: 0;
     transform: translateX(20px);
     transition: all 0.4s ease;
-    color: #333; /* تم تعديل اللون ليظهر النص */
+    color: #222; /* لون غامق جدًا لضمان وضوح النصوص */
+    font-weight: 600; /* جعل النصوص غامقة */
 }
+
 
 .dropdown-menu div.show {
     opacity: 1;
@@ -153,3 +155,4 @@ body {
     from { transform: translateX(0); }
     to { transform: translateX(-100%); }
 }
+
