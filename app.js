@@ -108,11 +108,22 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  function openSession(type) {
-    loginModal.style.display = "none";
-    menuBtn.disabled = false;
-    fillMenu(type);
-  }
+ function openSession(type) {
+
+  loginModal.style.display = "none";
+  menuBtn.disabled = false;
+
+  // إخفاء القائمة عند الدخول
+  dropdownMenu.style.display = "none";
+
+  // تغيير عبارة الترحيب
+  const welcomeText = document.getElementById("welcomeText");
+  welcomeText.textContent =
+    "مرحبًا بك 👋 لاختيار خدماتنا استخدم القائمة الجانبية.";
+
+  fillMenu(type);
+}
+
 
  function fillMenu(type) {
     dropdownMenu.innerHTML = "";
@@ -131,11 +142,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  function logout() {
-    dropdownMenu.style.display = "none";
-    menuBtn.disabled = true;
-    loginModal.style.display = "flex";
-  }
+ function logout() {
+
+  dropdownMenu.style.display = "none";
+  menuBtn.disabled = true;
+  loginModal.style.display = "flex";
+
+  const welcomeText = document.getElementById("welcomeText");
+  welcomeText.textContent =
+    "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
+}
+
 
   window.toggleMenu = function () {
     dropdownMenu.style.display =
@@ -209,3 +226,4 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
 });
+
