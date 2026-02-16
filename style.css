@@ -18,14 +18,15 @@ body {
 }
 
 .top-bar {
-    background: linear-gradient(135deg, #3f51b5, #5c6bc0);
-    color: white;
+    background: rgba(63, 81, 181, 0.7); /* شفاف جزئي */
+    color: #fff; /* يمكن تعديل اللون حسب ألوان الخلفية */
     padding: 12px;
     display: flex;
     align-items: center;
     position: relative;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
+
 
 .menu-btn {
     background: #ff9800;
@@ -49,8 +50,10 @@ body {
 }
 
 .welcome-text {
-    font-size: 12px;
-    opacity: 0.9;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff; /* أبيض لتباين مع الخلفية */
+    opacity: 0.95;
 }
 
 .modal {
@@ -124,25 +127,25 @@ body {
     opacity: 0;
     transform: translateX(20px);
     transition: all 0.4s ease;
-    color: #222; /* لون غامق جدًا لضمان وضوح النصوص */
-    font-weight: 600; /* جعل النصوص غامقة */
+    color: #fff; /* لون النص أبيض لتباين جيد مع الخلفية */
+    font-weight: 600;
 }
 
+.dropdown-menu div:hover {
+    background: rgba(255,255,255,0.2); /* لون شفاف عند المرور */
+}
 
 .dropdown-menu div.show {
     opacity: 1;
     transform: translateX(0);
 }
 
-.dropdown-menu div:hover {
-    background: #f0f0f0;
-}
-
 .app-footer {
-    background: #3f51b5;
-    color: white;
+    background: rgba(63, 81, 181, 0.7); /* شفاف جزئي */
+    color: #fff;
     padding: 10px 0;
     overflow: hidden;
+    font-weight: 600;
 }
 
 .footer-marquee {
@@ -150,11 +153,14 @@ body {
     white-space: nowrap;
     padding-left: 100%;
     animation: marqueeRTL 18s linear infinite;
+    color: #fff; /* نص متناسق */
+    font-weight: bold;
 }
 
 @keyframes marqueeRTL {
     from { transform: translateX(0); }
     to { transform: translateX(-100%); }
 }
+
 
 
