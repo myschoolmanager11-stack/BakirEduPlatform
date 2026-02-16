@@ -1,6 +1,3 @@
-/* ===========================
-   الإعدادات
-=========================== */
 const CONFIG = {
   "SchoolName": "متوسطة الشهيد بكير تركي محمد بن حسن (المدية)",
   "SchoolAcadimi": "مديرية التربية لولاية المدية",
@@ -43,9 +40,6 @@ const GAS_SCRIPT_URL =
 let PASSWORDS = [];
 let SCHOOL_KEY = "";
 
-/* ===========================
-   بعد تحميل الصفحة
-=========================== */
 document.addEventListener("DOMContentLoaded", function () {
 
   const userTypeSelect = document.getElementById("userTypeSelect");
@@ -58,13 +52,20 @@ document.addEventListener("DOMContentLoaded", function () {
   const loginModal = document.getElementById("loginModal");
   const menuBtn = document.getElementById("menuBtn");
   const dropdownMenu = document.getElementById("dropdownMenu");
-
-  /* ===========================
-     دوال المساعدة
-  =========================== */
+  const schoolKeyBlock = document.getElementById("schoolKeyBlock");
+  const schoolKeyInput = document.getElementById("schoolKeyInput");
+  const schoolKeyBtn = document.getElementById("schoolKeyBtn");
 
   function getFileLink(fileId) {
     return `${GAS_SCRIPT_URL}?id=${fileId}`;
+  }
+
+  function loadSchoolKey() {
+    return fetch(getFileLink(CONFIG.School_Key_File_ID))
+      .then(r => r.text())
+      .then(text => {
+        SCHOOL_KEY = text.trim();
+      });
   }
 
   function loadEmployeeList(type) {
@@ -92,8 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
             `<option value="${e}">${e}</option>`;
         });
 
-      })
-      .catch(() => alert("تعذر تحميل قائمة الموظفين"));
+      });
   }
 
   function loadPasswords() {
@@ -105,8 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
           .split("\n")
           .map(x => x.trim())
           .filter(x => x);
-      })
-      .catch(() => alert("تعذر تحميل كلمات المرور"));
+      });
   }
 
   function openSession(type) {
@@ -115,57 +114,19 @@ document.addEventListener("DOMContentLoaded", function () {
     fillMenu(type);
   }
 
-  function fillMenu(type) {
-
+ function fillMenu(type) {
     dropdownMenu.innerHTML = "";
-
     const MENUS = {
-      parent: [
-        "📋 سجل الغيابات",
-        "📨 سجل المراسلات الإدارية",
-        "🗓 جدول استقبال الأولياء",
-        "📅 جدول التوقيت الأسبوعي للتلاميذ",
-        "📝 رزنامة الفروض والاختبارات",
-        "📂 استمارات ووثائق مختلفة للتلاميذ",
-        "📢 إعلانات",
-        "☎️ اتصل بنا",
-        "🚪 تسجيل الخروج"
-      ],
-      teacher: [
-        "📋 القوائم الإسمية للتلاميذ",
-        "📝 قوائم صب النقاط",
-        "⏳ الغائبون قبل اليوم",
-        "📤 إرسال غيابات اليوم",
-        "📅 جدول توقيت الأستاذ",
-        "📅 جدول التوقيت الأسبوعي للتلاميذ",
-        "📝 رزنامة الفروض والاختبارات",
-        "📂 استمارات ووثائق مختلفة للأساتذة",
-        "📢 إعلانات",
-        "☎️ اتصل بنا",
-        "🚪 تسجيل الخروج"
-      ],
-      consultation: [
-        "📋 القوائم الإسمية",
-        "⏳ الغائبون قبل اليوم",
-        "📊 متابعة غيابات اليوم",
-        "📅 جدول توقيت الأستاذ",
-        "📅 جدول التوقيت الأسبوعي للتلاميذ",
-        "📝 رزنامة الفروض والاختبارات",
-        "📂 وثائق خاصة بالإشراف التربوي",
-        "📢 إعلانات",
-        "☎️ اتصل بنا",
-        "🚪 تسجيل الخروج"
-      ]
+        parent: ["📋 سجل الغيابات","📨 سجل المراسلات الإدارية","🗓 جدول استقبال الأولياء","📅 جدول التوقيت الأسبوعي للتلاميذ","📝 رزنامة الفروض والاختبارات","📂 استمارات ووثائق مختلفة للتلاميذ","📢 إعلانات","☎️ اتصل بنا","🚪 تسجيل الخروج","🗑 مسح جميع الروابط المحفوظة"],
+        teacher: ["📋 القوائم الإسمية للتلاميذ","📝 قوائم صب النقاط","⏳ الغائبون قبل اليوم","📤 إرسال غيابات اليوم","📅 جدول توقيت الأستاذ","📅 جدول التوقيت الأسبوعي للتلاميذ","📝 رزنامة الفروض والاختبارات","📂 استمارات ووثائق مختلفة للأساتذة","📢 إعلانات","☎️ اتصل بنا","🚪 تسجيل الخروج","🗑 مسح جميع الروابط المحفوظة"],
+        consultation: ["📋 القوائم الإسمية","⏳ الغائبون قبل اليوم","📊 متابعة غيابات اليوم","📅 جدول توقيت الأستاذ","📅 جدول التوقيت الأسبوعي للتلاميذ","📝 رزنامة الفروض والاختبارات","📂 وثائق خاصة بالإشراف التربوي","📢 إعلانات","☎️ اتصل بنا","🚪 تسجيل الخروج","🗑 مسح جميع الروابط المحفوظة"]
     };
 
     MENUS[type].forEach(item => {
-
       let div = document.createElement("div");
       div.textContent = item;
-
       if (item.includes("تسجيل الخروج"))
         div.onclick = logout;
-
       dropdownMenu.appendChild(div);
     });
   }
@@ -193,27 +154,14 @@ document.addEventListener("DOMContentLoaded", function () {
     authBlock.style.display = "none";
     continueBtn.style.display = "none";
     loginBtn.style.display = "none";
+    schoolKeyBlock.style.display = "none";
 
     if (this.value === "parent") {
       continueBtn.style.display = "flex";
     }
 
     if (this.value === "teacher" || this.value === "consultation") {
-      employeeBlock.style.display = "block";
-      loadEmployeeList(this.value);
-      loadPasswords();
-    }
-
-  });
-
-  employeeSelect.addEventListener("change", function () {
-
-    if (this.value !== "") {
-      authBlock.style.display = "block";
-      loginBtn.style.display = "flex";
-    } else {
-      authBlock.style.display = "none";
-      loginBtn.style.display = "none";
+      schoolKeyBlock.style.display = "block";
     }
 
   });
@@ -222,10 +170,34 @@ document.addEventListener("DOMContentLoaded", function () {
     openSession("parent");
   });
 
-  loginBtn.addEventListener("click", function () {
+  schoolKeyBtn.addEventListener("click", async function () {
 
-    if (!employeeSelect.value)
-      return alert("اختر الاسم أولاً");
+    if (!schoolKeyInput.value)
+      return alert("أدخل رمز المؤسسة");
+
+    await loadSchoolKey();
+
+    if (schoolKeyInput.value !== SCHOOL_KEY)
+      return alert("رمز المؤسسة غير صحيح");
+
+    schoolKeyBlock.style.display = "none";
+    employeeBlock.style.display = "block";
+
+    loadEmployeeList(userTypeSelect.value);
+    await loadPasswords();
+
+  });
+
+  employeeSelect.addEventListener("change", function () {
+
+    if (this.value !== "") {
+      authBlock.style.display = "block";
+      loginBtn.style.display = "flex";
+    }
+
+  });
+
+  loginBtn.addEventListener("click", function () {
 
     if (!loginPassword.value)
       return alert("أدخل كلمة المرور");
@@ -237,4 +209,3 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
 });
-
