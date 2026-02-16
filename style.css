@@ -1,5 +1,6 @@
-* { box-sizing: border-box; }
-
+* {
+    box-sizing: border-box;
+}
 body {
     margin: 0;
     font-family: "Segoe UI", Roboto, sans-serif;
@@ -10,7 +11,10 @@ body {
     min-height: 100vh;
 }
 
-.container { flex: 1; padding: 20px; }
+.container {
+    flex: 1;
+    padding: 20px;
+}
 
 .top-bar {
     background: linear-gradient(135deg, #3f51b5, #5c6bc0);
@@ -34,15 +38,19 @@ body {
     transition: 0.3s;
     box-shadow: 0 3px 6px rgba(0,0,0,0.2);
 }
-
 .menu-btn:hover {
     background: #e68900;
 }
 
+.app-title {
+    flex: 1;
+    text-align: center;
+}
 
-.app-title { flex: 1; text-align: center; }
-
-.welcome-text { font-size: 12px; opacity: 0.9; }
+.welcome-text {
+    font-size: 12px;
+    opacity: 0.9;
+}
 
 .modal {
     position: fixed;
@@ -62,17 +70,16 @@ body {
     box-shadow: 0 15px 40px rgba(0,0,0,0.25);
 }
 
-.login-field { margin-bottom: 14px; }
-
+.login-field {
+    margin-bottom: 14px;
+}
 .login-field label {
     font-weight:600;
     color:#3f51b5;
     margin-bottom:4px;
     display:block;
 }
-
-.login-field input,
-.login-field select {
+.login-field input, .login-field select {
     width: 100%;
     padding:9px;
     border-radius:10px;
@@ -104,6 +111,27 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,0.25);
     display: none;
     z-index: 999;
+    overflow: hidden;
+}
+
+.dropdown-menu div {
+    padding: 10px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.4s ease;
+}
+
+.dropdown-menu div.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.dropdown-menu div:hover {
+    background: #f0f0f0;
 }
 
 .app-footer {
@@ -122,10 +150,5 @@ body {
 
 @keyframes marqueeRTL {
     from { transform: translateX(0); }
-    to   { transform: translateX(-100%); }
+    to { transform: translateX(-100%); }
 }
-
-
-
-
-
