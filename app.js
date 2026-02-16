@@ -145,8 +145,7 @@ function fillMenu(type) {
             {icon:"folder", label:"استمارات ووثائق مختلفة للتلاميذ"},
             {icon:"campaign", label:"إعلانات"},
             {icon:"call", label:"اتصل بنا"},
-            {icon:"logout", label:"تسجيل الخروج"},
-            {icon:"delete_sweep", label:"مسح جميع الروابط المحفوظة"}
+            {icon:"logout", label:"تسجيل الخروج"}
         ],
         teacher: [
             {icon:"assignment", label:"القوائم الإسمية للتلاميذ"},
@@ -159,8 +158,7 @@ function fillMenu(type) {
             {icon:"folder", label:"استمارات ووثائق مختلفة للأساتذة"},
             {icon:"campaign", label:"إعلانات"},
             {icon:"call", label:"اتصل بنا"},
-            {icon:"logout", label:"تسجيل الخروج"},
-            {icon:"delete_sweep", label:"مسح جميع الروابط المحفوظة"}
+            {icon:"logout", label:"تسجيل الخروج"}
         ],
         consultation: [
             {icon:"assignment", label:"القوائم الإسمية"},
@@ -172,8 +170,7 @@ function fillMenu(type) {
             {icon:"folder", label:"وثائق خاصة بالإشراف التربوي"},
             {icon:"campaign", label:"إعلانات"},
             {icon:"call", label:"اتصل بنا"},
-            {icon:"logout", label:"تسجيل الخروج"},
-            {icon:"delete_sweep", label:"مسح جميع الروابط المحفوظة"}
+            {icon:"logout", label:"تسجيل الخروج"}
         ]
     };
 
@@ -308,6 +305,7 @@ if(savedType) {
   });
 
 });
+
 
 
 
