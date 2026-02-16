@@ -108,11 +108,27 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  function openSession(type) {
-    loginModal.style.display = "none";
-    menuBtn.disabled = false;
+ function openSession(type) {
+    const welcomeText = document.getElementById("welcomeText");
+    const employeeName = document.getElementById("employeeSelect").value;
+
+    document.getElementById("loginModal").style.display = "none";
+    document.getElementById("menuBtn").disabled = false;
+    document.getElementById("dropdownMenu").style.display = "none";
+
+    if(type === "parent") {
+        welcomeText.textContent = "مرحبًا بك! افتح القائمة لاستخدام خدماتنا.";
+    } else {
+        welcomeText.textContent = `مرحبًا بك يا ${employeeName}! افتح القائمة لاستخدام خدماتنا.`;
+    }
+
     fillMenu(type);
-  }
+
+    // حفظ البيانات في localStorage
+    localStorage.setItem("userType", type);
+    localStorage.setItem("employeeName", employeeName);
+}
+
 
 function fillMenu(type) {
     const dropdownMenu = document.getElementById("dropdownMenu");
@@ -185,12 +201,40 @@ function fillMenu(type) {
     });
 }
 
+// استعادة الجلسة عند تحديث الصفحة
+const savedType = localStorage.getItem("userType");
+const savedName = localStorage.getItem("employeeName");
+
+if(savedType) {
+    document.getElementById("menuBtn").disabled = false;
+    document.getElementById("loginModal").style.display = "none";
+    fillMenu(savedType);
+
+    const welcomeText = document.getElementById("welcomeText");
+    if(savedType === "parent") {
+        welcomeText.textContent = "مرحبًا بك! افتح القائمة لاستخدام خدماتنا.";
+    } else {
+        welcomeText.textContent = `مرحبًا بك يا ${savedName}! افتح القائمة لاستخدام خدماتنا.`;
+    }
+}
 
   function logout() {
-    dropdownMenu.style.display = "none";
-    menuBtn.disabled = true;
-    loginModal.style.display = "flex";
-  }
+    const welcomeText = document.getElementById("welcomeText");
+
+    // إعادة النص الأصلي
+    welcomeText.textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
+
+    document.getElementById("dropdownMenu").style.display = "none";
+    document.getElementById("menuBtn").disabled = true;
+    document.getElementById("loginModal").style.display = "flex";
+
+    // مسح بيانات الجلسة
+    localStorage.clear();
+    document.getElementById("employeeSelect").innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+    document.getElementById("loginPassword").value = "";
+    document.getElementById("schoolKeyInput").value = "";
+}
+
 
   window.toggleMenu = function () {
     dropdownMenu.style.display =
@@ -264,6 +308,7 @@ function fillMenu(type) {
   });
 
 });
+
 
 
 
