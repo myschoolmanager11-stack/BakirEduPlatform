@@ -141,7 +141,7 @@ body {
 }
 
 .app-footer {
-    background: #ffffff; /* أبيض */
+    background: rgba(255, 255, 255, 0); /* شفاف بالكامل */
     color: #0197c3;      /* لون الخط */
     padding: 10px 0;
     overflow: hidden;
@@ -152,15 +152,20 @@ body {
     display: inline-block;
     white-space: nowrap;
     padding-left: 100%;
-    animation: marqueeRTL 18s linear infinite;
+    animation: marqueeLTR 18s linear infinite;
     color: #0197c3;      /* لون النص */
     font-weight: bold;
+}
+
+.app-footer, .app-footer * {
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 @keyframes marqueeRTL {
     from { transform: translateX(0); }
     to { transform: translateX(-100%); }
 }
+
 
 
 
