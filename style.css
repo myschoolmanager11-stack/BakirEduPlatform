@@ -119,12 +119,14 @@ body {
 .footer-marquee {
     display: inline-block;
     white-space: nowrap;
+    padding-left: 100%;
     animation: marqueeRTL 18s linear infinite;
 }
 
 @keyframes marqueeRTL {
-    from { transform: translateX(-100%); }
-    to   { transform: translateX(100%); }
+    from { transform: translateX(0); }
+    to   { transform: translateX(-100%); }
 }
+
 
 
