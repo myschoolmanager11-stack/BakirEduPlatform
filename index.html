@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <header class="top-bar">
     <button class="menu-btn" id="menuBtn" onclick="toggleMenu()" disabled>
         <span class="material-icons">menu</span>
@@ -26,11 +25,9 @@
 </header>
 
 <main class="container">
-    <!-- مودال تسجيل الدخول -->
     <div id="loginModal" class="modal">
         <div class="modal-content login-content">
             <h3><span class="material-icons">login</span> تسجيل الدخول</h3>
-
             <div class="login-field">
                 <label>نوع المستخدم</label>
                 <select id="userTypeSelect">
@@ -40,7 +37,6 @@
                     <option value="parent">أولياء الأمور</option>
                 </select>
             </div>
-
             <div id="schoolKeyBlock" style="display:none;">
                 <div class="login-field">
                     <label>رمز المؤسسة الموحد</label>
@@ -50,7 +46,6 @@
                     <span class="material-icons btn-icon">arrow_forward</span> متابعة
                 </button>
             </div>
-
             <div id="employeeBlock" style="display:none;">
                 <div class="login-field">
                     <label>اختر اسم ولقب الموظف</label>
@@ -59,24 +54,20 @@
                     </select>
                 </div>
             </div>
-
             <div id="authBlock" style="display:none;">
                 <div class="login-field">
                     <label>كلمة المرور</label>
                     <input type="password" id="loginPassword">
                 </div>
             </div>
-
             <button id="continueBtn" class="login-btn" style="display:none;">
                 <span class="material-icons btn-icon">arrow_forward</span> متابعة
             </button>
             <button id="loginBtn" class="login-btn" style="display:none;">
                 <span class="material-icons btn-icon">login</span> تسجيل الدخول
             </button>
-
         </div>
     </div>
-
     <div id="mainContent"></div>
 </main>
 
