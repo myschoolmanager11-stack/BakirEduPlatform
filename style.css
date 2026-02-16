@@ -166,7 +166,7 @@ body {
     display: inline-block;
     white-space: nowrap;
     padding-left: 100%;
-    animation: marqueeLTR 18s linear infinite;
+    animation: marqueeRTL 17s linear infinite;
     color: #0197c3;      /* لون النص */
     font-weight: bold;
 }
@@ -179,6 +179,7 @@ body {
     from { transform: translateX(0); }
     to { transform: translateX(-100%); }
 }
+
 
 
 
