@@ -149,53 +149,52 @@ body {
 
 .file-preview-panel {
   position: fixed;
-  bottom: 0;
+  top: 60px; /* أسفل الشريط العلوي */
   left: 0;
   right: 0;
-  top: 0;
-  background: rgba(0,0,0,0.6);
+  bottom: 40px; /* فوق الفوتر */
+  background: rgba(255,255,255,0.95);
   display: none;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   z-index: 1000;
   padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
 .file-preview-panel iframe {
-  width: 90%;
-  max-width: 900px;
-  height: 70%;
+  width: 100%;
+  height: calc(100% - 50px);
   border: none;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  border-radius: 8px;
 }
 
 .preview-header {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
+  width: 100%;
   margin-bottom: 8px;
-  width: 90%;
-  max-width: 900px;
 }
 
 .preview-btn {
-  background: white;
-  border: 1px solid #0197c3;
-  color: #0197c3;
-  cursor: pointer;
-  border-radius: 6px;
-  padding: 5px 8px;
-  display: flex;
-  align-items: center;
-  transition: 0.2s;
-}
-
-.preview-btn:hover {
   background: #0197c3;
   color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  cursor: default; /* المؤشر عند الوقوف بالماوس */
+  transition: 0.2s;
 }
+.preview-btn:hover {
+  background: #007da3;
+  color: white;
+}
+
 
 .app-footer {
     background: rgba(255, 255, 255, 0);
@@ -217,5 +216,6 @@ body {
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
 
 
