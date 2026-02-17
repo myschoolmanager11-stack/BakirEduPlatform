@@ -1,6 +1,6 @@
 // ==================== CONFIGURATION ====================
 const CONFIG = {
-  "SchoolName": "متوسطة الشهيد بكير تركي محمد بن حسن (المدية)",
+ "SchoolName": "متوسطة الشهيد بكير تركي محمد بن حسن (المدية)",
   "SchoolAcadimi": "مديرية التربية لولاية المدية",
   "SchoolVille": "المدية",
   "SchoolDaira": "المدية",
@@ -8,31 +8,31 @@ const CONFIG = {
   "Schoolsystem": "متوسط",
   "SchoolPhone": "0000000000",
   "SchoolAdresse": "حي راس قلوش المدية",
-  "SchoolMail": "cembakirtorki@gmail.com",
+  "SchoolMail": "YourMail@Gmail.com",
   "SchoolLink": "https://myschoolmanager11-stack.github.io/BakirEduPlatform/",
-  "SchoolKey": "29fZIb47Ed",
-  "School_Folder_ID": "1_QRPDalqnbAB_ydeZNa2ZGLBEOFy4VKr",
-  "Documents_Folder_ID": "1KXP6lrj1VHFeavzw42XeRnI3V3JERi_3",
-  "Students_Correspondence_Folder_ID": "1JCVhwwYTW7QnMRTjzkb2m2h-Uq_gRbn_",
-  "Students_SijileAbsence_Folder_ID": "1mL5eJIfj6sRxj1XoGtlfeGKQVnMGcNZq",
-  "School_Key_File_ID": "1J9tUtwMXdyzRyphRdxYcEJv4kAB5rqsB",
-  "School_Link_File_ID": "1AMDhbO6ylmC8Aj-7Uy9li1r0PIutePtS",
-  "ListeTeacher_File_ID": "1fWx9ngbHdmm7ZXGNeHgB35Lp1xXtol8q",
-  "ListeSupervisory_File_ID": "1rC-2-w8sgpKRCBPr7OoPN-KMPRzdN_VY",
-  "ListeStudents_File_ID": "1kuMFj94eNpknZmljsAY2cUmkoheg6sCk",
-  "New_Absented_File_ID": "1VlBle_lhUfCaSfk8PedIZ95TG0GQR7iM",
-  "Old_Absented_File_ID": "1vPcNv5CrlRGd7cCV0raAhyu2EI24POiH",
-  "Password_File_ID": "1cX6acqEHh4zGGLHv5G8P3OFIBo4wmsn6",
-  "ListeClasses_File_ID": "1Nh2_fo3Gjj26oqjqsicOEc3pCqhByuVW",
-  "ListeBranches_File_ID": "1lLtipDukDIFJIQsC9GIDJikFURhOqZh-",
-  "Reception_Schedule_File_ID": "1StoRkoYX_pc9Vr50pCOsRbLgVxL14ncm",
-  "Weekly_Students_Timetable_File_ID": "1BIjn3CMudumwJ-ZjGpsybYo5KeAKvT03",
-  "Teacher_Timetable_File_ID": "1PzyPfwuRdMOOJAlpq6WJy-GbHPrm19W",
-  "Exams_Calendar_File_ID": "1bgBZuAAecXMMoKqQTvlSU9vUlRc2AM9d",
-  "Students_Documents_File_ID": "1lb0p5OhGZ1IpnlyFtBFn_0J5z93WCFnz",
-  "Teacher_Documents_File_ID": "1a-g6QAG-GbqUlFuzVfwdsgH4HwH_rxcT",
-  "Supervisory_Documents_File_ID": "1VaIgUqIWVBpwJSmHEho28gU0HoJgMS1M",
-  "Announcements_File_ID": "1tbtXXyU1NvrTKME50QjJ53VL-FODcCo6"
+  "SchoolKey": "2R98c0I301",
+  "School_Folder_ID": "17JuIu9yqqPLCtUvzLpNro9W2Kxcvxd1z",
+  "Documents_Folder_ID": "1D8ENvWpCQTSuEIeMK_D-fyUVLdakLOfC",
+  "Students_Correspondence_Folder_ID": "1EUT7U6_PgH1cArOQn_3XrvDsB22mh8Q_",
+  "Students_SijileAbsence_Folder_ID": "1-D0cD8EzsA-r5ahxTANCtYeDBoFDbmK5",
+  "School_Key_File_ID": "1mSNMoZNZvOIEUl1WYkoTdp2qLvhSVkT2",
+  "School_Link_File_ID": "1qoimW3ARvOKq3eQHjyRjRYadz2DLNOCM",
+  "ListeTeacher_File_ID": "1wAtKCVQ-colhdZe-oY6BkRTix9kqIAB7",
+  "ListeSupervisory_File_ID": "15yK29UDbc1FLuja02Ps7t_Z5teu30dKi",
+  "ListeStudents_File_ID": "1zRiRa_ZAdUMwEzCqYJtjsT5Aq7Rds-gK",
+  "New_Absented_File_ID": "1LL0jB8-pWf7jjJAvcubOgn-tOQ3kNt3q",
+  "Old_Absented_File_ID": "1ChEkzdH0WPbLb97vbCP85Ud97NKpKt0x",
+  "Password_File_ID": "10T4EbNNpCJ4psRbSQZLtglj66PTJVQi8",
+  "ListeClasses_File_ID": "1Nmxg-OTbZim8Xzg0tVBBe5f7NF1FgiqK",
+  "ListeBranches_File_ID": "1YVugctovM0MqU55AqkxCy1gDKBoT-ITo",
+  "Reception_Schedule_File_ID": "1Lr74xtl22pGzvm0BwkGe0uslJw0eAkLb",
+  "Weekly_Students_Timetable_File_ID": "1sntTaJEc9mJzJiHit7ReH71ruQ8THRD5",
+  "Teacher_Timetable_File_ID": "1OYCAhCwivuJZoRHP1Bwejg32Luys8Bfc",
+  "Exams_Calendar_File_ID": "18bvygHQ_ZRdooalwYsN4cIUWcLe8kngK",
+  "Students_Documents_File_ID": "1ZGRHd9e64nx9Bv9QvVtQIK4op0j9XHKy",
+  "Teacher_Documents_File_ID": "1wHgjfJUu5Zxl4o0dXBsBcSBopS2LKsVJ",
+  "Supervisory_Documents_File_ID": "1hx9UFDaaMWobU8QKDaSJ4w44fD-iSpdP",
+  "Announcements_File_ID": "1hpH71D6X6-GuBJau0YeM6geya7ftcEP0"
 };
 
 const FILE_ITEMS = {
@@ -307,4 +307,5 @@ function openFilePreview(fileId) {
 document.getElementById("previewClose").addEventListener("click", () => {
     document.getElementById("filePreviewPanel").style.display = "none";
 });
+
 
