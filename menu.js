@@ -97,11 +97,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // استرجاع نوع المستخدم بعد تحديث الصفحة
-    const savedType = localStorage.getItem("userType");
-    if (savedType) {
-        document.getElementById("menuBtn").disabled = false;
-        fillMenu(savedType);
-    }
+   const savedType = localStorage.getItem("userType");
+const menuBtn = document.getElementById("menuBtn");
+
+if (savedType && menuBtn) {
+    menuBtn.disabled = false;
+    fillMenu(savedType);
+}
 
     // جعل الدالة متاحة لبقية الملفات
     window.fillMenu = fillMenu;
