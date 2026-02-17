@@ -312,4 +312,41 @@ function openFilePreview(fileId) {
   setTimeout(() => panel.style.opacity = 1, 50);
 }
 
+// ==================== سحب وتحريك المعاينة ====================
+const panel = document.getElementById("filePreviewPanel");
+const header = panel.querySelector(".preview-header");
+let isDragging = false, startX, startY, startLeft, startTop;
+
+header.addEventListener("mousedown", e => {
+    if(panel.classList.contains("fullscreen")) return; // لا يسمح بالسحب في fullscreen
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    const rect = panel.getBoundingClientRect();
+    startLeft = rect.left;
+    startTop = rect.top;
+    panel.style.transition = "none";
+    document.body.style.userSelect = "none"; // منع تحديد النص أثناء السحب
+});
+
+document.addEventListener("mousemove", e => {
+    if(!isDragging) return;
+    let dx = e.clientX - startX;
+    let dy = e.clientY - startY;
+    panel.style.left = startLeft + dx + "px";
+    panel.style.top = startTop + dy + "px";
+});
+
+document.addEventListener("mouseup", e => {
+    if(!isDragging) return;
+    isDragging = false;
+    panel.style.transition = "all 0.3s ease";
+    document.body.style.userSelect = ""; // إعادة تمكين تحديد النص
+});
+
+// ==================== زر تكبير/تصغير ====================
+document.getElementById("previewToggle").addEventListener("click", () => {
+    panel.classList.toggle("fullscreen");
+});
+
 
