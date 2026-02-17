@@ -147,6 +147,23 @@ body {
 .modal-content button:hover { background: #007da3; }
 .modal-content .subtitle { text-align:center; margin-bottom:15px; color:#555; }
 
+.preview-btn {
+  background: white;
+  border: 1px solid #0197c3;
+  color: #0197c3;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  transition: 0.2s;
+}
+
+.preview-btn:hover {
+  background: #0197c3;
+  color: white;
+}
+
 .app-footer {
     background: rgba(255, 255, 255, 0);
     color: #0197c3;
@@ -167,3 +184,4 @@ body {
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
