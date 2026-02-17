@@ -8,26 +8,41 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+
 <header class="top-bar">
     <button class="menu-btn" id="menuBtn" onclick="toggleMenu()" disabled>
         <span class="material-icons">menu</span>
     </button>
+
     <div class="app-title">
         <h2 id="selectedTitle">
-            <span class="material-icons">school</span> فضاء الخدمات – متوسطة الشهيد بكير تركي محمد بن حسن (المدية)
+            <span class="material-icons">school</span>
+            فضاء الخدمات – متوسطة الشهيد بكير تركي محمد بن حسن (المدية)
         </h2>
+
         <p class="welcome-text" id="welcomeText">
             مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.
         </p>
+
+        <!-- عنوان فرعي ديناميكي -->
+        <div id="itemDescription" class="item-description"></div>
     </div>
+
     <div class="dropdown-menu" id="dropdownMenu"></div>
 </header>
 
 <main class="container">
+
+    <!-- نافذة تسجيل الدخول -->
     <div id="loginModal" class="modal">
         <div class="modal-content login-content">
-            <h3><span class="material-icons">login</span> تسجيل الدخول</h3>
+            <h3>
+                <span class="material-icons">login</span>
+                تسجيل الدخول
+            </h3>
+
             <div class="login-field">
                 <label>نوع المستخدم</label>
                 <select id="userTypeSelect">
@@ -37,15 +52,18 @@
                     <option value="parent">أولياء الأمور</option>
                 </select>
             </div>
+
             <div id="schoolKeyBlock" style="display:none;">
                 <div class="login-field">
                     <label>رمز المؤسسة الموحد</label>
                     <input type="password" id="schoolKeyInput">
                 </div>
                 <button id="schoolKeyBtn" class="login-btn">
-                    <span class="material-icons btn-icon">arrow_forward</span> متابعة
+                    <span class="material-icons btn-icon">arrow_forward</span>
+                    متابعة
                 </button>
             </div>
+
             <div id="employeeBlock" style="display:none;">
                 <div class="login-field">
                     <label>اختر اسم ولقب الموظف</label>
@@ -54,17 +72,22 @@
                     </select>
                 </div>
             </div>
+
             <div id="authBlock" style="display:none;">
                 <div class="login-field">
                     <label>كلمة المرور</label>
                     <input type="password" id="loginPassword">
                 </div>
             </div>
+
             <button id="continueBtn" class="login-btn" style="display:none;">
-                <span class="material-icons btn-icon">arrow_forward</span> متابعة
+                <span class="material-icons btn-icon">arrow_forward</span>
+                متابعة
             </button>
+
             <button id="loginBtn" class="login-btn" style="display:none;">
-                <span class="material-icons btn-icon">login</span> تسجيل الدخول
+                <span class="material-icons btn-icon">login</span>
+                تسجيل الدخول
             </button>
         </div>
     </div>
@@ -72,9 +95,12 @@
     <!-- مودال اتصل بنا -->
     <div id="contactModal" class="modal" style="display:none;">
         <div class="modal-content">
-            <span id="closeContactModal" style="float:left; cursor:pointer; font-size:20px; color:#0197c3;">&times;</span>
+            <span id="closeContactModal" class="close-btn">&times;</span>
+
             <h2>☎️ اتصل بنا</h2>
-            <p class="subtitle">يمكنك إرسال استفسارك مباشرة إلى إدارة البوابة.</p>
+            <p class="subtitle">
+                يمكنك إرسال استفسارك مباشرة إلى إدارة البوابة.
+            </p>
 
             <label>البريد الإلكتروني</label>
             <input type="email" id="contactEmail" placeholder="example@email.com">
@@ -87,7 +113,35 @@
         </div>
     </div>
 
+    <!-- ===============================
+         لوحة معاينة الملفات العامة
+    ================================ -->
+
+    <div id="filePreviewPanel" class="file-preview-panel" style="display:none;">
+
+        <div class="preview-header">
+
+            <button class="preview-btn" id="previewClose" title="إغلاق">
+                <span class="material-icons">close</span>
+            </button>
+
+            <button class="preview-btn" id="previewDownload" title="تحميل">
+                <span class="material-icons">download</span>
+            </button>
+
+            <button class="preview-btn" id="previewOpen" title="فتح في صفحة جديدة">
+                <span class="material-icons">open_in_new</span>
+            </button>
+
+        </div>
+
+        <iframe id="filePreviewFrame"></iframe>
+
+    </div>
+
+    <!-- محتوى إضافي مستقبلي -->
     <div id="mainContent"></div>
+
 </main>
 
 <footer class="app-footer">
@@ -97,5 +151,6 @@
 </footer>
 
 <script src="app.js"></script>
+
 </body>
 </html>
