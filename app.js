@@ -137,6 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
     dropdownMenu.innerHTML = "";
     const MENUS = {
       parent: [
+        {icon:"people", label:"فضاء أولياء التلاميذ", desc:"مرحبا بكم في فضاء أولياء التلاميذ"},
         {icon:"assignment", label:"سجل الغيابات", desc:"عرض سجل الغيابات الخاص بتلميذك"},
         {icon:"mail", label:"سجل المراسلات الإدارية", desc:"عرض المراسلات الإدارية بين الإدارة وأولياء الأمور"},
         {icon:"event", label:"جدول استقبال الأولياء", desc:"مواعيد استقبال الأولياء من قبل الإدارة"},
@@ -148,6 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
         {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
       ],
       teacher: [
+        {icon:"person", label:"فضاء الأساتذة", desc:"مرحبا بكم في الأرضية الرقمية - فضاء الأساتذة"},
         {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
         {icon:"description", label:"قوائم صب النقاط", desc:"إدخال ومتابعة صب النقاط"},
         {icon:"hourglass_top", label:"الغائبون قبل اليوم", desc:"قائمة التلاميذ الغائبين قبل اليوم"},
@@ -161,6 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
         {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
       ],
       consultation: [
+        {icon:"qr_code_2", label:"نظام الحضور الذكي", desc:"تسجيل حضور التلاميذ بالباركود"},
         {icon:"assignment", label:"القوائم الإسمية", desc:"عرض القوائم الإسمية"},
         {icon:"hourglass_top", label:"الغائبون قبل اليوم", desc:"قائمة الغائبين قبل اليوم"},
         {icon:"bar_chart", label:"متابعة غيابات اليوم", desc:"متابعة غيابات اليوم"},
@@ -394,6 +397,7 @@ header.addEventListener("touchend", e => {
     isDragging = false;
     panel.style.transition = "all 0.3s ease";
 });
+
 
 
 
