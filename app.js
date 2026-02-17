@@ -1,3 +1,4 @@
+// ==================== CONFIGURATION ====================
 const CONFIG = {
   "SchoolName": "متوسطة الشهيد بكير تركي محمد بن حسن (المدية)",
   "SchoolAcadimi": "مديرية التربية لولاية المدية",
@@ -45,20 +46,15 @@ const FILE_ITEMS = {
   "إعلانات": CONFIG.Announcements_File_ID
 };
 
-const GAS_SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycby2X2ku8gwIIq5_nYjEykekNk27IiTzNFRfF5fUhzwnczdZKf1ilUXssxfC4o-KB0tE/exec";
-
-const filePreviewPanel = document.getElementById("filePreviewPanel");
-const filePreviewFrame = document.getElementById("filePreviewFrame");
-const previewClose = document.getElementById("previewClose");
-const previewDownload = document.getElementById("previewDownload");
-const previewOpen = document.getElementById("previewOpen");
+const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2X2ku8gwIIq5_nYjEykekNk27IiTzNFRfF5fUhzwnczdZKf1ilUXssxfC4o-KB0tE/exec";
 
 let currentFileURL = null;
 let PASSWORDS = [];
 let SCHOOL_KEY = "";
 
+// ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
+  // عناصر الصفحة
   const userTypeSelect = document.getElementById("userTypeSelect");
   const employeeBlock = document.getElementById("employeeBlock");
   const employeeSelect = document.getElementById("employeeSelect");
@@ -71,8 +67,18 @@ document.addEventListener("DOMContentLoaded", function () {
   const dropdownMenu = document.getElementById("dropdownMenu");
   const schoolKeyBlock = document.getElementById("schoolKeyBlock");
   const schoolKeyInput = document.getElementById("schoolKeyInput");
-  const schoolKeyBtn = document.getElementById("schoolKeyBtn");
+  const welcomeText = document.getElementById("welcomeText");
 
+  // div وصف العنصر
+  let itemDescription = document.createElement("div");
+  itemDescription.id = "itemDescription";
+  itemDescription.style.fontSize = "13px";
+  itemDescription.style.color = "#555";
+  itemDescription.style.marginTop = "4px";
+  itemDescription.style.minHeight = "18px";
+  welcomeText.insertAdjacentElement('afterend', itemDescription);
+
+  // ==================== FUNCTIONS ====================
   function getFileLink(fileId) {
     return `${GAS_SCRIPT_URL}?id=${fileId}`;
   }
@@ -91,61 +97,27 @@ document.addEventListener("DOMContentLoaded", function () {
       .filter(x => x);
   }
 
- function loadEmployeeList(type) {
+  function loadEmployeeList(type) {
+    const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
+    employeeSelect.disabled = true;
+    employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة ${type==="teacher"?"الأساتذة":"الإشراف التربوي"}</option>`;
 
-  const fileId = type === "teacher" 
-    ? CONFIG.ListeTeacher_File_ID 
-    : CONFIG.ListeSupervisory_File_ID;
-
-  // 🔒 تعطيل القائمة أثناء التحميل
-  employeeSelect.disabled = true;
-
-  // عرض رسالة التحميل
-  employeeSelect.innerHTML = `
-    <option value="">
-      يرجى الإنتظار... جاري تحميل قائمة ${
-        type === "teacher" ? "الأساتذة" : "الإشراف التربوي"
-      }
-    </option>
-  `;
-
-  fetch(getFileLink(fileId))
-    .then(r => r.text())
-    .then(text => {
-
-      let list = text
-        .replace(/\r/g, "")
-        .split("\n")
-        .map(x => x.trim())
-        .filter(x => x);
-
-      employeeSelect.innerHTML =
-        '<option value="">-- اختر الاسم واللقب --</option>';
-
-      list.forEach(e => {
-        employeeSelect.innerHTML +=
-          `<option value="${e}">${e}</option>`;
+    fetch(getFileLink(fileId))
+      .then(r => r.text())
+      .then(text => {
+        let list = text.replace(/\r/g, "").split("\n").map(x => x.trim()).filter(x => x);
+        employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+        list.forEach(e => employeeSelect.innerHTML += `<option value="${e}">${e}</option>`);
+        employeeSelect.disabled = false;
+      })
+      .catch(error => {
+        employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
+        console.error("خطأ في تحميل القائمة:", error);
+        employeeSelect.disabled = false;
       });
-
-      // ✅ إعادة التفعيل بعد نجاح التحميل
-      employeeSelect.disabled = false;
-
-    })
-    .catch(error => {
-
-      employeeSelect.innerHTML =
-        '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
-
-      console.error("خطأ في تحميل القائمة:", error);
-
-      // ✅ إعادة التفعيل حتى في حالة الخطأ
-      employeeSelect.disabled = false;
-    });
-}
-
+  }
 
   function openSession(type) {
-    const welcomeText = document.getElementById("welcomeText");
     const employeeName = employeeSelect.value;
     loginModal.style.display = "none";
     menuBtn.disabled = false;
@@ -156,173 +128,98 @@ document.addEventListener("DOMContentLoaded", function () {
       : `مرحبًا بك يا ${employeeName}! افتح القائمة لاستخدام خدماتنا.`;
 
     fillMenu(type);
-
     localStorage.setItem("userType", type);
     localStorage.setItem("employeeName", employeeName);
   }
 
-  // بعد تعريف fillMenu(type) نضيف التالي:
-const welcomeText = document.getElementById("welcomeText");
+  function fillMenu(type) {
+    dropdownMenu.innerHTML = "";
+    const MENUS = {
+      parent: [
+        {icon:"assignment", label:"سجل الغيابات", desc:"عرض سجل الغيابات الخاص بتلميذك"},
+        {icon:"mail", label:"سجل المراسلات الإدارية", desc:"عرض المراسلات الإدارية بين الإدارة وأولياء الأمور"},
+        {icon:"event", label:"جدول استقبال الأولياء", desc:"مواعيد استقبال الأولياء من قبل الإدارة"},
+        {icon:"calendar_today", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"عرض التوقيت الأسبوعي للتلاميذ"},
+        {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
+        {icon:"folder", label:"استمارات ووثائق مختلفة للتلاميذ", desc:"تحميل الاستمارات والوثائق المخصصة للتلاميذ"},
+        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
+        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
+        {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
+      ],
+      teacher: [
+        {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
+        {icon:"description", label:"قوائم صب النقاط", desc:"إدخال ومتابعة صب النقاط"},
+        {icon:"hourglass_top", label:"الغائبون قبل اليوم", desc:"قائمة التلاميذ الغائبين قبل اليوم"},
+        {icon:"send", label:"إرسال غيابات اليوم", desc:"إرسال غيابات اليوم للإدارة"},
+        {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
+        {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
+        {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
+        {icon:"folder", label:"استمارات ووثائق مختلفة للأساتذة", desc:"تحميل استمارات ووثائق مختلفة للأساتذة"},
+        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
+        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
+        {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
+      ],
+      consultation: [
+        {icon:"assignment", label:"القوائم الإسمية", desc:"عرض القوائم الإسمية"},
+        {icon:"hourglass_top", label:"الغائبون قبل اليوم", desc:"قائمة الغائبين قبل اليوم"},
+        {icon:"bar_chart", label:"متابعة غيابات اليوم", desc:"متابعة غيابات اليوم"},
+        {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
+        {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
+        {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات"},
+        {icon:"folder", label:"استمارات ووثائق مختلفة للإشراف التربوي", desc:"تحميل استمارات ووثائق مختلفة للإشراف التربوي"},
+        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات"},
+        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
+        {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
+      ]
+    };
 
-// إضافة div صغير لعرض وصف العنصر
-let itemDescription = document.createElement("div");
-itemDescription.id = "itemDescription";
-itemDescription.style.fontSize = "13px";
-itemDescription.style.color = "#555";
-itemDescription.style.marginTop = "4px";
-itemDescription.style.minHeight = "18px"; // لضمان عدم تغير الصفحة عند مسح النص
-welcomeText.insertAdjacentElement('afterend', itemDescription);
+    MENUS[type].forEach((item, idx) => {
+      let div = document.createElement("div");
+      let span = document.createElement("span"); 
+      span.className="material-icons"; 
+      span.textContent=item.icon;
+      div.appendChild(span);
 
-// تعديل fillMenu لتدعم وصف العنصر
-function fillMenu(type) {
-  dropdownMenu.innerHTML = "";
-  const MENUS = {
-    parent: [
-      {icon:"assignment", label:"سجل الغيابات", desc:"عرض سجل الغيابات الخاص بتلميذك"},
-      {icon:"mail", label:"سجل المراسلات الإدارية", desc:"عرض المراسلات الإدارية بين الإدارة وأولياء الأمور"},
-      {icon:"event", label:"جدول استقبال الأولياء", desc:"مواعيد استقبال الأولياء من قبل الإدارة"},
-      {icon:"calendar_today", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"عرض التوقيت الأسبوعي للتلاميذ"},
-      {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
-      {icon:"folder", label:"استمارات ووثائق مختلفة للتلاميذ", desc:"تحميل الاستمارات والوثائق المخصصة للتلاميذ"},
-      {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
-      {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
-      {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
-    ],
-    teacher: [
-      {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
-      {icon:"description", label:"قوائم صب النقاط", desc:"إدخال ومتابعة صب النقاط"},
-      {icon:"hourglass_top", label:"الغائبون قبل اليوم", desc:"قائمة التلاميذ الغائبين قبل اليوم"},
-      {icon:"send", label:"إرسال غيابات اليوم", desc:"إرسال غيابات اليوم للإدارة"},
-      {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
-      {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
-      {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
-      {icon:"folder", label:"استمارات ووثائق مختلفة للأ ساتذة", desc:"تحميل استمارات ووثائق مختلفة للأ ساتذة"},
-      {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
-      {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
-      {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
-    ],
-    consultation: [
-      {icon:"assignment", label:"القوائم الإسمية", desc:"عرض القوائم الإسمية"},
-      {icon:"hourglass_top", label:"الغائبون قبل اليوم", desc:"قائمة الغائبين قبل اليوم"},
-      {icon:"bar_chart", label:"متابعة غيابات اليوم", desc:"متابعة غيابات اليوم"},
-      {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
-      {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
-      {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات"},
-      {icon:"folder", label:"استمارات ووثائق مختلفة للإشراف التربوي", desc:"تحميل استمارات ووثائق مختلفة للإشراف التربوي"},
-      {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات"},
-      {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
-      {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
-    ]
-  };
+      let label = document.createElement("span"); 
+      label.textContent=item.label; 
+      div.appendChild(label);
 
-  MENUS[type].forEach((item, idx) => {
-    let div = document.createElement("div");
-    let span = document.createElement("span"); 
-    span.className="material-icons"; 
-    span.textContent=item.icon;
-    div.appendChild(span);
-    let label = document.createElement("span"); 
-    label.textContent=item.label; 
-    div.appendChild(label);
+      // حدث الضغط الواحد لكل div
+      div.addEventListener('click', function(){
+        itemDescription.textContent = item.desc || "";
 
-    // عرض الوصف عند الضغط
-    div.addEventListener('click', function(){
-  itemDescription.textContent = item.desc || "";
-  
-  if(item.icon==="call") {
-    document.getElementById("contactModal").style.display="flex";
+        if(item.icon === "call") document.getElementById("contactModal").style.display="flex";
+        if(item.icon === "logout") logout();
+        if(FILE_ITEMS[item.label]) openFilePreview(FILE_ITEMS[item.label]);
+        dropdownMenu.style.display = "none";
+      });
+
+      dropdownMenu.appendChild(div);
+      setTimeout(()=> div.classList.add("show"), idx*80);
+    });
   }
-  
-  if(item.icon==="logout") {
-    logout();
-  }
-
-  // فتح المعاينة إذا كان الملف موجود
-  if(FILE_ITEMS[item.label]) {
-    openFilePreview(FILE_ITEMS[item.label]);
-  }
-
-  dropdownMenu.style.display = "none"; // إخفاء القائمة بعد الضغط
-});
-
-    dropdownMenu.appendChild(div);
-    setTimeout(()=> div.classList.add("show"), idx*80);
-  });
-}
-
-   // عرض امعاينة الملف عند الضغط على إعلانات
-  div.addEventListener('click', function(){
-  if(item.label === "إعلانات") {
-    openFilePreview(CONFIG.Announcements_File_ID, "عرض ملف الإعلانات");
-  }
-
-    previewClose.addEventListener("click", function(){
-  filePreviewPanel.style.display = "none";
-  filePreviewFrame.src = "";
-  itemDescription.textContent = "";
-});
-
-previewDownload.addEventListener("click", function(){
-  if(currentFileURL)
-    window.open(currentFileURL + "&export=download", "_blank");
-});
-
-previewOpen.addEventListener("click", function(){
-  if(currentFileURL)
-    window.open(currentFileURL, "_blank");
-});
-    
-  if(item.icon === "logout") logout();
-  dropdownMenu.style.display = "none";
-});
-  
-// إخفاء القائمة عند الضغط في أي مكان خارجها
-document.addEventListener("click", function(event) {
-  if(!dropdownMenu.contains(event.target) && !document.getElementById("menuBtn").contains(event.target)) {
-    dropdownMenu.style.display = "none";
-  }
-});
-
 
   function logout() {
-
-  // إعادة نص الترحيب
-  const welcomeText = document.getElementById("welcomeText");
-  welcomeText.textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
-
-  // حذف وصف العنصر إن وجد
-  if (itemDescription) itemDescription.textContent = "";
-
-  // إخفاء القائمة
-  dropdownMenu.style.display = "none";
-  menuBtn.disabled = true;
-
-  // مسح التخزين المحلي
-  localStorage.clear();
-
-  // إعادة نموذج الدخول للحالة الافتراضية
-  loginModal.style.display = "flex";
-  loginModal.classList.remove("expanded"); // إذا كنت تستعمل كلاس تكبير
-
-  userTypeSelect.value = "";
-  schoolKeyInput.value = "";
-  loginPassword.value = "";
-
-  employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-
-  // إخفاء كل البلوكات
-  schoolKeyBlock.style.display = "none";
-  employeeBlock.style.display = "none";
-  authBlock.style.display = "none";
-  continueBtn.style.display = "none";
-  loginBtn.style.display = "none";
-}
-
+    welcomeText.textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
+    if(itemDescription) itemDescription.textContent = "";
+    dropdownMenu.style.display = "none";
+    menuBtn.disabled = true;
+    localStorage.clear();
+    loginModal.style.display = "flex";
+    loginModal.classList.remove("expanded");
+    userTypeSelect.value = "";
+    schoolKeyInput.value = "";
+    loginPassword.value = "";
+    employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+    schoolKeyBlock.style.display = employeeBlock.style.display = authBlock.style.display = continueBtn.style.display = loginBtn.style.display = "none";
+    document.getElementById("filePreviewPanel").style.display="none";
+  }
 
   window.toggleMenu = function () {
     dropdownMenu.style.display = (dropdownMenu.style.display==="block") ? "none" : "block";
   };
 
+  // ==================== EVENTS ====================
   userTypeSelect.addEventListener("change", function () {
     employeeBlock.style.display = authBlock.style.display = continueBtn.style.display = loginBtn.style.display = schoolKeyBlock.style.display = "none";
     if(this.value==="parent") continueBtn.style.display="flex";
@@ -372,56 +269,40 @@ document.addEventListener("click", function(event) {
     document.getElementById("contactMessage").value = "";
   });
 
+  // ==================== حفظ الجلسة ====================
   const savedType = localStorage.getItem("userType");
   const savedName = localStorage.getItem("employeeName");
   if(savedType) {
     menuBtn.disabled=false;
     loginModal.style.display="none";
     fillMenu(savedType);
-    document.getElementById("welcomeText").textContent = (savedType==="parent") ? 
+    welcomeText.textContent = (savedType==="parent") ? 
       "مرحبًا بك! افتح القائمة لاستخدام خدماتنا." : `مرحبًا بك يا ${savedName}! افتح القائمة لاستخدام خدماتنا.`;
   }
 
 });
 
+// ==================== معاينة الملفات ====================
 function openFilePreview(fileId) {
   const panel = document.getElementById("filePreviewPanel");
   const frame = document.getElementById("filePreviewFrame");
   const previewDownload = document.getElementById("previewDownload");
   const previewOpen = document.getElementById("previewOpen");
 
-  // عرض شريط التحميل
   frame.style.display = "none";
   panel.style.opacity = 0;
   panel.style.display = "flex";
 
-  // رابط الملف من Google Drive
   const url = `https://drive.google.com/file/d/${fileId}/preview`;
-
-  // تحميل الملف
   frame.src = url;
-  frame.onload = () => {
-    frame.style.display = "block";
-    panel.style.transition = "opacity 0.4s";
-    panel.style.opacity = 1; // تأثير Fade
-  };
+  frame.onload = () => frame.style.display = "block";
 
-  // زر التحميل
-  previewDownload.onclick = () => window.open(`https://drive.google.com/uc?export=download&id=${fileId}`, "_blank");
+  previewDownload.href = `https://drive.google.com/uc?id=${fileId}&export=download`;
+  previewOpen.href = url;
 
-  // زر فتح في صفحة جديدة
-  previewOpen.onclick = () => window.open(url, "_blank");
-
-  // زر الإغلاق
-  document.getElementById("previewClose").onclick = () => {
-    panel.style.opacity = 0;
-    setTimeout(() => { panel.style.display="none"; frame.src=""; }, 400);
-  };
+  setTimeout(()=> panel.style.opacity=1, 50);
 }
 
-
-
-
-
-
-
+document.getElementById("closePreview").addEventListener("click", () => {
+  document.getElementById("filePreviewPanel").style.display="none";
+});
