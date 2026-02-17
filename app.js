@@ -189,14 +189,35 @@ document.addEventListener("DOMContentLoaded", function () {
       div.appendChild(label);
 
       // حدث الضغط الواحد لكل div
-      div.addEventListener('click', function(){
-        itemDescription.textContent = item.desc || "";
+    div.addEventListener('click', function(){
 
-        if(item.icon === "call") document.getElementById("contactModal").style.display="flex";
-        if(item.icon === "logout") logout();
-        if(FILE_ITEMS[item.label]) openFilePreview(FILE_ITEMS[item.label]);
-        dropdownMenu.style.display = "none";
-      });
+  itemDescription.textContent = item.desc || "";
+
+  // روابط خارجية
+  if(item.label === "فضاء الأساتذة") {
+    window.open("https://ostad.education.dz/auth", "_blank");
+  }
+
+  if(item.label === "فضاء أولياء التلاميذ") {
+    window.open("https://awlyaa.education.dz/", "_blank");
+  }
+
+  // مودال نظام الحضور الذكي
+  if(item.label === "نظام الحضور الذكي") {
+    document.getElementById("attendanceModal").style.display = "flex";
+  }
+
+  if(item.icon === "call") {
+    document.getElementById("contactModal").style.display = "flex";
+  }
+
+  if(item.icon === "logout") logout();
+
+  if(FILE_ITEMS[item.label]) openFilePreview(FILE_ITEMS[item.label]);
+
+  dropdownMenu.style.display = "none";
+});
+
 
       dropdownMenu.appendChild(div);
       setTimeout(()=> div.classList.add("show"), idx*80);
@@ -397,6 +418,7 @@ header.addEventListener("touchend", e => {
     isDragging = false;
     panel.style.transition = "all 0.3s ease";
 });
+
 
 
 
