@@ -68,7 +68,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const schoolKeyBlock = document.getElementById("schoolKeyBlock");
   const schoolKeyInput = document.getElementById("schoolKeyInput");
   const welcomeText = document.getElementById("welcomeText");
-
+  const schoolKeyBtn = document.getElementById("schoolKeyBtn");
+  
   // div وصف العنصر
   let itemDescription = document.createElement("div");
   itemDescription.id = "itemDescription";
@@ -303,6 +304,7 @@ function openFilePreview(fileId) {
   setTimeout(()=> panel.style.opacity=1, 50);
 }
 
-document.getElementById("closePreview").addEventListener("click", () => {
-  document.getElementById("filePreviewPanel").style.display="none";
+document.getElementById("previewClose").addEventListener("click", () => {
+    document.getElementById("filePreviewPanel").style.display = "none";
 });
+
