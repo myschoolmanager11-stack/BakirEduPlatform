@@ -73,16 +73,58 @@ document.addEventListener("DOMContentLoaded", function () {
       .filter(x => x);
   }
 
-  function loadEmployeeList(type) {
-    const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
-    fetch(getFileLink(fileId))
-      .then(r => r.text())
-      .then(text => {
-        let list = text.replace(/\r/g,"").split("\n").map(x => x.trim()).filter(x => x);
-        employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-        list.forEach(e => employeeSelect.innerHTML += `<option value="${e}">${e}</option>`);
+ function loadEmployeeList(type) {
+
+  const fileId = type === "teacher" 
+    ? CONFIG.ListeTeacher_File_ID 
+    : CONFIG.ListeSupervisory_File_ID;
+
+  // 🔒 تعطيل القائمة أثناء التحميل
+  employeeSelect.disabled = true;
+
+  // عرض رسالة التحميل
+  employeeSelect.innerHTML = `
+    <option value="">
+      يرجى الإنتظار... جاري تحميل قائمة ${
+        type === "teacher" ? "الأساتذة" : "الإشراف التربوي"
+      }
+    </option>
+  `;
+
+  fetch(getFileLink(fileId))
+    .then(r => r.text())
+    .then(text => {
+
+      let list = text
+        .replace(/\r/g, "")
+        .split("\n")
+        .map(x => x.trim())
+        .filter(x => x);
+
+      employeeSelect.innerHTML =
+        '<option value="">-- اختر الاسم واللقب --</option>';
+
+      list.forEach(e => {
+        employeeSelect.innerHTML +=
+          `<option value="${e}">${e}</option>`;
       });
-  }
+
+      // ✅ إعادة التفعيل بعد نجاح التحميل
+      employeeSelect.disabled = false;
+
+    })
+    .catch(error => {
+
+      employeeSelect.innerHTML =
+        '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
+
+      console.error("خطأ في تحميل القائمة:", error);
+
+      // ✅ إعادة التفعيل حتى في حالة الخطأ
+      employeeSelect.disabled = false;
+    });
+}
+
 
   function openSession(type) {
     const welcomeText = document.getElementById("welcomeText");
@@ -285,6 +327,7 @@ document.addEventListener("click", function(event) {
   }
 
 });
+
 
 
 
