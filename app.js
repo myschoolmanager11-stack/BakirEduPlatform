@@ -422,9 +422,8 @@ header.addEventListener("touchend", e => {
 
 // إغلاق مودال الحضور
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
-  document.getElementById("attendanceModal").classList.remove("show");
+  document.getElementById("attendanceModal").style.display = "none";
 });
-
 
 
 
