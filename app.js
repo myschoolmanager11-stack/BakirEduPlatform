@@ -34,6 +34,17 @@ const CONFIG = {
   "Announcements_File_ID": "1tbtXXyU1NvrTKME50QjJ53VL-FODcCo6"
 };
 
+const FILE_ITEMS = {
+  "جدول توقيت الأستاذ": CONFIG.Teacher_Timetable_File_ID,
+  "جدول استقبال الأولياء": CONFIG.Reception_Schedule_File_ID,
+  "جدول التوقيت الأسبوعي للتلاميذ": CONFIG.Weekly_Students_Timetable_File_ID,
+  "رزنامة الفروض والاختبارات": CONFIG.Exams_Calendar_File_ID,
+  "استمارات ووثائق مختلفة للتلاميذ": CONFIG.Students_Documents_File_ID,
+  "استمارات ووثائق مختلفة للأساتذة": CONFIG.Teacher_Documents_File_ID,
+  "استمارات ووثائق مختلفة للإشراف التربوي": CONFIG.Supervisory_Documents_File_ID,
+  "إعلانات": CONFIG.Announcements_File_ID
+};
+
 const GAS_SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycby2X2ku8gwIIq5_nYjEykekNk27IiTzNFRfF5fUhzwnczdZKf1ilUXssxfC4o-KB0tE/exec";
 
@@ -185,7 +196,7 @@ function fillMenu(type) {
       {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
       {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
       {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
-      {icon:"folder", label:"استمارات ووثائق مختلفة للأساتذة", desc:"تحميل استمارات ووثائق مخصصة للأساتذة"},
+      {icon:"folder", label:"استمارات ووثائق مختلفة للأ ساتذة", desc:"تحميل استمارات ووثائق مختلفة للأ ساتذة"},
       {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
       {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
       {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
@@ -197,7 +208,7 @@ function fillMenu(type) {
       {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
       {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
       {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات"},
-      {icon:"folder", label:"وثائق خاصة بالإشراف التربوي", desc:"تحميل وثائق خاصة بالإشراف التربوي"},
+      {icon:"folder", label:"استمارات ووثائق مختلفة للإشراف التربوي", desc:"تحميل استمارات ووثائق مختلفة للإشراف التربوي"},
       {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات"},
       {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
       {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
@@ -216,11 +227,23 @@ function fillMenu(type) {
 
     // عرض الوصف عند الضغط
     div.addEventListener('click', function(){
-      itemDescription.textContent = item.desc || "";
-      if(item.icon==="call") document.getElementById("contactModal").style.display="flex";
-      if(item.icon==="logout") logout();
-      dropdownMenu.style.display = "none"; // إخفاء القائمة بعد الضغط
-    });
+  itemDescription.textContent = item.desc || "";
+  
+  if(item.icon==="call") {
+    document.getElementById("contactModal").style.display="flex";
+  }
+  
+  if(item.icon==="logout") {
+    logout();
+  }
+
+  // فتح المعاينة إذا كان الملف موجود
+  if(FILE_ITEMS[item.label]) {
+    openFilePreview(FILE_ITEMS[item.label]);
+  }
+
+  dropdownMenu.style.display = "none"; // إخفاء القائمة بعد الضغط
+});
 
     dropdownMenu.appendChild(div);
     setTimeout(()=> div.classList.add("show"), idx*80);
@@ -361,12 +384,42 @@ document.addEventListener("click", function(event) {
 
 });
 
-function openFilePreview(fileId, fileTitle) {
-  currentFileURL = getFileLink(fileId);
-  filePreviewFrame.src = currentFileURL;
-  filePreviewPanel.style.display = "block";
-  itemDescription.textContent = fileTitle;
+function openFilePreview(fileId) {
+  const panel = document.getElementById("filePreviewPanel");
+  const frame = document.getElementById("filePreviewFrame");
+  const previewDownload = document.getElementById("previewDownload");
+  const previewOpen = document.getElementById("previewOpen");
+
+  // عرض شريط التحميل
+  frame.style.display = "none";
+  panel.style.opacity = 0;
+  panel.style.display = "flex";
+
+  // رابط الملف من Google Drive
+  const url = `https://drive.google.com/file/d/${fileId}/preview`;
+
+  // تحميل الملف
+  frame.src = url;
+  frame.onload = () => {
+    frame.style.display = "block";
+    panel.style.transition = "opacity 0.4s";
+    panel.style.opacity = 1; // تأثير Fade
+  };
+
+  // زر التحميل
+  previewDownload.onclick = () => window.open(`https://drive.google.com/uc?export=download&id=${fileId}`, "_blank");
+
+  // زر فتح في صفحة جديدة
+  previewOpen.onclick = () => window.open(url, "_blank");
+
+  // زر الإغلاق
+  document.getElementById("previewClose").onclick = () => {
+    panel.style.opacity = 0;
+    setTimeout(() => { panel.style.display="none"; frame.src=""; }, 400);
+  };
 }
+
+
 
 
 
