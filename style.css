@@ -225,12 +225,24 @@ body {
 .preview-header { cursor: grab; }
 
 .file-preview-panel {
-  top: 80px; /* مسافة من الشريط العلوي */
-  left: 20px;
-  width: calc(100% - 40px); /* تقليل العرض قليلًا */
-  height: calc(100% - 120px); /* تقليل الارتفاع لتجنب الفوتر */
-  padding: 8px;
+    position: fixed;
+    top: 70px; /* خليها تبعد شوي عن الشريط العلوي */
+    left: 50px;
+    width: calc(100% - 100px); /* تقليل العرض */
+    height: calc(100% - 140px); /* تقليل الارتفاع لتجنب الفوتر */
+    background: rgba(255,255,255,0.95);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    z-index: 1000;
+    padding: 8px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    cursor: grab;
+    transition: all 0.3s ease;
 }
+
 
 .dropdown-menu {
     z-index: 1100; /* أكبر من file-preview-panel */
@@ -241,9 +253,10 @@ body {
 }
 
 .file-preview-panel iframe {
-  width: 100%;
-  height: 100%; /* يغطي كامل اللوحة */
-  border: none;
+    width: 100%;
+    height: 100%; /* يملأ كامل اللوحة */
+    border: none;
+    border-radius: 6px;
 }
 
 .app-footer {
@@ -266,6 +279,7 @@ body {
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
 
 
 
