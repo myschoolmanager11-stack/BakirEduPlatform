@@ -312,6 +312,23 @@ function openFilePreview(fileId) {
   setTimeout(() => panel.style.opacity = 1, 50);
 }
 
+// ======= ربط أزرار المعاينة =======
+const previewClose = document.getElementById("previewClose");
+const previewDownload = document.getElementById("previewDownload");
+const previewOpen = document.getElementById("previewOpen");
+
+previewClose.addEventListener("click", () => {
+    panel.style.display = "none";
+});
+
+previewDownload.addEventListener("click", () => {
+    window.open(previewDownload.href, "_blank");
+});
+
+previewOpen.addEventListener("click", () => {
+    window.open(previewOpen.href, "_blank");
+});
+
 // ==================== سحب وتحريك المعاينة ====================
 const panel = document.getElementById("filePreviewPanel");
 const header = panel.querySelector(".preview-header");
@@ -377,5 +394,6 @@ header.addEventListener("touchend", e => {
     isDragging = false;
     panel.style.transition = "all 0.3s ease";
 });
+
 
 
