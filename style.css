@@ -267,28 +267,15 @@ body {
     color: #0197c3;
 }
 
-/* زر إغلاق موحد للمودالات */
-
 .icon-close {
-    background: rgba(1,151,195,0.08);
+    background: none;
     border: none;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
     color: #0197c3;
-}
-
-.icon-close .material-icons {
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .icon-close:hover {
-    background: rgba(211,47,47,0.12);
     color: #d32f2f;
 }
 
@@ -303,41 +290,6 @@ body {
     background: rgba(1,151,195,0.05);
     font-weight: bold;
     color: #0197c3;
-}
-
-.modal-content {
-    box-shadow: 0 15px 40px rgba(0,0,0,0.18);
-}
-
-/* خلفية المودال */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.35);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.25s ease;
-    z-index: 9999;
-}
-
-/* عند التفعيل */
-.modal.show {
-    display: flex;
-    opacity: 1;
-}
-
-/* حركة المودال */
-.modal-content {
-    transform: scale(0.92);
-    opacity: 0;
-    transition: all 0.25s ease;
-}
-
-.modal.show .modal-content {
-    transform: scale(1);
-    opacity: 1;
 }
 
 
@@ -361,14 +313,4 @@ body {
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
-
-
-
-
-
-
-
-
-
-
 
