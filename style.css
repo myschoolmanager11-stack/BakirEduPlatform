@@ -1,7 +1,7 @@
 body {
     margin: 0;
     font-family: "Segoe UI", Roboto, sans-serif;
-    background: url('background.png') no-repeat center center fixed; /* ضع صورة تعبر عن محتوى البوابة */
+    background: url('background.png') no-repeat center center fixed;
     background-size: cover;
     direction: rtl;
     display: flex;
@@ -15,13 +15,13 @@ body {
 }
 
 .top-bar {
-    background: rgba(255, 255, 255, 0); /* شفاف بالكامل */
-    color: #0197c3;                    /* لون الخط */
+    background: rgba(255, 255, 255, 0);
+    color: #0197c3;
     padding: 12px;
     display: flex;
     align-items: center;
     position: relative;
-    box-shadow: none;                   /* إزالة الظل ليكون الشريط شفافًا تمامًا */
+    box-shadow: none;
 }
 
 .top-bar, .top-bar * {
@@ -44,15 +44,12 @@ body {
     background: #e68900;
 }
 
-.app-title {
-    flex: 1;
-    text-align: center;
-}
+.app-title { flex: 1; text-align: center; }
 
 .welcome-text {
     font-size: 14px;
     font-weight: bold;
-    color: #0197c3; /* لون الخط متناسق مع القائمة */
+    color: #0197c3;
     opacity: 0.95;
 }
 
@@ -74,9 +71,7 @@ body {
     box-shadow: 0 15px 40px rgba(0,0,0,0.25);
 }
 
-.login-field {
-    margin-bottom: 14px;
-}
+.login-field { margin-bottom: 14px; }
 .login-field label {
     font-weight:600;
     color:#3f51b5;
@@ -127,12 +122,12 @@ body {
     opacity: 0;
     transform: translateX(20px);
     transition: all 0.4s ease;
-    color: #0197c3;      /* لون النص */
+    color: #0197c3;
     font-weight: 600;
 }
 
 .dropdown-menu div:hover {
-    background: rgba(1, 151, 195, 0.1); /* لون خلفية عند المرور */
+    background: rgba(1, 151, 195, 0.1);
 }
 
 .dropdown-menu div.show {
@@ -140,7 +135,6 @@ body {
     transform: translateX(0);
 }
 
-/* إضافة في style.css */
 .modal-content input, .modal-content textarea {
     width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px;
     border-radius: 8px; border: 1px solid #ccc; font-size: 14px; box-sizing: border-box;
@@ -153,10 +147,9 @@ body {
 .modal-content button:hover { background: #007da3; }
 .modal-content .subtitle { text-align:center; margin-bottom:15px; color:#555; }
 
-
 .app-footer {
-    background: rgba(255, 255, 255, 0); /* شفاف بالكامل */
-    color: #0197c3;      /* لون الخط */
+    background: rgba(255, 255, 255, 0);
+    color: #0197c3;
     padding: 10px 0;
     overflow: hidden;
     font-weight: 600;
@@ -167,23 +160,10 @@ body {
     white-space: nowrap;
     padding-left: 100%;
     animation: marqueeRTL 17s linear infinite;
-    color: #0197c3;      /* لون النص */
+    color: #0197c3;
     font-weight: bold;
 }
 
-.app-footer, .app-footer * {
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-}
+.app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
-@keyframes marqueeRTL {
-    from { transform: translateX(0); }
-    to { transform: translateX(-100%); }
-}
-
-
-
-
-
-
-
-
+@keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
