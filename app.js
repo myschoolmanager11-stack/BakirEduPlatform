@@ -37,6 +37,13 @@ const CONFIG = {
 const GAS_SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycby2X2ku8gwIIq5_nYjEykekNk27IiTzNFRfF5fUhzwnczdZKf1ilUXssxfC4o-KB0tE/exec";
 
+const filePreviewPanel = document.getElementById("filePreviewPanel");
+const filePreviewFrame = document.getElementById("filePreviewFrame");
+const previewClose = document.getElementById("previewClose");
+const previewDownload = document.getElementById("previewDownload");
+const previewOpen = document.getElementById("previewOpen");
+
+let currentFileURL = null;
 let PASSWORDS = [];
 let SCHOOL_KEY = "";
 
@@ -220,6 +227,32 @@ function fillMenu(type) {
   });
 }
 
+   // عرض امعاينة الملف عند الضغط على إعلانات
+  div.addEventListener('click', function(){
+  if(item.label === "إعلانات") {
+    openFilePreview(CONFIG.Announcements_File_ID, "عرض ملف الإعلانات");
+  }
+
+    previewClose.addEventListener("click", function(){
+  filePreviewPanel.style.display = "none";
+  filePreviewFrame.src = "";
+  itemDescription.textContent = "";
+});
+
+previewDownload.addEventListener("click", function(){
+  if(currentFileURL)
+    window.open(currentFileURL + "&export=download", "_blank");
+});
+
+previewOpen.addEventListener("click", function(){
+  if(currentFileURL)
+    window.open(currentFileURL, "_blank");
+});
+    
+  if(item.icon === "logout") logout();
+  dropdownMenu.style.display = "none";
+});
+  
 // إخفاء القائمة عند الضغط في أي مكان خارجها
 document.addEventListener("click", function(event) {
   if(!dropdownMenu.contains(event.target) && !document.getElementById("menuBtn").contains(event.target)) {
@@ -327,6 +360,13 @@ document.addEventListener("click", function(event) {
   }
 
 });
+
+function openFilePreview(fileId, fileTitle) {
+  currentFileURL = getFileLink(fileId);
+  filePreviewFrame.src = currentFileURL;
+  filePreviewPanel.style.display = "block";
+  itemDescription.textContent = fileTitle;
+}
 
 
 
