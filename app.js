@@ -69,21 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const schoolKeyInput = document.getElementById("schoolKeyInput");
   const welcomeText = document.getElementById("welcomeText");
   const schoolKeyBtn = document.getElementById("schoolKeyBtn");
-
- document.addEventListener("DOMContentLoaded", function () {
-    // تأكد أن نافذة تسجيل الدخول ظاهرة افتراضيًا إذا لم يكن هناك جلسة
-    const savedType = localStorage.getItem("userType");
-    if(!savedType) {
-        loginModal.style.display = "flex";  // عرض النافذة
-        loginModal.classList.add("show");   // إضافة الكلاس show إذا كنت تستخدمه للـ transitions
-    }
-});
-
- document.getElementById("closeLoginModal").addEventListener("click", function(){
-    loginModal.style.display = "none";
-    loginModal.classList.remove("show");
-});
-
+  
   // div وصف العنصر
   let itemDescription = document.createElement("div");
   itemDescription.id = "itemDescription";
@@ -134,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function openSession(type) {
     const employeeName = employeeSelect.value;
-    loginModal.classList.remove("show");
+    loginModal.style.display = "none";
     menuBtn.disabled = false;
     dropdownMenu.style.display = "none";
 
@@ -244,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function () {
     dropdownMenu.style.display = "none";
     menuBtn.disabled = true;
     localStorage.clear();
-    loginModal.classList.add("show");
+    loginModal.style.display = "flex";
     loginModal.classList.remove("expanded");
     userTypeSelect.value = "";
     schoolKeyInput.value = "";
@@ -438,28 +424,6 @@ header.addEventListener("touchend", e => {
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
-
-// ==================== إغلاق المودالات باحتراف ====================
-
-// إغلاق عند الضغط خارج المحتوى
-document.querySelectorAll(".modal").forEach(modal => {
-    modal.addEventListener("click", function(e){
-        if(e.target === modal){
-            modal.classList.remove("show");
-        }
-    });
-});
-
-// إغلاق عند الضغط على ESC
-document.addEventListener("keydown", function(e){
-    if(e.key === "Escape"){
-        document.querySelectorAll(".modal.show").forEach(modal=>{
-            modal.classList.remove("show");
-        });
-    }
-});
-
-
 
 
 
