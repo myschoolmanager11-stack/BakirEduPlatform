@@ -224,6 +224,22 @@ body {
 
 .preview-header { cursor: grab; }
 
+.file-preview-panel {
+  top: 80px; /* مسافة من الشريط العلوي */
+  left: 20px;
+  width: calc(100% - 40px); /* تقليل العرض قليلًا */
+  height: calc(100% - 120px); /* تقليل الارتفاع لتجنب الفوتر */
+  padding: 8px;
+}
+
+.dropdown-menu {
+    z-index: 1100; /* أكبر من file-preview-panel */
+}
+
+.file-preview-panel, .preview-header {
+    touch-action: none; /* منع تمرير الصفحة أثناء السحب */
+}
+
 .app-footer {
     background: rgba(255, 255, 255, 0);
     color: #0197c3;
@@ -244,6 +260,7 @@ body {
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
 
 
 
