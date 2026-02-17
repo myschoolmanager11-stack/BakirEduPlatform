@@ -290,22 +290,26 @@ function openFilePreview(fileId) {
   const previewDownload = document.getElementById("previewDownload");
   const previewOpen = document.getElementById("previewOpen");
 
+  // إعادة ضبط الإطار
   frame.style.display = "none";
   panel.style.opacity = 0;
   panel.style.display = "flex";
 
+  // رابط المعاينة والتحميل
   const url = `https://drive.google.com/file/d/${fileId}/preview`;
   frame.src = url;
   frame.onload = () => frame.style.display = "block";
 
   previewDownload.href = `https://drive.google.com/uc?id=${fileId}&export=download`;
   previewOpen.href = url;
+  previewOpen.target = "_blank";
 
-  setTimeout(()=> panel.style.opacity=1, 50);
+  // ضبط المؤشرات عند الوقوف بالماوس
+  [previewDownload, previewOpen].forEach(btn => {
+    btn.style.cursor = "default";
+  });
+
+  setTimeout(() => panel.style.opacity = 1, 50);
 }
-
-document.getElementById("previewClose").addEventListener("click", () => {
-    document.getElementById("filePreviewPanel").style.display = "none";
-});
 
 
