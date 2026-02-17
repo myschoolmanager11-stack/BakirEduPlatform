@@ -69,7 +69,21 @@ document.addEventListener("DOMContentLoaded", function () {
   const schoolKeyInput = document.getElementById("schoolKeyInput");
   const welcomeText = document.getElementById("welcomeText");
   const schoolKeyBtn = document.getElementById("schoolKeyBtn");
-  
+
+ document.addEventListener("DOMContentLoaded", function () {
+    // تأكد أن نافذة تسجيل الدخول ظاهرة افتراضيًا إذا لم يكن هناك جلسة
+    const savedType = localStorage.getItem("userType");
+    if(!savedType) {
+        loginModal.style.display = "flex";  // عرض النافذة
+        loginModal.classList.add("show");   // إضافة الكلاس show إذا كنت تستخدمه للـ transitions
+    }
+});
+
+ document.getElementById("closeLoginModal").addEventListener("click", function(){
+    loginModal.style.display = "none";
+    loginModal.classList.remove("show");
+});
+
   // div وصف العنصر
   let itemDescription = document.createElement("div");
   itemDescription.id = "itemDescription";
@@ -444,6 +458,7 @@ document.addEventListener("keydown", function(e){
         });
     }
 });
+
 
 
 
