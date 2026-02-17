@@ -101,63 +101,90 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("employeeName", employeeName);
   }
 
-  function fillMenu(type) {
-    dropdownMenu.innerHTML = "";
-    const MENUS = {
-      parent: [
-        {icon:"assignment", label:"سجل الغيابات"},
-        {icon:"mail", label:"سجل المراسلات الإدارية"},
-        {icon:"event", label:"جدول استقبال الأولياء"},
-        {icon:"calendar_today", label:"جدول التوقيت الأسبوعي للتلاميذ"},
-        {icon:"description", label:"رزنامة الفروض والاختبارات"},
-        {icon:"folder", label:"استمارات ووثائق مختلفة للتلاميذ"},
-        {icon:"campaign", label:"إعلانات"},
-        {icon:"call", label:"اتصل بنا"},
-        {icon:"logout", label:"تسجيل الخروج"}
-      ],
-      teacher: [
-        {icon:"assignment", label:"القوائم الإسمية للتلاميذ"},
-        {icon:"description", label:"قوائم صب النقاط"},
-        {icon:"hourglass_top", label:"الغائبون قبل اليوم"},
-        {icon:"send", label:"إرسال غيابات اليوم"},
-        {icon:"calendar_today", label:"جدول توقيت الأستاذ"},
-        {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ"},
-        {icon:"description", label:"رزنامة الفروض والاختبارات"},
-        {icon:"folder", label:"استمارات ووثائق مختلفة للأساتذة"},
-        {icon:"campaign", label:"إعلانات"},
-        {icon:"call", label:"اتصل بنا"},
-        {icon:"logout", label:"تسجيل الخروج"}
-      ],
-      consultation: [
-        {icon:"assignment", label:"القوائم الإسمية"},
-        {icon:"hourglass_top", label:"الغائبون قبل اليوم"},
-        {icon:"bar_chart", label:"متابعة غيابات اليوم"},
-        {icon:"calendar_today", label:"جدول توقيت الأستاذ"},
-        {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ"},
-        {icon:"description", label:"رزنامة الفروض والاختبارات"},
-        {icon:"folder", label:"وثائق خاصة بالإشراف التربوي"},
-        {icon:"campaign", label:"إعلانات"},
-        {icon:"call", label:"اتصل بنا"},
-        {icon:"logout", label:"تسجيل الخروج"}
-      ]
-    };
+  // بعد تعريف fillMenu(type) نضيف التالي:
+const welcomeText = document.getElementById("welcomeText");
 
-    MENUS[type].forEach((item, idx) => {
-      let div = document.createElement("div");
-      let span = document.createElement("span"); span.className="material-icons"; span.textContent=item.icon;
-      div.appendChild(span);
-      let label = document.createElement("span"); label.textContent=item.label; div.appendChild(label);
+// إضافة div صغير لعرض وصف العنصر
+let itemDescription = document.createElement("div");
+itemDescription.id = "itemDescription";
+itemDescription.style.fontSize = "13px";
+itemDescription.style.color = "#555";
+itemDescription.style.marginTop = "4px";
+itemDescription.style.minHeight = "18px"; // لضمان عدم تغير الصفحة عند مسح النص
+welcomeText.insertAdjacentElement('afterend', itemDescription);
 
-      if(item.icon==="logout") div.onclick=logout;
+// تعديل fillMenu لتدعم وصف العنصر
+function fillMenu(type) {
+  dropdownMenu.innerHTML = "";
+  const MENUS = {
+    parent: [
+      {icon:"assignment", label:"سجل الغيابات", desc:"عرض سجل الغيابات الخاص بتلميذك"},
+      {icon:"mail", label:"سجل المراسلات الإدارية", desc:"عرض المراسلات الإدارية بين الإدارة وأولياء الأمور"},
+      {icon:"event", label:"جدول استقبال الأولياء", desc:"مواعيد استقبال الأولياء من قبل الإدارة"},
+      {icon:"calendar_today", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"عرض التوقيت الأسبوعي للتلاميذ"},
+      {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
+      {icon:"folder", label:"استمارات ووثائق مختلفة للتلاميذ", desc:"تحميل الاستمارات والوثائق المخصصة للتلاميذ"},
+      {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
+      {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
+      {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
+    ],
+    teacher: [
+      {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
+      {icon:"description", label:"قوائم صب النقاط", desc:"إدخال ومتابعة صب النقاط"},
+      {icon:"hourglass_top", label:"الغائبون قبل اليوم", desc:"قائمة التلاميذ الغائبين قبل اليوم"},
+      {icon:"send", label:"إرسال غيابات اليوم", desc:"إرسال غيابات اليوم للإدارة"},
+      {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
+      {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
+      {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
+      {icon:"folder", label:"استمارات ووثائق مختلفة للأساتذة", desc:"تحميل استمارات ووثائق مخصصة للأساتذة"},
+      {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
+      {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
+      {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
+    ],
+    consultation: [
+      {icon:"assignment", label:"القوائم الإسمية", desc:"عرض القوائم الإسمية"},
+      {icon:"hourglass_top", label:"الغائبون قبل اليوم", desc:"قائمة الغائبين قبل اليوم"},
+      {icon:"bar_chart", label:"متابعة غيابات اليوم", desc:"متابعة غيابات اليوم"},
+      {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
+      {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
+      {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات"},
+      {icon:"folder", label:"وثائق خاصة بالإشراف التربوي", desc:"تحميل وثائق خاصة بالإشراف التربوي"},
+      {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات"},
+      {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
+      {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
+    ]
+  };
 
-      div.addEventListener('click', function(){
-        if(item.icon==="call") document.getElementById("contactModal").style.display="flex";
-      });
+  MENUS[type].forEach((item, idx) => {
+    let div = document.createElement("div");
+    let span = document.createElement("span"); 
+    span.className="material-icons"; 
+    span.textContent=item.icon;
+    div.appendChild(span);
+    let label = document.createElement("span"); 
+    label.textContent=item.label; 
+    div.appendChild(label);
 
-      dropdownMenu.appendChild(div);
-      setTimeout(()=> div.classList.add("show"), idx*80);
+    // عرض الوصف عند الضغط
+    div.addEventListener('click', function(){
+      itemDescription.textContent = item.desc || "";
+      if(item.icon==="call") document.getElementById("contactModal").style.display="flex";
+      if(item.icon==="logout") logout();
+      dropdownMenu.style.display = "none"; // إخفاء القائمة بعد الضغط
     });
+
+    dropdownMenu.appendChild(div);
+    setTimeout(()=> div.classList.add("show"), idx*80);
+  });
+}
+
+// إخفاء القائمة عند الضغط في أي مكان خارجها
+document.addEventListener("click", function(event) {
+  if(!dropdownMenu.contains(event.target) && !document.getElementById("menuBtn").contains(event.target)) {
+    dropdownMenu.style.display = "none";
   }
+});
+
 
   function logout() {
     const welcomeText = document.getElementById("welcomeText");
@@ -235,3 +262,4 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
 });
+
