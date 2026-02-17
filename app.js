@@ -349,4 +349,33 @@ document.getElementById("previewToggle").addEventListener("click", () => {
     panel.classList.toggle("fullscreen");
 });
 
+// ==================== دعم السحب باللمس ====================
+header.addEventListener("touchstart", e => {
+    if(panel.classList.contains("fullscreen")) return;
+    isDragging = true;
+    const touch = e.touches[0];
+    startX = touch.clientX;
+    startY = touch.clientY;
+    const rect = panel.getBoundingClientRect();
+    startLeft = rect.left;
+    startTop = rect.top;
+    panel.style.transition = "none";
+});
+
+header.addEventListener("touchmove", e => {
+    if(!isDragging) return;
+    const touch = e.touches[0];
+    let dx = touch.clientX - startX;
+    let dy = touch.clientY - startY;
+    panel.style.left = startLeft + dx + "px";
+    panel.style.top = startTop + dy + "px";
+    e.preventDefault(); // منع تمرير الصفحة أثناء السحب
+}, {passive: false});
+
+header.addEventListener("touchend", e => {
+    if(!isDragging) return;
+    isDragging = false;
+    panel.style.transition = "all 0.3s ease";
+});
+
 
