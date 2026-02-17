@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function openSession(type) {
     const employeeName = employeeSelect.value;
-    loginmodal.classList.remove("show");
+    loginModal.classList.remove("show");
     menuBtn.disabled = false;
     dropdownMenu.style.display = "none";
 
@@ -230,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function () {
     dropdownMenu.style.display = "none";
     menuBtn.disabled = true;
     localStorage.clear();
-    loginmodal.classList.add("show");
+    loginModal.classList.add("show");
     loginModal.classList.remove("expanded");
     userTypeSelect.value = "";
     schoolKeyInput.value = "";
@@ -444,6 +444,7 @@ document.addEventListener("keydown", function(e){
         });
     }
 });
+
 
 
 
