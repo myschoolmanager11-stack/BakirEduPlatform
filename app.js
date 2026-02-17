@@ -378,4 +378,8 @@ header.addEventListener("touchend", e => {
     panel.style.transition = "all 0.3s ease";
 });
 
+.file-preview-panel, .preview-header {
+    touch-action: none; /* منع تمرير الصفحة أثناء السحب */
+}
+
 
