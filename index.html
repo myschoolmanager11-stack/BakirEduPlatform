@@ -9,25 +9,32 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <header class="top-bar">
     <button class="menu-btn" id="menuBtn" onclick="toggleMenu()" disabled>
         <span class="material-icons">menu</span>
     </button>
+
     <div class="app-title">
-        <h2 id="selectedTitle">
-            <span class="material-icons">school</span> فضاء الخدمات – متوسطة الشهيد بكير تركي محمد بن حسن (المدية)
+        <h2>
+            <span class="material-icons">school</span>
+            فضاء الخدمات – متوسطة الشهيد بكير تركي محمد بن حسن (المدية)
         </h2>
         <p class="welcome-text" id="welcomeText">
             مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.
         </p>
     </div>
+
     <div class="dropdown-menu" id="dropdownMenu"></div>
 </header>
 
 <main class="container">
+
+    <!-- نافذة تسجيل الدخول -->
     <div id="loginModal" class="modal">
         <div class="modal-content login-content">
             <h3><span class="material-icons">login</span> تسجيل الدخول</h3>
+
             <div class="login-field">
                 <label>نوع المستخدم</label>
                 <select id="userTypeSelect">
@@ -37,15 +44,17 @@
                     <option value="parent">أولياء الأمور</option>
                 </select>
             </div>
+
             <div id="schoolKeyBlock" style="display:none;">
                 <div class="login-field">
                     <label>رمز المؤسسة الموحد</label>
                     <input type="password" id="schoolKeyInput">
                 </div>
                 <button id="schoolKeyBtn" class="login-btn">
-                    <span class="material-icons btn-icon">arrow_forward</span> متابعة
+                    متابعة
                 </button>
             </div>
+
             <div id="employeeBlock" style="display:none;">
                 <div class="login-field">
                     <label>اختر اسم ولقب الموظف</label>
@@ -54,40 +63,39 @@
                     </select>
                 </div>
             </div>
+
             <div id="authBlock" style="display:none;">
                 <div class="login-field">
                     <label>كلمة المرور</label>
                     <input type="password" id="loginPassword">
                 </div>
             </div>
-            <button id="continueBtn" class="login-btn" style="display:none;">
-                <span class="material-icons btn-icon">arrow_forward</span> متابعة
-            </button>
-            <button id="loginBtn" class="login-btn" style="display:none;">
-                <span class="material-icons btn-icon">login</span> تسجيل الدخول
-            </button>
 
-            <!-- داخل body، بعد <main> وقبل footer -->
-<div id="contactModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <span id="closeContactModal" style="float:left; cursor:pointer; font-size:20px; color:#0197c3;">&times;</span>
-        <h2>☎️ اتصل بنا</h2>
-        <p class="subtitle">يمكنك إرسال استفسارك مباشرة إلى إدارة البوابة.</p>
-
-        <label>البريد الإلكتروني</label>
-        <input type="email" id="contactEmail" placeholder="example@email.com">
-
-        <label>نص الرسالة</label>
-        <textarea id="contactMessage" placeholder="اكتب رسالتك هنا..."></textarea>
-
-        <button id="contactSendBtn">📤 إرسال الرسالة</button>
-        <div id="contactResult"></div>
-    </div>
-</div>
+            <button id="continueBtn" class="login-btn" style="display:none;">متابعة</button>
+            <button id="loginBtn" class="login-btn" style="display:none;">تسجيل الدخول</button>
 
         </div>
     </div>
+
+    <!-- نافذة اتصل بنا (خارج loginModal) -->
+    <div id="contactModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span id="closeContactModal" style="float:left; cursor:pointer; font-size:20px;">&times;</span>
+            <h2>☎️ اتصل بنا</h2>
+
+            <label>البريد الإلكتروني</label>
+            <input type="email" id="contactEmail">
+
+            <label>نص الرسالة</label>
+            <textarea id="contactMessage"></textarea>
+
+            <button id="contactSendBtn">📤 إرسال</button>
+            <div id="contactResult"></div>
+        </div>
+    </div>
+
     <div id="mainContent"></div>
+
 </main>
 
 <footer class="app-footer">
@@ -96,6 +104,10 @@
     </div>
 </footer>
 
-<script src="app.js"></script>
+<!-- ترتيب مهم -->
+<script src="js/app.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/contact.js"></script>
+
 </body>
 </html>
