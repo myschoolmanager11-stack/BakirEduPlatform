@@ -198,6 +198,55 @@ function fillMenu(type) {
     });
 }
 
+  // فتح نافذة اتصل بنا عند الضغط على العنصر
+document.querySelectorAll('#dropdownMenu div').forEach(div => {
+    div.addEventListener('click', function(){
+        if(div.textContent.includes("اتصل بنا")){
+            document.getElementById("contactModal").style.display = "flex";
+        }
+    });
+});
+
+// إغلاق المودال
+document.getElementById("closeContactModal").addEventListener("click", function(){
+    document.getElementById("contactModal").style.display = "none";
+});
+
+// إرسال الرسالة
+document.getElementById("contactSendBtn").addEventListener("click", function(){
+    const email = document.getElementById("contactEmail").value.trim();
+    const message = document.getElementById("contactMessage").value.trim();
+    const contactResult = document.getElementById("contactResult");
+    const ADMIN_EMAIL = "myschoolmanager11@gmail.com";
+
+    if(!email || !/\S+@\S+\.\S+/.test(email)) {
+        contactResult.textContent = "يرجى إدخال بريد إلكتروني صحيح";
+        contactResult.style.color = "red";
+        return;
+    }
+    if(!message) {
+        contactResult.textContent = "يرجى كتابة الرسالة";
+        contactResult.style.color = "red";
+        return;
+    }
+
+    const subject = encodeURIComponent("رسالة من مستخدم البوابة");
+    const body = encodeURIComponent(
+        "السلام عليكم،\n\n" +
+        "تم إرسال هذه الرسالة من خلال نموذج اتصل بنا.\n\n" +
+        "البريد: " + email + "\n" +
+        "الرسالة: " + message + "\n\n" +
+        "تحياتنا."
+    );
+
+    window.location.href = `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
+    contactResult.textContent = "ߓ̠سيتم فتح بريدك لإرسال الرسالة مباشرة";
+    contactResult.style.color = "green";
+
+    document.getElementById("contactEmail").value = "";
+    document.getElementById("contactMessage").value = "";
+});
+
 // استعادة الجلسة عند تحديث الصفحة
 const savedType = localStorage.getItem("userType");
 const savedName = localStorage.getItem("employeeName");
@@ -305,58 +354,5 @@ if(savedType) {
   });
 
 });
-
-// داخل app.js بعد fillMenu
-// فتح نافذة اتصل بنا عند الضغط على العنصر
-document.querySelectorAll('#dropdownMenu div').forEach(div => {
-    div.addEventListener('click', function(){
-        if(div.textContent.includes("اتصل بنا")){
-            document.getElementById("contactModal").style.display = "flex";
-        }
-    });
-});
-
-// إغلاق المودال
-document.getElementById("closeContactModal").addEventListener("click", function(){
-    document.getElementById("contactModal").style.display = "none";
-});
-
-// إرسال الرسالة
-document.getElementById("contactSendBtn").addEventListener("click", function(){
-    const email = document.getElementById("contactEmail").value.trim();
-    const message = document.getElementById("contactMessage").value.trim();
-    const contactResult = document.getElementById("contactResult");
-    const ADMIN_EMAIL = "myschoolmanager11@gmail.com";
-
-    if(!email || !/\S+@\S+\.\S+/.test(email)) {
-        contactResult.textContent = "يرجى إدخال بريد إلكتروني صحيح";
-        contactResult.style.color = "red";
-        return;
-    }
-    if(!message) {
-        contactResult.textContent = "يرجى كتابة الرسالة";
-        contactResult.style.color = "red";
-        return;
-    }
-
-    const subject = encodeURIComponent("رسالة من مستخدم البوابة");
-    const body = encodeURIComponent(
-        "السلام عليكم،\n\n" +
-        "تم إرسال هذه الرسالة من خلال نموذج اتصل بنا.\n\n" +
-        "البريد: " + email + "\n" +
-        "الرسالة: " + message + "\n\n" +
-        "تحياتنا."
-    );
-
-    window.location.href = `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
-    contactResult.textContent = "ߓ̠سيتم فتح بريدك لإرسال الرسالة مباشرة";
-    contactResult.style.color = "green";
-
-    document.getElementById("contactEmail").value = "";
-    document.getElementById("contactMessage").value = "";
-});
-
-
-
 
 
