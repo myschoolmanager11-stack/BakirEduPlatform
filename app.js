@@ -158,25 +158,37 @@ function fillMenu(type) {
   MENUS[type].forEach((item, idx) => {
     let div = document.createElement("div");
     let span = document.createElement("span"); 
-    span.className="material-icons"; 
-    span.textContent=item.icon;
+    span.className = "material-icons"; 
+    span.textContent = item.icon;
     div.appendChild(span);
+
     let label = document.createElement("span"); 
-    label.textContent=item.label; 
+    label.textContent = item.label; 
     div.appendChild(label);
 
     // عرض الوصف عند الضغط
     div.addEventListener('click', function(){
-      itemDescription.textContent = item.desc || "";
-      if(item.icon==="call") document.getElementById("contactModal").style.display="flex";
-      if(item.icon==="logout") logout();
-      dropdownMenu.style.display = "none"; // إخفاء القائمة بعد الضغط
+        itemDescription.textContent = item.desc || "";
+
+        // إخفاء الوصف تلقائيًا بعد 5 ثواني
+        setTimeout(() => {
+            itemDescription.textContent = "";
+        }, 5000);
+
+        // فتح نافذة اتصل بنا
+        if(item.icon === "call") document.getElementById("contactModal").style.display = "flex";
+
+        // تسجيل الخروج
+        if(item.icon === "logout") logout();
+
+        // إخفاء القائمة بعد الضغط
+        dropdownMenu.style.display = "none";
     });
 
     dropdownMenu.appendChild(div);
     setTimeout(()=> div.classList.add("show"), idx*80);
-  });
-}
+});
+
 
 // إخفاء القائمة عند الضغط في أي مكان خارجها
 document.addEventListener("click", function(event) {
@@ -262,4 +274,5 @@ document.addEventListener("click", function(event) {
   }
 
 });
+
 
