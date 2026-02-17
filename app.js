@@ -187,16 +187,39 @@ document.addEventListener("click", function(event) {
 
 
   function logout() {
-    const welcomeText = document.getElementById("welcomeText");
-    welcomeText.textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
-    dropdownMenu.style.display="none";
-    menuBtn.disabled = true;
-    loginModal.style.display="flex";
-    localStorage.clear();
-    employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-    loginPassword.value = "";
-    schoolKeyInput.value = "";
-  }
+
+  // إعادة نص الترحيب
+  const welcomeText = document.getElementById("welcomeText");
+  welcomeText.textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
+
+  // حذف وصف العنصر إن وجد
+  if (itemDescription) itemDescription.textContent = "";
+
+  // إخفاء القائمة
+  dropdownMenu.style.display = "none";
+  menuBtn.disabled = true;
+
+  // مسح التخزين المحلي
+  localStorage.clear();
+
+  // إعادة نموذج الدخول للحالة الافتراضية
+  loginModal.style.display = "flex";
+  loginModal.classList.remove("expanded"); // إذا كنت تستعمل كلاس تكبير
+
+  userTypeSelect.value = "";
+  schoolKeyInput.value = "";
+  loginPassword.value = "";
+
+  employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+
+  // إخفاء كل البلوكات
+  schoolKeyBlock.style.display = "none";
+  employeeBlock.style.display = "none";
+  authBlock.style.display = "none";
+  continueBtn.style.display = "none";
+  loginBtn.style.display = "none";
+}
+
 
   window.toggleMenu = function () {
     dropdownMenu.style.display = (dropdownMenu.style.display==="block") ? "none" : "block";
@@ -262,6 +285,7 @@ document.addEventListener("click", function(event) {
   }
 
 });
+
 
 
 
