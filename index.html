@@ -66,27 +66,27 @@
             <button id="loginBtn" class="login-btn" style="display:none;">
                 <span class="material-icons btn-icon">login</span> تسجيل الدخول
             </button>
-
-            <!-- داخل body، بعد <main> وقبل footer -->
-<div id="contactModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <span id="closeContactModal" style="float:left; cursor:pointer; font-size:20px; color:#0197c3;">&times;</span>
-        <h2>☎️ اتصل بنا</h2>
-        <p class="subtitle">يمكنك إرسال استفسارك مباشرة إلى إدارة البوابة.</p>
-
-        <label>البريد الإلكتروني</label>
-        <input type="email" id="contactEmail" placeholder="example@email.com">
-
-        <label>نص الرسالة</label>
-        <textarea id="contactMessage" placeholder="اكتب رسالتك هنا..."></textarea>
-
-        <button id="contactSendBtn">ߓĠإرسال الرسالة</button>
-        <div id="contactResult"></div>
-    </div>
-</div>
-
         </div>
     </div>
+
+    <!-- مودال اتصل بنا -->
+    <div id="contactModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span id="closeContactModal" style="float:left; cursor:pointer; font-size:20px; color:#0197c3;">&times;</span>
+            <h2>☎️ اتصل بنا</h2>
+            <p class="subtitle">يمكنك إرسال استفسارك مباشرة إلى إدارة البوابة.</p>
+
+            <label>البريد الإلكتروني</label>
+            <input type="email" id="contactEmail" placeholder="example@email.com">
+
+            <label>نص الرسالة</label>
+            <textarea id="contactMessage" placeholder="اكتب رسالتك هنا..."></textarea>
+
+            <button id="contactSendBtn">إرسال الرسالة</button>
+            <div id="contactResult"></div>
+        </div>
+    </div>
+
     <div id="mainContent"></div>
 </main>
 
