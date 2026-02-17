@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function openSession(type) {
     const employeeName = employeeSelect.value;
-    loginModal.style.display = "none";
+    loginmodal.classList.remove("show");
     menuBtn.disabled = false;
     dropdownMenu.style.display = "none";
 
@@ -230,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function () {
     dropdownMenu.style.display = "none";
     menuBtn.disabled = true;
     localStorage.clear();
-    loginModal.style.display = "flex";
+    loginmodal.classList.add("show");
     loginModal.classList.remove("expanded");
     userTypeSelect.value = "";
     schoolKeyInput.value = "";
@@ -423,6 +423,26 @@ header.addEventListener("touchend", e => {
 // إغلاق مودال الحضور
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
+});
+
+// ==================== إغلاق المودالات باحتراف ====================
+
+// إغلاق عند الضغط خارج المحتوى
+document.querySelectorAll(".modal").forEach(modal => {
+    modal.addEventListener("click", function(e){
+        if(e.target === modal){
+            modal.classList.remove("show");
+        }
+    });
+});
+
+// إغلاق عند الضغط على ESC
+document.addEventListener("keydown", function(e){
+    if(e.key === "Escape"){
+        document.querySelectorAll(".modal.show").forEach(modal=>{
+            modal.classList.remove("show");
+        });
+    }
 });
 
 
