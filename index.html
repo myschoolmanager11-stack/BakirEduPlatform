@@ -180,5 +180,21 @@
 
 <script src="app.js"></script>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    fetch("config.json")
+        .then(res => res.json())
+        .then(data => {
+            window.CONFIG = data;
+            initApp();
+        })
+        .catch(error => {
+            console.error("فشل تحميل الإعدادات:", error);
+        });
+
+});
+</script>
+
 </body>
 </html>
