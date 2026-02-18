@@ -259,25 +259,54 @@ document.addEventListener("DOMContentLoaded", function () {
 
   continueBtn.addEventListener("click", function () { openSession("parent"); });
 
-  schoolKeyBtn.addEventListener("click", async function () {
+ schoolKeyBtn.addEventListener("click", async function () {
     if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
-    await loadSchoolKey();
-    if(schoolKeyInput.value !== SCHOOL_KEY) return alert("رمز المؤسسة غير صحيح");
-    schoolKeyBlock.style.display="none";
-    employeeBlock.style.display="block";
-    loadEmployeeList(userTypeSelect.value);
-    await loadPasswords();
-  });
+
+    // إظهار سبينر التحميل
+    const spinner = document.getElementById("loadingSpinner");
+    spinner.style.display = "block";
+
+    try {
+        await loadSchoolKey();
+        if(schoolKeyInput.value !== SCHOOL_KEY) {
+            spinner.style.display = "none";
+            return alert("رمز المؤسسة غير صحيح");
+        }
+
+        schoolKeyBlock.style.display="none";
+        employeeBlock.style.display="block";
+        await loadEmployeeList(userTypeSelect.value);
+        await loadPasswords();
+
+    } catch(err) {
+        console.error(err);
+        alert("حدث خطأ أثناء تحميل البيانات");
+    } finally {
+        spinner.style.display = "none"; // إخفاؤه بعد الانتهاء
+    }
+});
+
 
   employeeSelect.addEventListener("change", function() {
     if(this.value!=="") { authBlock.style.display="block"; loginBtn.style.display="flex"; }
   });
 
-  loginBtn.addEventListener("click", function() {
+ loginBtn.addEventListener("click", function() {
     if(!loginPassword.value) return alert("أدخل كلمة المرور");
-    if(!PASSWORDS.includes(loginPassword.value)) return alert("كلمة المرور غير صحيحة");
-    openSession(userTypeSelect.value);
-  });
+
+    const spinner = document.getElementById("loadingSpinner");
+    spinner.style.display = "block";
+
+    setTimeout(() => {  // محاكاة الانتظار لوظيفة async
+        if(!PASSWORDS.includes(loginPassword.value)) {
+            spinner.style.display = "none";
+            return alert("كلمة المرور غير صحيحة");
+        }
+        openSession(userTypeSelect.value);
+        spinner.style.display = "none";
+    }, 300); // 300ms مجرد مثال
+});
+
 
   document.getElementById("closeContactModal").addEventListener("click", function(){
     document.getElementById("contactModal").style.display="none";
@@ -432,3 +461,4 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
