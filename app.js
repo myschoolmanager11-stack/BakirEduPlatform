@@ -336,58 +336,119 @@ function openFilePreview(fileId) {
   setTimeout(() => panel.style.opacity = 1, 50);
 }
 
-// ======= ربط أزرار المعاينة =======
-const previewClose = document.getElementById("previewClose");
-const previewDownload = document.getElementById("previewDownload");
-const previewOpen = document.getElementById("previewOpen");
+// ==================== معاينة الملفات ====================
+function openFilePreview(fileId) {
+  const panel = document.getElementById("filePreviewPanel");
+  const frame = document.getElementById("filePreviewFrame");
+  const previewDownload = document.getElementById("previewDownload");
+  const previewOpen = document.getElementById("previewOpen");
 
-previewClose.addEventListener("click", () => {
-    panel.style.display = "none";
-});
+  frame.style.display = "none";
+  panel.style.opacity = 0;
+  panel.style.display = "flex";
 
-previewDownload.addEventListener("click", () => {
-    window.open(previewDownload.href, "_blank");
-});
+  const url = `https://drive.google.com/file/d/${fileId}/preview`;
+  frame.src = url;
+  frame.onload = () => frame.style.display = "block";
 
-previewOpen.addEventListener("click", () => {
-    window.open(previewOpen.href, "_blank");
-});
+  previewDownload.href = `https://drive.google.com/uc?id=${fileId}&export=download`;
+  previewOpen.href = url;
+  previewOpen.target = "_blank";
 
-// ==================== سحب وتحريك المعاينة ====================
-const panel = document.getElementById("filePreviewPanel");
-const header = panel.querySelector(".preview-header");
-let isDragging = false, startX, startY, startLeft, startTop;
+  setTimeout(() => panel.style.opacity = 1, 50);
+}
 
-header.addEventListener("mousedown", e => {
-    if(panel.classList.contains("fullscreen")) return; // لا يسمح بالسحب في fullscreen
-    isDragging = true;
-    startX = e.clientX;
-    startY = e.clientY;
-    const rect = panel.getBoundingClientRect();
-    startLeft = rect.left;
-    startTop = rect.top;
-    panel.style.transition = "none";
-    document.body.style.userSelect = "none"; // منع تحديد النص أثناء السحب
-});
 
-document.addEventListener("mousemove", e => {
-    if(!isDragging) return;
-    let dx = e.clientX - startX;
-    let dy = e.clientY - startY;
-    panel.style.left = startLeft + dx + "px";
-    panel.style.top = startTop + dy + "px";
-});
+// ==================== تفعيل عناصر المعاينة بعد تحميل الصفحة ====================
+document.addEventListener("DOMContentLoaded", function(){
 
-document.addEventListener("mouseup", e => {
-    if(!isDragging) return;
-    isDragging = false;
-    panel.style.transition = "all 0.3s ease";
-    document.body.style.userSelect = ""; // إعادة تمكين تحديد النص
-});
+  const panel = document.getElementById("filePreviewPanel");
+  const header = panel.querySelector(".preview-header");
 
-// ==================== زر تكبير/تصغير ====================
-document.getElementById("previewToggle").addEventListener("click", () => {
-    panel.classList.toggle("fullscreen");
+  const previewClose = document.getElementById("previewClose");
+  const previewDownload = document.getElementById("previewDownload");
+  const previewOpen = document.getElementById("previewOpen");
+  const previewToggle = document.getElementById("previewToggle");
+
+  // زر الإغلاق
+  previewClose.addEventListener("click", () => {
+      panel.style.display = "none";
+  });
+
+  // زر التحميل
+  previewDownload.addEventListener("click", () => {
+      window.open(previewDownload.href, "_blank");
+  });
+
+  // زر فتح في تبويب جديد
+  previewOpen.addEventListener("click", () => {
+      window.open(previewOpen.href, "_blank");
+  });
+
+  // ==================== السحب والتحريك ====================
+  let isDragging = false, startX, startY, startLeft, startTop;
+
+  header.addEventListener("mousedown", e => {
+      if(panel.classList.contains("fullscreen")) return;
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      const rect = panel.getBoundingClientRect();
+      startLeft = rect.left;
+      startTop = rect.top;
+      panel.style.transition = "none";
+      document.body.style.userSelect = "none";
+  });
+
+  document.addEventListener("mousemove", e => {
+      if(!isDragging) return;
+      let dx = e.clientX - startX;
+      let dy = e.clientY - startY;
+      panel.style.left = startLeft + dx + "px";
+      panel.style.top = startTop + dy + "px";
+  });
+
+  document.addEventListener("mouseup", () => {
+      if(!isDragging) return;
+      isDragging = false;
+      panel.style.transition = "all 0.3s ease";
+      document.body.style.userSelect = "";
+  });
+
+  // ==================== دعم اللمس ====================
+  header.addEventListener("touchstart", e => {
+      if(panel.classList.contains("fullscreen")) return;
+      isDragging = true;
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      const rect = panel.getBoundingClientRect();
+      startLeft = rect.left;
+      startTop = rect.top;
+      panel.style.transition = "none";
+  });
+
+  header.addEventListener("touchmove", e => {
+      if(!isDragging) return;
+      const touch = e.touches[0];
+      let dx = touch.clientX - startX;
+      let dy = touch.clientY - startY;
+      panel.style.left = startLeft + dx + "px";
+      panel.style.top = startTop + dy + "px";
+      e.preventDefault();
+  }, {passive: false});
+
+  header.addEventListener("touchend", () => {
+      if(!isDragging) return;
+      isDragging = false;
+      panel.style.transition = "all 0.3s ease";
+  });
+
+  // ==================== تكبير / تصغير ====================
+  previewToggle.addEventListener("click", () => {
+      panel.classList.toggle("fullscreen");
+  });
+
 });
 
 // ==================== دعم السحب باللمس ====================
@@ -424,6 +485,7 @@ header.addEventListener("touchend", e => {
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
