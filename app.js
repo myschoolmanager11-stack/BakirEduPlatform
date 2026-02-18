@@ -1,21 +1,3 @@
-const FILE_ITEMS = {
-  "جدول توقيت الأستاذ": CONFIG.Teacher_Timetable_File_ID,
-  "جدول استقبال الأولياء": CONFIG.Reception_Schedule_File_ID,
-  "جدول التوقيت الأسبوعي للتلاميذ": CONFIG.Weekly_Students_Timetable_File_ID,
-  "رزنامة الفروض والاختبارات": CONFIG.Exams_Calendar_File_ID,
-  "استمارات ووثائق مختلفة للتلاميذ": CONFIG.Students_Documents_File_ID,
-  "استمارات ووثائق مختلفة للأساتذة": CONFIG.Teacher_Documents_File_ID,
-  "استمارات ووثائق مختلفة للإشراف التربوي": CONFIG.Supervisory_Documents_File_ID,
-  "إعلانات": CONFIG.Announcements_File_ID
-};
-
-const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2X2ku8gwIIq5_nYjEykekNk27IiTzNFRfF5fUhzwnczdZKf1ilUXssxfC4o-KB0tE/exec";
-
-let currentFileURL = null;
-let PASSWORDS = [];
-let SCHOOL_KEY = "";
-
-// ==================== INIT APP ====================
 async function initApp() {
 
   // ==================== عناصر الصفحة ====================
@@ -48,6 +30,11 @@ async function initApp() {
   itemDescription.style.minHeight = "18px";
   welcomeText.insertAdjacentElement('afterend', itemDescription);
 
+  // ==================== Flags ====================
+  let passwordsLoaded = false;
+  let SCHOOL_KEY = "";
+  let PASSWORDS = [];
+
   // ==================== FUNCTIONS ====================
   function getFileLink(fileId) {
     return `${GAS_SCRIPT_URL}?id=${fileId}`;
@@ -65,6 +52,7 @@ async function initApp() {
       .split("\n")
       .map(x => x.trim())
       .filter(x => x);
+    passwordsLoaded = true;
   }
 
   function loadEmployeeList(type) {
@@ -72,7 +60,7 @@ async function initApp() {
     employeeSelect.disabled = true;
     employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة ${type==="teacher"?"الأساتذة":"الإشراف التربوي"}</option>`;
 
-    fetch(getFileLink(fileId))
+    return fetch(getFileLink(fileId))
       .then(r => r.text())
       .then(text => {
         let list = text.replace(/\r/g, "").split("\n").map(x => x.trim()).filter(x => x);
@@ -208,10 +196,12 @@ async function initApp() {
     if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
     await loadSchoolKey();
     if(schoolKeyInput.value !== SCHOOL_KEY) return alert("رمز المؤسسة غير صحيح");
-    schoolKeyBlock.style.display="none";
-    employeeBlock.style.display="block";
-    loadEmployeeList(userTypeSelect.value);
-    await loadPasswords();
+
+    schoolKeyBlock.style.display = "none";
+    employeeBlock.style.display = "block";
+
+    await loadEmployeeList(userTypeSelect.value); // انتظر تحميل القائمة
+    await loadPasswords(); // انتظر تحميل كلمات المرور
   });
 
   employeeSelect.addEventListener("change", function() {
@@ -219,8 +209,11 @@ async function initApp() {
   });
 
   loginBtn.addEventListener("click", function() {
+    if(!employeeSelect.value) return alert("اختر الاسم واللقب");
     if(!loginPassword.value) return alert("أدخل كلمة المرور");
+    if(!passwordsLoaded) return alert("جارٍ تحميل كلمات المرور، يرجى الانتظار");
     if(!PASSWORDS.includes(loginPassword.value)) return alert("كلمة المرور غير صحيحة");
+
     openSession(userTypeSelect.value);
   });
 
@@ -360,3 +353,4 @@ async function initApp() {
 
 // ==================== DOM READY ====================
 document.addEventListener("DOMContentLoaded", initApp);
+
