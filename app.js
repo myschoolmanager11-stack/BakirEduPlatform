@@ -55,25 +55,24 @@ async function initApp() {
     passwordsLoaded = true;
   }
 
-  function loadEmployeeList(type) {
-    const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
-    employeeSelect.disabled = true;
-    employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة ${type==="teacher"?"الأساتذة":"الإشراف التربوي"}</option>`;
-
-    return fetch(getFileLink(fileId))
-      .then(r => r.text())
-      .then(text => {
-        let list = text.replace(/\r/g, "").split("\n").map(x => x.trim()).filter(x => x);
-        employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-        list.forEach(e => employeeSelect.innerHTML += `<option value="${e}">${e}</option>`);
-        employeeSelect.disabled = false;
-      })
-      .catch(error => {
-        employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
-        console.error("خطأ في تحميل القائمة:", error);
-        employeeSelect.disabled = false;
-      });
+ async function loadEmployeeList(type) {
+  const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
+  employeeSelect.disabled = true;
+  employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة ${type==="teacher"?"الأساتذة":"الإشراف التربوي"}</option>`;
+  
+  try {
+    const r = await fetch(getFileLink(fileId));
+    const text = await r.text();
+    let list = text.replace(/\r/g, "").split("\n").map(x => x.trim()).filter(x => x);
+    employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+    list.forEach(e => employeeSelect.innerHTML += `<option value="${e}">${e}</option>`);
+    employeeSelect.disabled = false;
+  } catch(error) {
+    employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
+    console.error("خطأ في تحميل القائمة:", error);
+    employeeSelect.disabled = false;
   }
+}
 
   function openSession(type) {
     const employeeName = employeeSelect.value;
@@ -192,17 +191,18 @@ async function initApp() {
 
   continueBtn.addEventListener("click", function () { openSession("parent"); });
 
-  schoolKeyBtn.addEventListener("click", async function () {
-    if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
-    await loadSchoolKey();
-    if(schoolKeyInput.value !== SCHOOL_KEY) return alert("رمز المؤسسة غير صحيح");
+ schoolKeyBtn.addEventListener("click", async function () {
+  if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
+  await loadSchoolKey();
+  if(schoolKeyInput.value !== SCHOOL_KEY) return alert("رمز المؤسسة غير صحيح");
 
-    schoolKeyBlock.style.display = "none";
-    employeeBlock.style.display = "block";
+  schoolKeyBlock.style.display = "none";
+  employeeBlock.style.display = "block";
 
-    await loadEmployeeList(userTypeSelect.value); // انتظر تحميل القائمة
-    await loadPasswords(); // انتظر تحميل كلمات المرور
-  });
+  // انتظار تحميل القائمة والكلمات
+  await loadEmployeeList(userTypeSelect.value); // الآن تنتظر اكتمال التحميل
+  await loadPasswords();
+});
 
   employeeSelect.addEventListener("change", function() {
     if(this.value!=="") { authBlock.style.display="block"; loginBtn.style.display="flex"; }
@@ -353,4 +353,5 @@ async function initApp() {
 
 // ==================== DOM READY ====================
 document.addEventListener("DOMContentLoaded", initApp);
+
 
