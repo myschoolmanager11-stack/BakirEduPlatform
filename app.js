@@ -54,7 +54,8 @@ let SCHOOL_KEY = "";
 
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
-  // عناصر الصفحة
+
+ // عناصر الصفحة
   const userTypeSelect = document.getElementById("userTypeSelect");
   const employeeBlock = document.getElementById("employeeBlock");
   const employeeSelect = document.getElementById("employeeSelect");
@@ -69,7 +70,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const schoolKeyInput = document.getElementById("schoolKeyInput");
   const welcomeText = document.getElementById("welcomeText");
   const schoolKeyBtn = document.getElementById("schoolKeyBtn");
-  
+
+ // ==================== تثبيت عرض المودال ====================
+  loginModal.style.display = "flex";
+  loginModal.style.zIndex = "5000";
+  menuBtn.disabled = true;
+ 
   // div وصف العنصر
   let itemDescription = document.createElement("div");
   itemDescription.id = "itemDescription";
@@ -314,35 +320,6 @@ function openFilePreview(fileId) {
   const previewDownload = document.getElementById("previewDownload");
   const previewOpen = document.getElementById("previewOpen");
 
-  // إعادة ضبط الإطار
-  frame.style.display = "none";
-  panel.style.opacity = 0;
-  panel.style.display = "flex";
-
-  // رابط المعاينة والتحميل
-  const url = `https://drive.google.com/file/d/${fileId}/preview`;
-  frame.src = url;
-  frame.onload = () => frame.style.display = "block";
-
-  previewDownload.href = `https://drive.google.com/uc?id=${fileId}&export=download`;
-  previewOpen.href = url;
-  previewOpen.target = "_blank";
-
-  // ضبط المؤشرات عند الوقوف بالماوس
-  [previewDownload, previewOpen].forEach(btn => {
-    btn.style.cursor = "default";
-  });
-
-  setTimeout(() => panel.style.opacity = 1, 50);
-}
-
-// ==================== معاينة الملفات ====================
-function openFilePreview(fileId) {
-  const panel = document.getElementById("filePreviewPanel");
-  const frame = document.getElementById("filePreviewFrame");
-  const previewDownload = document.getElementById("previewDownload");
-  const previewOpen = document.getElementById("previewOpen");
-
   frame.style.display = "none";
   panel.style.opacity = 0;
   panel.style.display = "flex";
@@ -451,40 +428,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
 });
 
-// ==================== دعم السحب باللمس ====================
-header.addEventListener("touchstart", e => {
-    if(panel.classList.contains("fullscreen")) return;
-    isDragging = true;
-    const touch = e.touches[0];
-    startX = touch.clientX;
-    startY = touch.clientY;
-    const rect = panel.getBoundingClientRect();
-    startLeft = rect.left;
-    startTop = rect.top;
-    panel.style.transition = "none";
-});
-
-header.addEventListener("touchmove", e => {
-    if(!isDragging) return;
-    const touch = e.touches[0];
-    let dx = touch.clientX - startX;
-    let dy = touch.clientY - startY;
-    panel.style.left = startLeft + dx + "px";
-    panel.style.top = startTop + dy + "px";
-    e.preventDefault(); // منع تمرير الصفحة أثناء السحب
-}, {passive: false});
-
-header.addEventListener("touchend", e => {
-    if(!isDragging) return;
-    isDragging = false;
-    panel.style.transition = "all 0.3s ease";
-});
-
-
 // إغلاق مودال الحضور
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
