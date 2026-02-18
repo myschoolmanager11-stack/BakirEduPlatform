@@ -34,6 +34,62 @@ document.addEventListener("DOMContentLoaded", function () {
   const welcomeText = document.getElementById("welcomeText");
   const schoolKeyBtn = document.getElementById("schoolKeyBtn");
 
+
+
+function initApp() {
+
+    hideLoader();
+    document.getElementById("app").style.display = "block";
+
+    const loginBtn = document.getElementById("loginBtn");
+
+    loginBtn.addEventListener("click", function () {
+
+        const type = document.getElementById("userType").value;
+        const name = document.getElementById("employeeName").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        if (!name || !password) {
+            alert("يرجى ملء جميع الحقول");
+            return;
+        }
+
+        let validUsers = type === "teacher"
+            ? CONFIG.teachers
+            : CONFIG.admins;
+
+        if (validUsers[name] && validUsers[name] === password) {
+
+            generateSession();
+            alert("تم تسجيل الدخول بنجاح");
+
+        } else {
+            alert("بيانات غير صحيحة");
+        }
+
+    });
+}
+
+function generateSession() {
+    const token = btoa(Date.now() + Math.random().toString());
+    sessionStorage.setItem("sessionToken", token);
+}
+
+function hideLoader() {
+    document.getElementById("loader").style.display = "none";
+}
+
+
+
+
+
+
+
+
+
+
+
+  
  // ==================== تثبيت عرض المودال ====================
   loginModal.style.display = "flex";
   loginModal.style.zIndex = "5000";
@@ -395,6 +451,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
