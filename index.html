@@ -183,14 +183,16 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
+    // تحميل config.json وحماية البيانات
     fetch("config.json")
         .then(res => res.json())
         .then(data => {
-            window.CONFIG = data;
-            initApp();
+            window.CONFIG = data; // الآن CONFIG جاهز للاستخدام
+            initApp();           // شغّل التطبيق بعد التحميل
         })
         .catch(error => {
             console.error("فشل تحميل الإعدادات:", error);
+            alert("تعذر تحميل إعدادات النظام، حاول لاحقًا.");
         });
 
 });
