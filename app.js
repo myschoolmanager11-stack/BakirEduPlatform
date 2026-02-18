@@ -1,5 +1,4 @@
 async function initApp() {
-
   // ==================== عناصر الصفحة ====================
   const userTypeSelect = document.getElementById("userTypeSelect");
   const employeeBlock = document.getElementById("employeeBlock");
@@ -14,14 +13,13 @@ async function initApp() {
   const schoolKeyBlock = document.getElementById("schoolKeyBlock");
   const schoolKeyInput = document.getElementById("schoolKeyInput");
   const welcomeText = document.getElementById("welcomeText");
-  const schoolKeyBtn = document.getElementById("schoolKeyBtn");
 
-  // ==================== عرض المودال ====================
+  const FILE_ITEMS = CONFIG.FILE_ITEMS || {}; // إذا كانت هناك ملفات للمعاينة
+
   loginModal.style.display = "flex";
   loginModal.style.zIndex = "5000";
   menuBtn.disabled = true;
 
-  // div لوصف العنصر
   let itemDescription = document.createElement("div");
   itemDescription.id = "itemDescription";
   itemDescription.style.fontSize = "13px";
@@ -30,10 +28,10 @@ async function initApp() {
   itemDescription.style.minHeight = "18px";
   welcomeText.insertAdjacentElement('afterend', itemDescription);
 
-  // ==================== Flags ====================
-  let passwordsLoaded = false;
+  // ==================== Flags & Storage ====================
   let SCHOOL_KEY = "";
   let PASSWORDS = [];
+  let passwordsLoaded = false;
 
   // ==================== FUNCTIONS ====================
   function getFileLink(fileId) {
@@ -55,24 +53,22 @@ async function initApp() {
     passwordsLoaded = true;
   }
 
- async function loadEmployeeList(type) {
-  const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
-  employeeSelect.disabled = true;
-  employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة ${type==="teacher"?"الأساتذة":"الإشراف التربوي"}</option>`;
-  
-  try {
-    const r = await fetch(getFileLink(fileId));
-    const text = await r.text();
-    let list = text.replace(/\r/g, "").split("\n").map(x => x.trim()).filter(x => x);
-    employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-    list.forEach(e => employeeSelect.innerHTML += `<option value="${e}">${e}</option>`);
-    employeeSelect.disabled = false;
-  } catch(error) {
-    employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
-    console.error("خطأ في تحميل القائمة:", error);
-    employeeSelect.disabled = false;
+  async function loadEmployeeList(type) {
+    const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
+    employeeSelect.disabled = true;
+    employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة ${type==="teacher"?"الأساتذة":"الإشراف التربوي"}</option>`;
+    try {
+      const r = await fetch(getFileLink(fileId));
+      const list = (await r.text()).replace(/\r/g, "").split("\n").map(x => x.trim()).filter(x => x);
+      employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+      list.forEach(e => employeeSelect.innerHTML += `<option value="${e}">${e}</option>`);
+      employeeSelect.disabled = false;
+    } catch (error) {
+      employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
+      console.error("خطأ في تحميل القائمة:", error);
+      employeeSelect.disabled = false;
+    }
   }
-}
 
   function openSession(type) {
     const employeeName = employeeSelect.value;
@@ -178,31 +174,22 @@ async function initApp() {
     document.getElementById("filePreviewPanel").style.display="none";
   }
 
-  window.toggleMenu = function () {
-    dropdownMenu.style.display = (dropdownMenu.style.display==="block") ? "none" : "block";
-  };
+  // ==================== DOM Events ====================
+  continueBtn.addEventListener("click", async function() {
+    const type = userTypeSelect.value;
+    if(!type) return alert("اختر نوع المستخدم");
 
-  // ==================== ربط الأحداث ====================
-  userTypeSelect.addEventListener("change", function () {
-    employeeBlock.style.display = authBlock.style.display = continueBtn.style.display = loginBtn.style.display = schoolKeyBlock.style.display = "none";
-    if(this.value==="parent") continueBtn.style.display="flex";
-    if(this.value==="teacher" || this.value==="consultation") schoolKeyBlock.style.display="block";
+    if(type === "parent") { openSession("parent"); return; }
+
+    if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
+    await loadSchoolKey();
+    if(schoolKeyInput.value !== SCHOOL_KEY) return alert("رمز المؤسسة غير صحيح");
+
+    schoolKeyBlock.style.display = "none";
+    employeeBlock.style.display = "block";
+    await loadEmployeeList(type);
+    await loadPasswords();
   });
-
-  continueBtn.addEventListener("click", function () { openSession("parent"); });
-
- schoolKeyBtn.addEventListener("click", async function () {
-  if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
-  await loadSchoolKey();
-  if(schoolKeyInput.value !== SCHOOL_KEY) return alert("رمز المؤسسة غير صحيح");
-
-  schoolKeyBlock.style.display = "none";
-  employeeBlock.style.display = "block";
-
-  // انتظار تحميل القائمة والكلمات
-  await loadEmployeeList(userTypeSelect.value); // الآن تنتظر اكتمال التحميل
-  await loadPasswords();
-});
 
   employeeSelect.addEventListener("change", function() {
     if(this.value!=="") { authBlock.style.display="block"; loginBtn.style.display="flex"; }
@@ -213,29 +200,7 @@ async function initApp() {
     if(!loginPassword.value) return alert("أدخل كلمة المرور");
     if(!passwordsLoaded) return alert("جارٍ تحميل كلمات المرور، يرجى الانتظار");
     if(!PASSWORDS.includes(loginPassword.value)) return alert("كلمة المرور غير صحيحة");
-
     openSession(userTypeSelect.value);
-  });
-
-  document.getElementById("closeContactModal").addEventListener("click", function(){
-    document.getElementById("contactModal").style.display="none";
-  });
-
-  document.getElementById("contactSendBtn").addEventListener("click", function(){
-    const email = document.getElementById("contactEmail").value.trim();
-    const message = document.getElementById("contactMessage").value.trim();
-    const contactResult = document.getElementById("contactResult");
-    const ADMIN_EMAIL = "myschoolmanager11@gmail.com";
-
-    if(!email || !/\S+@\S+\.\S+/.test(email)) { contactResult.textContent="يرجى إدخال بريد إلكتروني صحيح"; contactResult.style.color="red"; return; }
-    if(!message) { contactResult.textContent="يرجى كتابة الرسالة"; contactResult.style.color="red"; return; }
-
-    const subject = encodeURIComponent("رسالة من مستخدم البوابة");
-    const body = encodeURIComponent(`السلام عليكم،\n\nتم إرسال هذه الرسالة من خلال نموذج اتصل بنا.\n\nالبريد: ${email}\nالرسالة: ${message}\n\nتحياتنا.`);
-    window.location.href = `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
-    contactResult.textContent="سيتم فتح بريدك لإرسال الرسالة مباشرة"; contactResult.style.color="green";
-    document.getElementById("contactEmail").value = "";
-    document.getElementById("contactMessage").value = "";
   });
 
   // ==================== استرجاع الجلسة ====================
@@ -271,7 +236,7 @@ async function initApp() {
     setTimeout(() => panel.style.opacity = 1, 50);
   }
 
-  // ==================== عناصر المعاينة ====================
+  // ==================== دعم معاينة الملفات ====================
   const panel = document.getElementById("filePreviewPanel");
   const header = panel.querySelector(".preview-header");
   const previewClose = document.getElementById("previewClose");
@@ -282,76 +247,67 @@ async function initApp() {
   previewClose.addEventListener("click", () => panel.style.display = "none");
   previewDownload.addEventListener("click", () => window.open(previewDownload.href, "_blank"));
   previewOpen.addEventListener("click", () => window.open(previewOpen.href, "_blank"));
+  previewToggle.addEventListener("click", () => panel.classList.toggle("fullscreen"));
 
-  // ==================== سحب وتحريك المعاينة ====================
+  // سحب وتحريك المعاينة
   let isDragging = false, startX, startY, startLeft, startTop;
-
   header.addEventListener("mousedown", e => {
-      if(panel.classList.contains("fullscreen")) return;
-      isDragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      const rect = panel.getBoundingClientRect();
-      startLeft = rect.left;
-      startTop = rect.top;
-      panel.style.transition = "none";
-      document.body.style.userSelect = "none";
+    if(panel.classList.contains("fullscreen")) return;
+    isDragging = true; startX = e.clientX; startY = e.clientY;
+    const rect = panel.getBoundingClientRect();
+    startLeft = rect.left; startTop = rect.top;
+    panel.style.transition = "none"; document.body.style.userSelect = "none";
   });
-
   document.addEventListener("mousemove", e => {
-      if(!isDragging) return;
-      let dx = e.clientX - startX;
-      let dy = e.clientY - startY;
-      panel.style.left = startLeft + dx + "px";
-      panel.style.top = startTop + dy + "px";
+    if(!isDragging) return;
+    let dx = e.clientX - startX; let dy = e.clientY - startY;
+    panel.style.left = startLeft + dx + "px";
+    panel.style.top = startTop + dy + "px";
   });
-
-  document.addEventListener("mouseup", () => {
-      if(!isDragging) return;
-      isDragging = false;
-      panel.style.transition = "all 0.3s ease";
-      document.body.style.userSelect = "";
-  });
+  document.addEventListener("mouseup", () => { if(isDragging) { isDragging=false; panel.style.transition="all 0.3s ease"; document.body.style.userSelect=""; } });
 
   // دعم اللمس
   header.addEventListener("touchstart", e => {
-      if(panel.classList.contains("fullscreen")) return;
-      isDragging = true;
-      const touch = e.touches[0];
-      startX = touch.clientX;
-      startY = touch.clientY;
-      const rect = panel.getBoundingClientRect();
-      startLeft = rect.left;
-      startTop = rect.top;
-      panel.style.transition = "none";
+    if(panel.classList.contains("fullscreen")) return;
+    isDragging = true;
+    const touch = e.touches[0];
+    startX = touch.clientX; startY = touch.clientY;
+    const rect = panel.getBoundingClientRect();
+    startLeft = rect.left; startTop = rect.top;
+    panel.style.transition = "none";
   });
-
   header.addEventListener("touchmove", e => {
-      if(!isDragging) return;
-      const touch = e.touches[0];
-      let dx = touch.clientX - startX;
-      let dy = touch.clientY - startY;
-      panel.style.left = startLeft + dx + "px";
-      panel.style.top = startTop + dy + "px";
-      e.preventDefault();
-  }, {passive: false});
-
-  header.addEventListener("touchend", () => {
-      if(!isDragging) return;
-      isDragging = false;
-      panel.style.transition = "all 0.3s ease";
-  });
-
-  previewToggle.addEventListener("click", () => panel.classList.toggle("fullscreen"));
+    if(!isDragging) return;
+    const touch = e.touches[0];
+    let dx = touch.clientX - startX; let dy = touch.clientY - startY;
+    panel.style.left = startLeft + dx + "px";
+    panel.style.top = startTop + dy + "px";
+    e.preventDefault();
+  }, {passive:false});
+  header.addEventListener("touchend", () => { if(isDragging) { isDragging=false; panel.style.transition="all 0.3s ease"; } });
 
   // إغلاق مودال الحضور
-  document.getElementById("closeAttendanceModal").addEventListener("click", function(){
-    document.getElementById("attendanceModal").style.display = "none";
+  document.getElementById("closeAttendanceModal").addEventListener("click", () => document.getElementById("attendanceModal").style.display="none");
+
+  // مودال الاتصال
+  document.getElementById("closeContactModal").addEventListener("click", () => document.getElementById("contactModal").style.display="none");
+  document.getElementById("contactSendBtn").addEventListener("click", function(){
+    const email = document.getElementById("contactEmail").value.trim();
+    const message = document.getElementById("contactMessage").value.trim();
+    const contactResult = document.getElementById("contactResult");
+    const ADMIN_EMAIL = "myschoolmanager11@gmail.com";
+
+    if(!email || !/\S+@\S+\.\S+/.test(email)) { contactResult.textContent="يرجى إدخال بريد إلكتروني صحيح"; contactResult.style.color="red"; return; }
+    if(!message) { contactResult.textContent="يرجى كتابة الرسالة"; contactResult.style.color="red"; return; }
+
+    const subject = encodeURIComponent("رسالة من مستخدم البوابة");
+    const body = encodeURIComponent(`السلام عليكم،\n\nتم إرسال هذه الرسالة من خلال نموذج اتصل بنا.\n\nالبريد: ${email}\nالرسالة: ${message}\n\nتحياتنا.`);
+    window.location.href = `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
+    contactResult.textContent="سيتم فتح بريدك لإرسال الرسالة مباشرة"; contactResult.style.color="green";
+    document.getElementById("contactEmail").value = "";
+    document.getElementById("contactMessage").value = "";
   });
 
 }
 
-// ==================== DOM READY ====================
 document.addEventListener("DOMContentLoaded", initApp);
-
-
