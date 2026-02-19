@@ -56,10 +56,11 @@ body {
 .modal {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.45);
+    background: rgba(0,0,0,0.55);
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 5000;
 }
 
 .modal-content {
@@ -67,9 +68,11 @@ body {
     padding: 25px;
     border-radius: 16px;
     width: 380px;
-    max-width: 100%;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    max-width: 95%;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease;
 }
+
 
 .login-field { margin-bottom: 14px; }
 .login-field label {
@@ -85,23 +88,24 @@ body {
     border:1px solid #d0d6ff;
 }
 
-.login-btn {
+.modal-btn {
     width: 100%;
-    padding: 10px;
-    border-radius: 12px;
+    padding: 12px;
     border: none;
+    border-radius: 12px;
     background: linear-gradient(135deg, #3f51b5, #5c6bc0);
     color: white;
     font-weight: bold;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.15);
     transition: all 0.2s ease;
 }
-.login-btn:hover {
+
+.modal-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 10px rgba(0,0,0,0.2);
 }
@@ -115,9 +119,9 @@ body {
     min-width: 260px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.25);
     display: none;
-    z-index: 999;
+    z-index: 1100; /* أكبر من file-preview-panel */
     overflow: hidden;
-}
+    }
 
 .dropdown-menu div {
     padding: 10px 16px;
@@ -153,25 +157,6 @@ body {
 .modal-content button:hover { background: #007da3; }
 .modal-content .subtitle { text-align:center; margin-bottom:15px; color:#555; }
 
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.55);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 5000;
-}
-
-.modal-content {
-    background: white;
-    padding: 25px;
-    border-radius: 16px;
-    width: 380px;
-    max-width: 95%;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-    animation: fadeIn 0.3s ease;
-}
 
 @keyframes fadeIn {
     from {opacity:0; transform:scale(0.95);}
@@ -224,12 +209,9 @@ body {
   padding: 6px 10px;
   display: flex;
   align-items: center;
-  cursor: default; /* المؤشر عند الوقوف بالماوس */
-  transition: 0.2s;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
   box-shadow: 0 3px 6px rgba(0,0,0,0.15);
   transition: all 0.2s ease;
 }
@@ -251,10 +233,6 @@ body {
 }
 
 .preview-header { cursor: grab; }
-
-.dropdown-menu {
-    z-index: 1100; /* أكبر من file-preview-panel */
-}
 
 .file-preview-panel, .preview-header {
     touch-action: none; /* منع تمرير الصفحة أثناء السحب */
@@ -365,3 +343,4 @@ body {
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
