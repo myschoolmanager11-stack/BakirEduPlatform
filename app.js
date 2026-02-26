@@ -473,12 +473,20 @@ localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
   if(savedType) {
     
      // إذا كان ولي أمر نسترجع IDs
-    if(savedType === "parent"){
+   if(savedType === "parent"){
+    const corr = localStorage.getItem("Correspondence_Fille_ID");
+    const abs  = localStorage.getItem("SijileAbsence_Fille_ID");
+
+    if(corr && abs){
         parentData = {
-            correspondenceID: localStorage.getItem("Correspondence_Fille_ID"),
-            absenceID: localStorage.getItem("SijileAbsence_Fille_ID")
+            correspondenceID: corr,
+            absenceID: abs
         };
+    } else {
+        localStorage.removeItem("userType");
+        return;
     }
+}
     
     menuBtn.disabled=false;
     loginModal.style.display="none";
@@ -608,6 +616,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
