@@ -260,26 +260,32 @@ function parseStudentQR(qrText){
   itemDescription.textContent = item.desc || "";
 
   // روابط خارجية
-  if(item.label === "فضاء الأساتذة") {
+ if(item.label === "فضاء الأساتذة") {
     window.open("https://ostad.education.dz/auth", "_blank");
-  }
+    dropdownMenu.style.display = "none";
+    return;
+}
 
   if(item.label === "فضاء أولياء التلاميذ") {
     window.open("https://awlyaa.education.dz/", "_blank");
-  }
+      dropdownMenu.style.display = "none";
+    return;
+}
 
   // مودال نظام الحضور الذكي
   if(item.label === "نظام الحضور الذكي") {
     document.getElementById("attendanceModal").style.display = "flex";
-  }
+      dropdownMenu.style.display = "none";
+    return;
+}
 
   if(item.icon === "call") {
     document.getElementById("contactModal").style.display = "flex";
-  }
+      dropdownMenu.style.display = "none";
+    return;
+}
 
   if(item.icon === "logout") logout();
-
-  if(FILE_ITEMS[item.label]) openFilePreview(FILE_ITEMS[item.label]);
 
   if(item.label === "سجل الغيابات"){
     openFilePreview(localStorage.getItem("SijileAbsence_Fille_ID"));
@@ -292,6 +298,13 @@ if(item.label === "سجل المراسلات الإدارية"){
     dropdownMenu.style.display = "none";
     return;
 }
+      
+if(FILE_ITEMS[item.label]) {
+    openFilePreview(FILE_ITEMS[item.label]);
+    dropdownMenu.style.display = "none";
+    return;
+}
+     
 });
 
       dropdownMenu.appendChild(div);
@@ -304,7 +317,10 @@ if(item.label === "سجل المراسلات الإدارية"){
     if(itemDescription) itemDescription.textContent = "";
     dropdownMenu.style.display = "none";
     menuBtn.disabled = true;
-    localStorage.clear();
+    localStorage.removeItem("userType");
+localStorage.removeItem("employeeName");
+localStorage.removeItem("Correspondence_Fille_ID");
+localStorage.removeItem("SijileAbsence_Fille_ID");
     loginModal.style.display = "flex";
     loginModal.classList.remove("expanded");
     userTypeSelect.value = "";
@@ -402,8 +418,10 @@ if(userTypeSelect.value==="parent"){
     if(!selectedLine && !parentData)
         return alert("اختر التلميذ أو امسح QR");
 
-    let data = parentData ? parentData : parseStudentQR(selectedLine);
-
+    let data = parentData ? parentData : parseStudentQR(selectedLine); 
+  
+if(!data) return;
+  
     parentData = data;
 
  localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
@@ -449,10 +467,19 @@ localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
     document.getElementById("contactMessage").value = "";
   });
 
-  // ==================== حفظ الجلسة ====================
+   // ==================== حفظ الجلسة ====================
   const savedType = localStorage.getItem("userType");
   const savedName = localStorage.getItem("employeeName");
   if(savedType) {
+    
+     // إذا كان ولي أمر نسترجع IDs
+    if(savedType === "parent"){
+        parentData = {
+            correspondenceID: localStorage.getItem("Correspondence_Fille_ID"),
+            absenceID: localStorage.getItem("SijileAbsence_Fille_ID")
+        };
+    }
+    
     menuBtn.disabled=false;
     loginModal.style.display="none";
     fillMenu(savedType);
@@ -581,6 +608,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
