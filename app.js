@@ -282,22 +282,17 @@ function parseStudentQR(qrText){
   if(FILE_ITEMS[item.label]) openFilePreview(FILE_ITEMS[item.label]);
 
   if(item.label === "سجل الغيابات"){
-    openFilePreview(localStorage.getItem("Absence_ID"));
+    openFilePreview(localStorage.getItem("SijileAbsence_Fille_ID"));
     dropdownMenu.style.display = "none";
     return;
 }
 
 if(item.label === "سجل المراسلات الإدارية"){
-    openFilePreview(localStorage.getItem("Correspondence_ID"));
+    openFilePreview(localStorage.getItem("Correspondence_Fille_ID"));
     dropdownMenu.style.display = "none";
     return;
 }
-
-if(FILE_ITEMS[item.label]) {
-    openFilePreview(FILE_ITEMS[item.label]);
-}
 });
-
 
       dropdownMenu.appendChild(div);
       setTimeout(()=> div.classList.add("show"), idx*80);
@@ -342,7 +337,7 @@ if(this.value==="parent"){
 if(this.value==="teacher" || this.value==="consultation"){
     schoolKeyBlock.style.display="block";
 }
-
+});
   continueBtn.addEventListener("click", function () { openSession("parent"); });
 
  schoolKeyBtn.addEventListener("click", async function () {
@@ -411,8 +406,8 @@ if(userTypeSelect.value==="parent"){
 
     parentData = data;
 
-    localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
-    localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
+ localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
+localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
 
     openSession("parent");
     return;
@@ -586,6 +581,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
