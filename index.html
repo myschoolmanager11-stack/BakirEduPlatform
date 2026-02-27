@@ -52,28 +52,19 @@
                     <option value="parent">أولياء الأمور</option>
                 </select>
             </div>
-            
-<div id="studentBlock" style="display:none;">
 
-    <div class="login-field">
-        <label>
-            إختر اسم ولقب التلميذ من القائمة أو قم بمسح الكود بار
-        </label>
+            <div id="studentBlock" style="display:none;">
+    <div class="login-field" style="position:relative;">
+        <label>إختر اسم ولقب التلميذ</label>
+        <select id="studentSelect">
+            <option value="">-- اختر الاسم واللقب --</option>
+        </select>
 
-        <div class="student-row">
-
-            <select id="studentSelect">
-                <option value="">-- اختر الاسم واللقب --</option>
-            </select>
-
-            <button id="scanStudentQR"
-                    class="preview-btn small-btn"
-                    title="مسح رمز QR بالكاميرا">
-                <span class="material-icons">qr_code_scanner</span>
-            </button>
-
-        </div>
-
+        <button id="scanStudentQR" class="qr-btn">
+            <span class="material-icons">qr_code_scanner</span>
+        </button>
+     </div>
+                
         <div id="studentLoadingSpinner" align="center" class="mini-spinner"  style="
                  display:none; 
                   margin-top:10px; 
@@ -82,10 +73,9 @@
                     ">
                   ⏳ يرجى الإنتضار جاري التحميل...
         </div>
-
-    </div>
-    
-<div id="schoolKeyBlock" style="display:none;">
+</div>
+            
+            <div id="schoolKeyBlock" style="display:none;">
                 <div class="login-field">
                     <label>رمز المؤسسة الموحد</label>
                     <input type="password" id="schoolKeyInput">
@@ -94,10 +84,10 @@
                     <span class="material-icons btn-icon">arrow_forward</span>
                     متابعة
                 </button>
-</div>
+            </div>
 
              
-<div id="loadingSpinner" align="center" style="
+            <div id="loadingSpinner" align="center" style="
                  display:none; 
                   margin-top:10px; 
                   font-size:14px; 
@@ -171,7 +161,7 @@
             <span class="material-icons">close</span>
         </button>
 
-        <h2>📧️ اتصل بنا</h2>
+        <h2>ߓȯ؏ اتصل بنا</h2>
         <p class="subtitle">يمكنك إرسال استفسارك مباشرة إلى إدارة البوابة.</p>
 
         <label>البريد الإلكتروني</label>
@@ -212,6 +202,7 @@
   </div>
 </div>
 
+      
         <!-- مودال مسح QR -->
 <div id="qrScannerModal" class="modal" style="display:none;">
     <div class="modal-content attendance-content">
@@ -231,7 +222,8 @@
 
     </div>
 </div>
-        
+
+    
     <!-- محتوى إضافي مستقبلي -->
     <div id="mainContent"></div>
 
