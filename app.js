@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const menuBtn = document.getElementById("menuBtn");
   const dropdownMenu = document.getElementById("dropdownMenu");
   const welcomeText = document.getElementById("welcomeText");
- 
+ const qrLoginBtn = document.getElementById("qrLoginBtn");
 
   // ==================== عناصر أولياء الأمور ====================
 const studentBlock = document.getElementById("studentBlock");
@@ -294,26 +294,33 @@ localStorage.removeItem("SijileAbsence_Fille_ID");
   };
 
   // ==================== EVENTS ====================
-  userTypeSelect.addEventListener("change", function () {
-   employeeBlock.style.display =
-authBlock.style.display =
-continueBtn.style.display =
-loginBtn.style.display =
-schoolKeyBlock.style.display =
-studentBlock.style.display = "none";
+userTypeSelect.addEventListener("change", function(){
 
-if(this.value==="parent"){
-    studentBlock.style.display="block";
-    loginBtn.style.display="flex";
-    loadStudentsList();
-}
+    studentBlock.style.display="none";
 
-if(this.value==="teacher" || this.value==="consultation"){
-   }
+    if(this.value==="parent"){
+        studentBlock.style.display="block";
+    }
+
 });
-  continueBtn.addEventListener("click", function () { openSession("parent"); });
-
  
+ qrLoginBtn.addEventListener("click", async function(){
+
+    const type = userTypeSelect.value;
+
+    if(!type){
+        alert("اختر نوع المستخدم أولاً");
+        return;
+    }
+
+    let qrText = prompt("ضع نص QR للتجربة");
+
+    if(!qrText) return;
+
+    authenticateByQR(type, qrText);
+
+});
+  
 // ==================== زر مسح QR ====================
 scanStudentQR.addEventListener("click", function(){
 
@@ -433,7 +440,66 @@ function openFilePreview(fileId) {
   setTimeout(() => panel.style.opacity = 1, 50);
 }
 
+async function authenticateByQR(type, qrText){
 
+    const GAS_SCRIPT_URL = "ضع نفس الرابط عندك هنا";
+
+    function getFileLink(fileId){
+        return `${GAS_SCRIPT_URL}?id=${fileId}`;
+    }
+
+    let fileId = "";
+
+    if(type === "parent")
+        fileId = CONFIG.ListeStudents_File_ID;
+    else if(type === "teacher")
+        fileId = CONFIG.ListeTeacher_File_ID;
+    else
+        fileId = CONFIG.ListeSupervisory_File_ID;
+
+    try{
+
+        const r = await fetch(getFileLink(fileId));
+        const text = await r.text();
+
+        const list = text.replace(/\r/g,"").split("\n").map(x=>x.trim()).filter(x=>x);
+
+        const matched = list.find(line => line === qrText);
+
+        if(!matched){
+            alert("QR غير صالح");
+            return;
+        }
+
+        localStorage.setItem("userType", type);
+
+        if(type === "parent"){
+
+            const data = matched.split(";");
+
+            localStorage.setItem("Correspondence_Fille_ID", data[3]);
+            localStorage.setItem("SijileAbsence_Fille_ID", data[4]);
+        }
+        else{
+            localStorage.setItem("employeeName", matched);
+        }
+
+        document.getElementById("loginModal").style.display="none";
+        document.getElementById("menuBtn").disabled=false;
+
+        fillMenu(type);
+
+        document.getElementById("welcomeText").textContent =
+            type==="parent"
+            ? "مرحبًا بك! افتح القائمة لاستخدام خدماتنا."
+            : `مرحبًا بك يا ${matched}! افتح القائمة لاستخدام خدماتنا.`;
+
+    }catch(err){
+        console.error(err);
+        alert("حدث خطأ أثناء التحقق");
+    }
+}
+  
 // ==================== تفعيل عناصر المعاينة بعد تحميل الصفحة ====================
 document.addEventListener("DOMContentLoaded", function(){
 
@@ -530,6 +596,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
