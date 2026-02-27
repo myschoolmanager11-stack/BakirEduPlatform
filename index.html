@@ -36,6 +36,7 @@
 <main class="container">
 
     <!-- نافذة تسجيل الدخول -->
+   
     <div id="loginModal" class="modal">
         <div class="modal-content login-content">
             <h3>
@@ -43,98 +44,20 @@
                 تسجيل الدخول
             </h3>
 
-            <div class="login-field">
-                <label>نوع المستخدم</label>
-                <select id="userTypeSelect">
-                    <option value="">-- اختر --</option>
-                    <option value="teacher">الأساتذة</option>
-                    <option value="consultation">الإشراف التربوي</option>
-                    <option value="parent">أولياء الأمور</option>
-                </select>
-            </div>
-
-            <div id="studentBlock" style="display:none;">
-
-    <div class="login-field">
-        <label>
-            إختر اسم ولقب التلميذ من القائمة أو قم بمسح الكود بار
-        </label>
-
-        <div class="student-row">
-
-            <select id="studentSelect">
-                <option value="">-- اختر الاسم واللقب --</option>
-            </select>
-
-            <button id="scanStudentQR"
-                    class="preview-btn small-btn"
-                    title="مسح رمز QR بالكاميرا">
-                <span class="material-icons">qr_code_scanner</span>
-            </button>
-
-        </div>
-
-        <div id="studentLoadingSpinner" class="mini-spinner" style="
-                 display:none; 
-                  margin-top:10px; 
-                  font-size:14px; 
-                 color:#ff0036;
-                    ">
-                  ⏳ يرجى الإنتضار جاري التحميل...
-               </div>
-    </div>
-
+<div class="login-field">
+    <label>اختر نوع المستخدم</label>
+    <select id="userType">
+        <option value="">-- اختر النوع --</option>
+        <option value="teacher">الأساتذة</option>
+        <option value="consultation">الإشراف التربوي</option>
+        <option value="parent">أولياء الأمر</option>
+    </select>
 </div>
-            
-            <div id="schoolKeyBlock" style="display:none;">
-                <div class="login-field">
-                    <label>رمز المؤسسة الموحد</label>
-                    <input type="password" id="schoolKeyInput">
-                </div>
-                <button id="schoolKeyBtn" class="schoolKey-btn">
-                    <span class="material-icons btn-icon">arrow_forward</span>
-                    متابعة
-                </button>
-            </div>
-
-             
-            <div id="loadingSpinner" align="center" style="
-                 display:none; 
-                  margin-top:10px; 
-                  font-size:14px; 
-                 color:#ff0036;
-                    ">
-                  ⏳ يرجى الإنتضار جاري التحميل...
-               </div>
-
-            
-            <div id="employeeBlock" style="display:none;">
-                <div class="login-field">
-                    <label>اختر اسم ولقب الموظف</label>
-                    <select id="employeeSelect">
-                        <option value="">-- اختر الاسم واللقب --</option>
-                    </select>
-                </div>
-            </div>
-
-            <div id="authBlock" style="display:none;">
-                <div class="login-field">
-                    <label>كلمة المرور</label>
-                    <input type="password" id="loginPassword">
-                </div>
-            </div>
-
-            <button id="continueBtn" class="continue-btn" style="display:none;">
-                <span class="material-icons btn-icon">arrow_forward</span>
-                متابعة
-            </button>
-
-            <button id="loginBtn" class="login-btn" style="display:none;">
-                <span class="material-icons btn-icon">login</span>
-                تسجيل الدخول
-            </button>
-        </div>
-    </div>
+  <button id="qrLoginBtn" class="small-btn"
+   title="مسح رمز QR بالكاميرا">
+   <span class="material-icons">qr_code_scanner</span>
+   </button>
+</div>
 
    <!-- ===============================
      لوحة معاينة الملفات العامة
