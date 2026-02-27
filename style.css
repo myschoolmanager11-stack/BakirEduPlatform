@@ -406,26 +406,22 @@ Attendance-btn {
     font-weight: 600;
 }
 
-.qr-btn {
-    position:absolute;
-    left:5px;
-    top:32px;
-    background: linear-gradient(135deg, #3f51b5, #5c6bc0);
-    border:none;
-    color:white;
-    border-radius:8px;
-    width:36px;
-    height:36px;
+.student-row{
     display:flex;
     align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-    transition: all 0.2s ease;
+    gap:8px;
 }
 
-.qr-btn:hover {
-    transform: translateY(-2px);
+.small-btn{
+    width:36px;
+    height:36px;
+    padding:0;
+}
+
+.mini-spinner{
+    font-size:13px;
+    color:#ff0036;
+    margin-top:8px;
 }
 
 .app-footer {
@@ -448,6 +444,7 @@ Attendance-btn {
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
 
 
 
