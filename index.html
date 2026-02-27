@@ -54,25 +54,36 @@
             </div>
 
             <div id="studentBlock" style="display:none;">
-    <div class="login-field" style="position:relative;">
-        <label>إختر اسم ولقب التلميذ</label>
-        <select id="studentSelect">
-            <option value="">-- اختر الاسم واللقب --</option>
-        </select>
 
-        <button id="scanStudentQR" class="qr-btn">
-            <span class="material-icons">qr_code_scanner</span>
-        </button>
-     </div>
-                
-        <div id="studentLoadingSpinner" align="center" class="mini-spinner"  style="
+    <div class="login-field">
+        <label>
+            إختر اسم ولقب التلميذ من القائمة أو قم بمسح الكود بار
+        </label>
+
+        <div class="student-row">
+
+            <select id="studentSelect">
+                <option value="">-- اختر الاسم واللقب --</option>
+            </select>
+
+            <button id="scanStudentQR"
+                    class="preview-btn small-btn"
+                    title="مسح رمز QR بالكاميرا">
+                <span class="material-icons">qr_code_scanner</span>
+            </button>
+
+        </div>
+
+        <div id="studentLoadingSpinner" class="mini-spinner" style="
                  display:none; 
                   margin-top:10px; 
                   font-size:14px; 
                  color:#ff0036;
                     ">
                   ⏳ يرجى الإنتضار جاري التحميل...
-        </div>
+               </div>
+    </div>
+
 </div>
             
             <div id="schoolKeyBlock" style="display:none;">
