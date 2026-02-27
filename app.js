@@ -59,19 +59,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
  // عناصر الصفحة
   const userTypeSelect = document.getElementById("userTypeSelect");
-  const employeeBlock = document.getElementById("employeeBlock");
-  const employeeSelect = document.getElementById("employeeSelect");
-  const authBlock = document.getElementById("authBlock");
-  const continueBtn = document.getElementById("continueBtn");
-  const loginBtn = document.getElementById("loginBtn");
-  const loginPassword = document.getElementById("loginPassword");
   const loginModal = document.getElementById("loginModal");
   const menuBtn = document.getElementById("menuBtn");
   const dropdownMenu = document.getElementById("dropdownMenu");
-  const schoolKeyBlock = document.getElementById("schoolKeyBlock");
-  const schoolKeyInput = document.getElementById("schoolKeyInput");
   const welcomeText = document.getElementById("welcomeText");
-  const schoolKeyBtn = document.getElementById("schoolKeyBtn");
+ 
 
   // ==================== عناصر أولياء الأمور ====================
 const studentBlock = document.getElementById("studentBlock");
@@ -148,40 +140,6 @@ function parseStudentQR(qrText){
   // ==================== FUNCTIONS ====================
   function getFileLink(fileId) {
     return `${GAS_SCRIPT_URL}?id=${fileId}`;
-  }
-
-  async function loadSchoolKey() {
-    const r = await fetch(getFileLink(CONFIG.School_Key_File_ID));
-    SCHOOL_KEY = (await r.text()).trim();
-  }
-
-  async function loadPasswords() {
-    const r = await fetch(getFileLink(CONFIG.Password_File_ID));
-    PASSWORDS = (await r.text())
-      .replace(/\r/g, "")
-      .split("\n")
-      .map(x => x.trim())
-      .filter(x => x);
-  }
-
-  function loadEmployeeList(type) {
-    const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
-    employeeSelect.disabled = true;
-    employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة ${type==="teacher"?"الأساتذة":"الإشراف التربوي"}</option>`;
-
-    fetch(getFileLink(fileId))
-      .then(r => r.text())
-      .then(text => {
-        let list = text.replace(/\r/g, "").split("\n").map(x => x.trim()).filter(x => x);
-        employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-        list.forEach(e => employeeSelect.innerHTML += `<option value="${e}">${e}</option>`);
-        employeeSelect.disabled = false;
-      })
-      .catch(error => {
-        employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
-        console.error("خطأ في تحميل القائمة:", error);
-        employeeSelect.disabled = false;
-      });
   }
 
   function openSession(type) {
@@ -351,38 +309,11 @@ if(this.value==="parent"){
 }
 
 if(this.value==="teacher" || this.value==="consultation"){
-    schoolKeyBlock.style.display="block";
-}
+   }
 });
   continueBtn.addEventListener("click", function () { openSession("parent"); });
 
- schoolKeyBtn.addEventListener("click", async function () {
-    if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
-
-    // إظهار سبينر التحميل
-    const spinner = document.getElementById("loadingSpinner");
-    spinner.style.display = "block";
-
-    try {
-        await loadSchoolKey();
-        if(schoolKeyInput.value !== SCHOOL_KEY) {
-            spinner.style.display = "none";
-            return alert("رمز المؤسسة غير صحيح");
-        }
-
-        schoolKeyBlock.style.display="none";
-        employeeBlock.style.display="block";
-        await loadEmployeeList(userTypeSelect.value);
-        await loadPasswords();
-
-    } catch(err) {
-        console.error(err);
-        alert("حدث خطأ أثناء تحميل البيانات");
-    } finally {
-        spinner.style.display = "none"; // إخفاؤه بعد الانتهاء
-    }
-});
-
+ 
 // ==================== زر مسح QR ====================
 scanStudentQR.addEventListener("click", function(){
 
@@ -404,10 +335,7 @@ scanStudentQR.addEventListener("click", function(){
     }
 
 });
-    
-  employeeSelect.addEventListener("change", function() {
-    if(this.value!=="") { authBlock.style.display="block"; loginBtn.style.display="flex"; }
-  });
+  
 
  loginBtn.addEventListener("click", function() {
    // ==================== دخول أولياء الأمور ====================
@@ -430,20 +358,6 @@ localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
     openSession("parent");
     return;
 }
-    if(!loginPassword.value) return alert("أدخل كلمة المرور");
-
-    const spinner = document.getElementById("loadingSpinner");
-    spinner.style.display = "block";
-
-    setTimeout(() => {  // محاكاة الانتظار لوظيفة async
-        if(!PASSWORDS.includes(loginPassword.value)) {
-            spinner.style.display = "none";
-            return alert("كلمة المرور غير صحيحة");
-        }
-        openSession(userTypeSelect.value);
-        spinner.style.display = "none";
-    }, 300); // 300ms مجرد مثال
-});
 
 
   document.getElementById("closeContactModal").addEventListener("click", function(){
@@ -616,6 +530,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
