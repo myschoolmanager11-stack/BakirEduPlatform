@@ -282,11 +282,7 @@ localStorage.removeItem("SijileAbsence_Fille_ID");
     loginModal.style.display = "flex";
     loginModal.classList.remove("expanded");
     userTypeSelect.value = "";
-    schoolKeyInput.value = "";
-    loginPassword.value = "";
-    employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-    schoolKeyBlock.style.display = employeeBlock.style.display = authBlock.style.display = continueBtn.style.display = loginBtn.style.display = "none";
-    document.getElementById("filePreviewPanel").style.display="none";
+   document.getElementById("filePreviewPanel").style.display="none";
   }
 
   window.toggleMenu = function () {
@@ -442,8 +438,6 @@ function openFilePreview(fileId) {
 
 async function authenticateByQR(type, qrText){
 
-    const GAS_SCRIPT_URL = "ضع نفس الرابط عندك هنا";
-
     function getFileLink(fileId){
         return `${GAS_SCRIPT_URL}?id=${fileId}`;
     }
@@ -596,6 +590,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
