@@ -128,20 +128,21 @@ function hideLoading(){
     return `${GAS_SCRIPT_URL}?id=${fileId}`;
   }
 
-  function openSession(type) {
-    const employeeName = employeeSelect.value;
+function openSession(type) {
+
     loginModal.style.display = "none";
     menuBtn.disabled = false;
     dropdownMenu.style.display = "none";
 
-    welcomeText.textContent = (type==="parent") 
-      ? "مرحبًا بك! افتح القائمة لاستخدام خدماتنا." 
-      : `مرحبًا بك يا ${employeeName}! افتح القائمة لاستخدام خدماتنا.`;
+    welcomeText.textContent =
+        (type === "parent")
+        ? "مرحبًا بك! افتح القائمة لاستخدام خدماتنا."
+        : "مرحبًا بك! افتح القائمة لاستخدام خدماتنا.";
 
     fillMenu(type);
+
     localStorage.setItem("userType", type);
-    localStorage.setItem("employeeName", employeeName);
-  }
+}
 
   function fillMenu(type) {
     dropdownMenu.innerHTML = "";
@@ -288,21 +289,25 @@ userTypeSelect.addEventListener("change", async function () {
 
         let fileId = "";
 
-        if (type === "parent") fileId = CONFIG.FILE_IDS.ListeStudents;
-        if (type === "teacher") fileId = CONFIG.FILE_IDS.ListeTeacher;
-        if (type === "consultation") fileId = CONFIG.FILE_IDS.ListeSupervisory;
+        if (type === "parent") fileId = CONFIG.ListeStudents_File_ID;
+        if (type === "teacher") fileId = CONFIG.ListeTeacher_File_ID;
+        if (type === "consultation") fileId = CONFIG.ListeSupervisory_File_ID;
 
-        const response = await fetch(buildDownloadURL(fileId));
+        const response = await fetch(getFileLink(fileId));
         const text = await response.text();
 
-        cachedUsers = text.split("\n").map(x => x.trim());
+        cachedUsers = text
+            .replace(/\r/g,"")
+            .split("\n")
+            .map(x => x.trim())
+            .filter(x => x);
 
         hideLoading();
 
     } catch (err) {
         hideLoading();
-        alert("تعذر تحميل البيانات");
         console.error(err);
+        alert("تعذر تحميل البيانات");
     }
 
 });
@@ -492,11 +497,7 @@ async function authenticateByQR(type, qrText) {
     // ======================
     // دخول مباشر
     // ======================
-    localStorage.setItem("userType", type);
-    openSession(type);
-}
-
-        document.getElementById("loginModal").style.display="none";
+         document.getElementById("loginModal").style.display="none";
         document.getElementById("menuBtn").disabled=false;
 
         fillMenu(type);
@@ -608,6 +609,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
