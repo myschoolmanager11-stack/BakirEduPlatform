@@ -53,28 +53,90 @@ const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2X2ku8gwIIq5_n
 let currentFileURL = null;
 let PASSWORDS = [];
 let SCHOOL_KEY = "";
-let qrScanner = null;
-let cachedUsers = [];
-let STUDENTS_LIST = [];
-let parentData = null;
 
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
+
+ // عناصر الصفحة
   const userTypeSelect = document.getElementById("userTypeSelect");
+  const employeeBlock = document.getElementById("employeeBlock");
+  const employeeSelect = document.getElementById("employeeSelect");
+  const authBlock = document.getElementById("authBlock");
+  const continueBtn = document.getElementById("continueBtn");
+  const loginBtn = document.getElementById("loginBtn");
+  const loginPassword = document.getElementById("loginPassword");
   const loginModal = document.getElementById("loginModal");
   const menuBtn = document.getElementById("menuBtn");
   const dropdownMenu = document.getElementById("dropdownMenu");
+  const schoolKeyBlock = document.getElementById("schoolKeyBlock");
+  const schoolKeyInput = document.getElementById("schoolKeyInput");
   const welcomeText = document.getElementById("welcomeText");
-  const qrLoginBtn = document.getElementById("qrLoginBtn");
-  const studentBlock = document.getElementById("studentBlock");
-  const studentSelect = document.getElementById("studentSelect");
-  const scanStudentQR = document.getElementById("scanStudentQR");
+  const schoolKeyBtn = document.getElementById("schoolKeyBtn");
 
-  // ==================== مودال تسجيل الدخول ====================
+  // ==================== عناصر أولياء الأمور ====================
+const studentBlock = document.getElementById("studentBlock");
+const studentSelect = document.getElementById("studentSelect");
+const scanStudentQR = document.getElementById("scanStudentQR");
+
+let STUDENTS_LIST = [];
+let parentData = null;
+
+  // ==================== تحميل قائمة التلاميذ ====================
+async function loadStudentsList() {
+
+  studentSelect.disabled = true;
+  studentSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة التلاميذ</option>`;
+
+  try {
+      const r = await fetch(getFileLink(CONFIG.ListeStudents_File_ID));
+      let list = (await r.text())
+        .replace(/\r/g,"")
+        .split("\n")
+        .map(x=>x.trim())
+        .filter(x=>x);
+
+      STUDENTS_LIST = list;
+
+      studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+
+      list.forEach(line=>{
+          let parts = line.split(";");
+          studentSelect.innerHTML += `<option value="${line}">${parts[0]}</option>`;
+      });
+
+  } catch(err) {
+      studentSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل القائمة</option>`;
+      console.error(err);
+  }
+
+  studentSelect.disabled = false;
+}
+
+ // ==================== تحليل QR للتلميذ ====================
+function parseStudentQR(qrText){
+
+  let parts = qrText.trim().split(";");
+
+  if(parts.length !== 5){
+      alert("رمز QR غير صالح");
+      return null;
+  }
+
+  return {
+      name: parts[0],
+      classe: parts[1],
+      racord: parts[2],
+      correspondenceID: parts[3],
+      absenceID: parts[4]
+  };
+}
+  
+ // ==================== تثبيت عرض المودال ====================
   loginModal.style.display = "flex";
   loginModal.style.zIndex = "5000";
   menuBtn.disabled = true;
-
+ 
+  // div وصف العنصر
   let itemDescription = document.createElement("div");
   itemDescription.id = "itemDescription";
   itemDescription.style.fontSize = "13px";
@@ -83,45 +145,58 @@ document.addEventListener("DOMContentLoaded", function () {
   itemDescription.style.minHeight = "18px";
   welcomeText.insertAdjacentElement('afterend', itemDescription);
 
-  // ==================== الدوال ====================
+  // ==================== FUNCTIONS ====================
   function getFileLink(fileId) {
     return `${GAS_SCRIPT_URL}?id=${fileId}`;
   }
 
-  function showLoading(text) {
-    const overlay = document.getElementById("loadingOverlay");
-    overlay.innerText = text;
-    overlay.style.display = "flex";
+  async function loadSchoolKey() {
+    const r = await fetch(getFileLink(CONFIG.School_Key_File_ID));
+    SCHOOL_KEY = (await r.text()).trim();
   }
 
-  function hideLoading() {
-    document.getElementById("loadingOverlay").style.display = "none";
+  async function loadPasswords() {
+    const r = await fetch(getFileLink(CONFIG.Password_File_ID));
+    PASSWORDS = (await r.text())
+      .replace(/\r/g, "")
+      .split("\n")
+      .map(x => x.trim())
+      .filter(x => x);
   }
 
-  function parseStudentQR(qrText){
-    const parts = qrText.trim().split(";");
-    if(parts.length !== 5){
-      alert("رمز QR غير صالح");
-      return null;
-    }
-    return {
-      name: parts[0],
-      classe: parts[1],
-      racord: parts[2],
-      correspondenceID: parts[3],
-      absenceID: parts[4]
-    };
+  function loadEmployeeList(type) {
+    const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
+    employeeSelect.disabled = true;
+    employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة ${type==="teacher"?"الأساتذة":"الإشراف التربوي"}</option>`;
+
+    fetch(getFileLink(fileId))
+      .then(r => r.text())
+      .then(text => {
+        let list = text.replace(/\r/g, "").split("\n").map(x => x.trim()).filter(x => x);
+        employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+        list.forEach(e => employeeSelect.innerHTML += `<option value="${e}">${e}</option>`);
+        employeeSelect.disabled = false;
+      })
+      .catch(error => {
+        employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
+        console.error("خطأ في تحميل القائمة:", error);
+        employeeSelect.disabled = false;
+      });
   }
 
   function openSession(type) {
+    const employeeName = employeeSelect.value;
     loginModal.style.display = "none";
     menuBtn.disabled = false;
     dropdownMenu.style.display = "none";
-    welcomeText.textContent = (type === "parent") 
-      ? "مرحبًا بك! افتح القائمة لاستخدام خدماتنا."
-      : "مرحبًا بك! افتح القائمة لاستخدام خدماتنا.";
+
+    welcomeText.textContent = (type==="parent") 
+      ? "مرحبًا بك! افتح القائمة لاستخدام خدماتنا." 
+      : `مرحبًا بك يا ${employeeName}! افتح القائمة لاستخدام خدماتنا.`;
+
     fillMenu(type);
     localStorage.setItem("userType", type);
+    localStorage.setItem("employeeName", employeeName);
   }
 
   function fillMenu(type) {
@@ -179,19 +254,58 @@ document.addEventListener("DOMContentLoaded", function () {
       label.textContent=item.label; 
       div.appendChild(label);
 
-      div.addEventListener('click', function(){
-        itemDescription.textContent = item.desc || "";
+      // حدث الضغط الواحد لكل div
+    div.addEventListener('click', function(){
 
-        // روابط خارجية
-        if(item.label === "فضاء الأساتذة") { window.open("https://ostad.education.dz/auth", "_blank"); dropdownMenu.style.display="none"; return; }
-        if(item.label === "فضاء أولياء التلاميذ") { window.open("https://awlyaa.education.dz/", "_blank"); dropdownMenu.style.display="none"; return; }
-        if(item.label === "نظام الحضور الذكي") { document.getElementById("attendanceModal").style.display = "flex"; dropdownMenu.style.display="none"; return; }
-        if(item.icon === "call") { document.getElementById("contactModal").style.display = "flex"; dropdownMenu.style.display="none"; return; }
-        if(item.icon === "logout") logout();
-        if(item.label === "سجل الغيابات"){ openFilePreview(localStorage.getItem("SijileAbsence_Fille_ID")); dropdownMenu.style.display = "none"; return; }
-        if(item.label === "سجل المراسلات الإدارية"){ openFilePreview(localStorage.getItem("Correspondence_Fille_ID")); dropdownMenu.style.display = "none"; return; }
-        if(FILE_ITEMS[item.label]) { openFilePreview(FILE_ITEMS[item.label]); dropdownMenu.style.display = "none"; return; }
-      });
+  itemDescription.textContent = item.desc || "";
+
+  // روابط خارجية
+ if(item.label === "فضاء الأساتذة") {
+    window.open("https://ostad.education.dz/auth", "_blank");
+    dropdownMenu.style.display = "none";
+    return;
+}
+
+  if(item.label === "فضاء أولياء التلاميذ") {
+    window.open("https://awlyaa.education.dz/", "_blank");
+      dropdownMenu.style.display = "none";
+    return;
+}
+
+  // مودال نظام الحضور الذكي
+  if(item.label === "نظام الحضور الذكي") {
+    document.getElementById("attendanceModal").style.display = "flex";
+      dropdownMenu.style.display = "none";
+    return;
+}
+
+  if(item.icon === "call") {
+    document.getElementById("contactModal").style.display = "flex";
+      dropdownMenu.style.display = "none";
+    return;
+}
+
+  if(item.icon === "logout") logout();
+
+  if(item.label === "سجل الغيابات"){
+    openFilePreview(localStorage.getItem("SijileAbsence_Fille_ID"));
+    dropdownMenu.style.display = "none";
+    return;
+}
+
+if(item.label === "سجل المراسلات الإدارية"){
+    openFilePreview(localStorage.getItem("Correspondence_Fille_ID"));
+    dropdownMenu.style.display = "none";
+    return;
+}
+      
+if(FILE_ITEMS[item.label]) {
+    openFilePreview(FILE_ITEMS[item.label]);
+    dropdownMenu.style.display = "none";
+    return;
+}
+     
+});
 
       dropdownMenu.appendChild(div);
       setTimeout(()=> div.classList.add("show"), idx*80);
@@ -204,12 +318,16 @@ document.addEventListener("DOMContentLoaded", function () {
     dropdownMenu.style.display = "none";
     menuBtn.disabled = true;
     localStorage.removeItem("userType");
-    localStorage.removeItem("employeeName");
-    localStorage.removeItem("Correspondence_Fille_ID");
-    localStorage.removeItem("SijileAbsence_Fille_ID");
+localStorage.removeItem("employeeName");
+localStorage.removeItem("Correspondence_Fille_ID");
+localStorage.removeItem("SijileAbsence_Fille_ID");
     loginModal.style.display = "flex";
     loginModal.classList.remove("expanded");
     userTypeSelect.value = "";
+    schoolKeyInput.value = "";
+    loginPassword.value = "";
+    employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+    schoolKeyBlock.style.display = employeeBlock.style.display = authBlock.style.display = continueBtn.style.display = loginBtn.style.display = "none";
     document.getElementById("filePreviewPanel").style.display="none";
   }
 
@@ -217,64 +335,120 @@ document.addEventListener("DOMContentLoaded", function () {
     dropdownMenu.style.display = (dropdownMenu.style.display==="block") ? "none" : "block";
   };
 
-  // ==================== أحداث اختيار نوع المستخدم ====================
-  userTypeSelect.addEventListener("change", async function () {
-    const type = this.value;
-    if (!type) return;
-    showLoading("يرجى الانتظار جاري تحميل البيانات...");
+  // ==================== EVENTS ====================
+  userTypeSelect.addEventListener("change", function () {
+   employeeBlock.style.display =
+authBlock.style.display =
+continueBtn.style.display =
+loginBtn.style.display =
+schoolKeyBlock.style.display =
+studentBlock.style.display = "none";
+
+if(this.value==="parent"){
+    studentBlock.style.display="block";
+    loginBtn.style.display="flex";
+    loadStudentsList();
+}
+
+if(this.value==="teacher" || this.value==="consultation"){
+    schoolKeyBlock.style.display="block";
+}
+});
+  continueBtn.addEventListener("click", function () { openSession("parent"); });
+
+ schoolKeyBtn.addEventListener("click", async function () {
+    if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
+
+    // إظهار سبينر التحميل
+    const spinner = document.getElementById("loadingSpinner");
+    spinner.style.display = "block";
 
     try {
-      let fileId = "";
-      if (type === "parent") fileId = CONFIG.ListeStudents_File_ID;
-      if (type === "teacher") fileId = CONFIG.ListeTeacher_File_ID;
-      if (type === "consultation") fileId = CONFIG.ListeSupervisory_File_ID;
+        await loadSchoolKey();
+        if(schoolKeyInput.value !== SCHOOL_KEY) {
+            spinner.style.display = "none";
+            return alert("رمز المؤسسة غير صحيح");
+        }
 
-      const response = await fetch(getFileLink(fileId));
-      const text = await response.text();
+        schoolKeyBlock.style.display="none";
+        employeeBlock.style.display="block";
+        await loadEmployeeList(userTypeSelect.value);
+        await loadPasswords();
 
-      cachedUsers = text.replace(/\r/g,"").split("\n").map(x => x.trim()).filter(x => x);
-
-      hideLoading();
-    } catch (err) {
-      hideLoading();
-      console.error(err);
-      alert("تعذر تحميل البيانات");
+    } catch(err) {
+        console.error(err);
+        alert("حدث خطأ أثناء تحميل البيانات");
+    } finally {
+        spinner.style.display = "none"; // إخفاؤه بعد الانتهاء
     }
+});
+
+// ==================== زر مسح QR ====================
+scanStudentQR.addEventListener("click", function(){
+
+    let qrText = prompt("ضع نص QR للتجربة");
+
+    if(!qrText) return;
+
+    let data = parseStudentQR(qrText);
+    if(!data) return;
+
+    parentData = data;
+
+    // اختيار الطالب تلقائياً
+    for(let opt of studentSelect.options){
+        if(opt.value.startsWith(data.name + ";")){
+            studentSelect.value = opt.value;
+            break;
+        }
+    }
+
+});
+    
+  employeeSelect.addEventListener("change", function() {
+    if(this.value!=="") { authBlock.style.display="block"; loginBtn.style.display="flex"; }
   });
 
-  // ==================== QR Login ====================
-  qrLoginBtn.addEventListener("click", function(){
-    const type = userTypeSelect.value;
-    if(!type){ alert("اختر نوع المستخدم أولاً"); return; }
+ loginBtn.addEventListener("click", function() {
+   // ==================== دخول أولياء الأمور ====================
+if(userTypeSelect.value==="parent"){
 
-    document.getElementById("qrScannerModal").style.display = "flex";
-    qrScanner = new Html5Qrcode("qrReader");
+    let selectedLine = studentSelect.value;
 
-    qrScanner.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: 250 },
-      async (decodedText) => {
-        await authenticateByQR(type, decodedText);
-        stopQrScanner();
-      },
-      (errorMessage) => {}
-    ).catch(err=>{
-      console.error(err);
-      alert("تعذر تشغيل الكاميرا");
-    });
+    if(!selectedLine && !parentData)
+        return alert("اختر التلميذ أو امسح QR");
+
+    let data = parentData ? parentData : parseStudentQR(selectedLine); 
+  
+if(!data) return;
+  
+    parentData = data;
+
+ localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
+localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
+
+    openSession("parent");
+    return;
+}
+    if(!loginPassword.value) return alert("أدخل كلمة المرور");
+
+    const spinner = document.getElementById("loadingSpinner");
+    spinner.style.display = "block";
+
+    setTimeout(() => {  // محاكاة الانتظار لوظيفة async
+        if(!PASSWORDS.includes(loginPassword.value)) {
+            spinner.style.display = "none";
+            return alert("كلمة المرور غير صحيحة");
+        }
+        openSession(userTypeSelect.value);
+        spinner.style.display = "none";
+    }, 300); // 300ms مجرد مثال
+});
+
+
+  document.getElementById("closeContactModal").addEventListener("click", function(){
+    document.getElementById("contactModal").style.display="none";
   });
-
-  function stopQrScanner(){
-    if(qrScanner){
-      qrScanner.stop().then(()=>{ qrScanner.clear(); });
-    }
-    document.getElementById("qrScannerModal").style.display = "none";
-  }
-
-  document.getElementById("closeQrModal").addEventListener("click", function(){ stopQrScanner(); });
-
-  // ==================== Contact Modal ====================
-  document.getElementById("closeContactModal").addEventListener("click", function(){ document.getElementById("contactModal").style.display="none"; });
 
   document.getElementById("contactSendBtn").addEventListener("click", function(){
     const email = document.getElementById("contactEmail").value.trim();
@@ -289,50 +463,63 @@ document.addEventListener("DOMContentLoaded", function () {
     const body = encodeURIComponent(`السلام عليكم،\n\nتم إرسال هذه الرسالة من خلال نموذج اتصل بنا.\n\nالبريد: ${email}\nالرسالة: ${message}\n\nتحياتنا.`);
     window.location.href = `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
     contactResult.textContent="سيتم فتح بريدك لإرسال الرسالة مباشرة"; contactResult.style.color="green";
+    document.getElementById("contactEmail").value = "";
+    document.getElementById("contactMessage").value = "";
   });
 
-  // ==================== فتح الملفات ====================
-  window.openFilePreview = function(fileId){
-    if(!fileId) { alert("الملف غير موجود"); return; }
-    currentFileURL = getFileLink(fileId);
-    const previewPanel = document.getElementById("filePreviewPanel");
-    previewPanel.style.display="flex";
-    document.getElementById("filePreviewIframe").src = currentFileURL;
-  };
+   // ==================== حفظ الجلسة ====================
+  const savedType = localStorage.getItem("userType");
+  const savedName = localStorage.getItem("employeeName");
+  if(savedType) {
+    
+     // إذا كان ولي أمر نسترجع IDs
+   if(savedType === "parent"){
+    const corr = localStorage.getItem("Correspondence_Fille_ID");
+    const abs  = localStorage.getItem("SijileAbsence_Fille_ID");
 
-  document.getElementById("closeFilePreview").addEventListener("click", function(){
-    document.getElementById("filePreviewPanel").style.display="none";
-    document.getElementById("filePreviewIframe").src="";
-  });
-
-  // ==================== Authenticate QR ====================
-  async function authenticateByQR(type, qrText){
-    try{
-      const data = qrText.trim().split(";");
-      if(type === "parent" && data.length !== 5){ alert("QR غير صالح"); return; }
-      if(type !== "parent" && data.length !== 3){ alert("QR غير صالح"); return; }
-
-      const matched = cachedUsers.find(line => line.includes(data[0] || data[2]));
-      if(!matched){ alert("QR غير صالح"); return; }
-
-      if(type === "parent"){
-        localStorage.setItem("Correspondence_Fille_ID", data[3]);
-        localStorage.setItem("SijileAbsence_Fille_ID", data[4]);
-        localStorage.setItem("studentName", data[0]);
-        localStorage.setItem("classe", data[1]);
-      } else {
-        localStorage.setItem("username", data[0]);
-      }
-
-      openSession(type);
-    }catch(err){
-      console.error(err);
-      alert("حدث خطأ أثناء التحقق");
+    if(corr && abs){
+        parentData = {
+            correspondenceID: corr,
+            absenceID: abs
+        };
+    } else {
+        localStorage.removeItem("userType");
+        return;
     }
+}
+    
+    menuBtn.disabled=false;
+    loginModal.style.display="none";
+    fillMenu(savedType);
+    welcomeText.textContent = (savedType==="parent") ? 
+      "مرحبًا بك! افتح القائمة لاستخدام خدماتنا." : `مرحبًا بك يا ${savedName}! افتح القائمة لاستخدام خدماتنا.`;
   }
 
 });
-  
+
+// ==================== معاينة الملفات ====================
+function openFilePreview(fileId) {
+  const panel = document.getElementById("filePreviewPanel");
+  const frame = document.getElementById("filePreviewFrame");
+  const previewDownload = document.getElementById("previewDownload");
+  const previewOpen = document.getElementById("previewOpen");
+
+  frame.style.display = "none";
+  panel.style.opacity = 0;
+  panel.style.display = "flex";
+
+  const url = `https://drive.google.com/file/d/${fileId}/preview`;
+  frame.src = url;
+  frame.onload = () => frame.style.display = "block";
+
+  previewDownload.href = `https://drive.google.com/uc?id=${fileId}&export=download`;
+  previewOpen.href = url;
+  previewOpen.target = "_blank";
+
+  setTimeout(() => panel.style.opacity = 1, 50);
+}
+
+
 // ==================== تفعيل عناصر المعاينة بعد تحميل الصفحة ====================
 document.addEventListener("DOMContentLoaded", function(){
 
@@ -426,23 +613,6 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 
 // إغلاق مودال الحضور
-document.addEventListener("DOMContentLoaded", function(){
-    document.getElementById("closeAttendanceModal").addEventListener("click", function(){
-        document.getElementById("attendanceModal").style.display = "none";
-    });
+document.getElementById("closeAttendanceModal").addEventListener("click", function(){
+  document.getElementById("attendanceModal").style.display = "none";
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
