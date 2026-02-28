@@ -56,6 +56,10 @@ let SCHOOL_KEY = "";
 let STUDENTS_LIST = [];
 let parentData = null;
 
+async function loadClassesList()
+async function loadStudentsList()
+function parseStudentLine()
+
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -79,7 +83,6 @@ document.addEventListener("DOMContentLoaded", function () {
  const classeSelect = document.getElementById("ClasseSelect");
   
  // ==================== تحميل قائمة الأقسام ====================
-   // ==================== تحميل قائمة الأقسام ====================
 async function loadClassesList() {
     classeSelect.disabled = true;
     classeSelect.innerHTML = `<option value="">-- يرجى الإنتظار... --</option>`;
@@ -115,10 +118,6 @@ classeSelect.addEventListener("change", function () {
     const selectedClasse = this.value || "all";
     loadStudentsList(selectedClasse);
 });
-
-// تحميل أولي عند فتح الصفحة
-loadClassesList();
-loadStudentsList();
 
 // ==================== دالة تحليل بيانات التلاميذ في القائمة المحملة ====================
 function parseStudentLine(line) {
@@ -172,11 +171,7 @@ async function loadStudentsList(selectedClasse = "all") {
        hideLoader();
     }
 }
-
-// ==================== حدث تغيير القسم ====================
-classeSelect.addEventListener("change", function() {
-    const selectedClasse = this.value || "all"; // إذا لم يختر شيء → كل الأقسام
-    loadStudentsList(selectedClasse);
+  
 });
   
  // ==================== تثبيت عرض المودال ====================
@@ -232,9 +227,10 @@ classeSelect.addEventListener("change", function() {
         employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
         console.error("خطأ في تحميل القائمة:", error);
         employeeSelect.disabled = false;
-         } finally {
-        hideLoader();
-      });
+         })
+  .finally(() => {
+      hideLoader();
+  });
   }
 
   function openSession(type) {
@@ -340,14 +336,19 @@ classeSelect.addEventListener("change", function() {
 
   if(item.icon === "logout") logout();
 
-  if(item.icon === "assignment" && type === "parent"){
-    openFilePreview(localStorage.getItem("SijileAbsence_Fille_ID"));
+  if(item.label === "سجل الغيابات" && type === "parent"){
+    const id = localStorage.getItem("SijileAbsence_Fille_ID");
+if(id) openFilePreview(id);
+else alert("لم يتم العثور على الملف");
     dropdownMenu.style.display = "none";
     return;
 }
 
-if(item.icon === "mail" && type === "parent"){
-    openFilePreview(localStorage.getItem("Correspondence_Fille_ID"));
+if(item.label === "سجل المراسلات الإدارية" && type === "parent"){
+const id = localStorage.getItem("Correspondence_Fille_ID");
+if(id) openFilePreview(id);
+else alert("لم يتم العثور على الملف");
+  
     dropdownMenu.style.display = "none";
     return;
 }
@@ -392,6 +393,8 @@ function logout() {
     studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
     classeSelect.innerHTML = '<option value="">-- اختر القسم --</option>';
 
+  loadClassesList();
+  
     // إخفاء البلوكات
     schoolKeyBlock.style.display =
     employeeBlock.style.display =
@@ -677,6 +680,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
