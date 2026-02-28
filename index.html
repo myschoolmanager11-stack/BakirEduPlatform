@@ -7,6 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+
+<!-- مكتبة قراءة QR -->
+<script src="https://unpkg.com/html5-qrcode"></script>
+
 </head>
 
 <body>
@@ -26,7 +30,6 @@
             مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.
         </p>
 
-        <!-- عنوان فرعي ديناميكي -->
         <div id="itemDescription" class="item-description"></div>
     </div>
 
@@ -35,29 +38,49 @@
 
 <main class="container">
 
-    <!-- نافذة تسجيل الدخول -->
+   <!-- نافذة تسجيل الدخول -->
    
-    <div id="loginModal" class="modal">
-        <div class="modal-content login-content">
+<div id="loginModal" class="modal">
+    <div class="modal-content login-content">
+        <h3>
+            <span class="material-icons">login</span>
+            تسجيل الدخول
+        </h3>
+
+        <div class="login-field">
+            <label>اختر نوع المستخدم</label>
+            <select id="userTypeSelect">
+                <option value="">-- اختر النوع --</option>
+                <option value="teacher">الأساتذة</option>
+                <option value="consultation">الإشراف التربوي</option>
+                <option value="parent">أولياء الأمر</option>
+            </select>
+        </div>
+
+        <button id="qrLoginBtn" class="small-btn" title="مسح رمز QR بالكاميرا">
+            <span class="material-icons">qr_code_scanner</span>
+        </button>
+    </div>
+</div>
+
+<!-- مودال ماسح QR -->
+<div id="qrScannerModal" class="modal" style="display:none;">
+    <div class="modal-content attendance-content">
+        <div class="attendance-header">
             <h3>
-                <span class="material-icons">login</span>
-                تسجيل الدخول
+                <span class="material-icons">qr_code_scanner</span>
+                وجّه الكاميرا نحو رمز QR
             </h3>
 
-<div class="login-field">
-    <label>اختر نوع المستخدم</label>
-    <select id="userType">
-        <option value="">-- اختر النوع --</option>
-        <option value="teacher">الأساتذة</option>
-        <option value="consultation">الإشراف التربوي</option>
-        <option value="parent">أولياء الأمر</option>
-    </select>
+            <button id="closeQrModal" class="preview-btn">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+
+        <div id="qrReader" class="scanner-panel"></div>
+    </div>
 </div>
-  <button id="qrLoginBtn" class="small-btn"
-   title="مسح رمز QR بالكاميرا">
-   <span class="material-icons">qr_code_scanner</span>
-   </button>
-</div>
+
 
    <!-- ===============================
      لوحة معاينة الملفات العامة
@@ -135,28 +158,6 @@
 
   </div>
 </div>
-
-      
-        <!-- مودال مسح QR -->
-<div id="qrScannerModal" class="modal" style="display:none;">
-    <div class="modal-content attendance-content">
-
-        <div class="attendance-header">
-            <h3>
-                <span class="material-icons">qr_code_scanner</span>
-                وجّه الكاميرا نحو رمز QR
-            </h3>
-
-            <button id="closeQrModal" class="preview-btn">
-                <span class="material-icons">close</span>
-            </button>
-        </div>
-
-        <div id="qrReader" class="scanner-panel"></div>
-
-    </div>
-</div>
-
     
     <!-- محتوى إضافي مستقبلي -->
     <div id="mainContent"></div>
@@ -170,6 +171,5 @@
 </footer>
 
 <script src="app.js"></script>
-
 </body>
 </html>
