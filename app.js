@@ -59,293 +59,217 @@ let parentData = null;
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
 
- // عناصر الصفحة
-  const userTypeSelect = document.getElementById("userTypeSelect");
-  const employeeBlock = document.getElementById("employeeBlock");
-  const employeeSelect = document.getElementById("employeeSelect");
-  const authBlock = document.getElementById("authBlock");
-  const continueBtn = document.getElementById("continueBtn");
-  const loginBtn = document.getElementById("loginBtn");
-  const loginPassword = document.getElementById("loginPassword");
-  const loginModal = document.getElementById("loginModal");
-  const menuBtn = document.getElementById("menuBtn");
-  const dropdownMenu = document.getElementById("dropdownMenu");
-  const schoolKeyBlock = document.getElementById("schoolKeyBlock");
-  const schoolKeyInput = document.getElementById("schoolKeyInput");
-  const welcomeText = document.getElementById("welcomeText");
-  const schoolKeyBtn = document.getElementById("schoolKeyBtn");
-  const studentBlock = document.getElementById("studentBlock");
-  const studentSelect = document.getElementById("studentSelect");
- const classeSelect = document.getElementById("ClasseSelect");
+    const userTypeSelect = document.getElementById("userTypeSelect");
+    const employeeBlock = document.getElementById("employeeBlock");
+    const employeeSelect = document.getElementById("employeeSelect");
+    const authBlock = document.getElementById("authBlock");
+    const continueBtn = document.getElementById("continueBtn");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginPassword = document.getElementById("loginPassword");
+    const loginModal = document.getElementById("loginModal");
+    const menuBtn = document.getElementById("menuBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    const schoolKeyBlock = document.getElementById("schoolKeyBlock");
+    const schoolKeyInput = document.getElementById("schoolKeyInput");
+    const welcomeText = document.getElementById("welcomeText");
+    const schoolKeyBtn = document.getElementById("schoolKeyBtn");
+    const studentBlock = document.getElementById("studentBlock");
+    const studentSelect = document.getElementById("studentSelect");
+    const classeSelect = document.getElementById("ClasseSelect");
 
-  // ==================== EVENTS ====================
-userTypeSelect.addEventListener("change", function () {
+    // ==================== تغيير نوع المستخدم ====================
+    userTypeSelect.addEventListener("change", function () {
 
-employeeBlock.style.display =
-authBlock.style.display =
-continueBtn.style.display =
-loginBtn.style.display =
-schoolKeyBlock.style.display =
-studentBlock.style.display = "none";
+        // إخفاء جميع البلوكات أولاً
+        employeeBlock.style.display =
+        authBlock.style.display =
+        continueBtn.style.display =
+        loginBtn.style.display =
+        schoolKeyBlock.style.display =
+        studentBlock.style.display = "none";
 
-loadClassesList();
+        loadClassesList();
 
-if(this.value === "parent"){
-    studentBlock.style.display="block";
-    loginBtn.style.display="flex";
-    loadStudentsList();
-}
-
-if(this.value==="teacher" || this.value==="consultation"){
-    schoolKeyBlock.style.display="block";
-}
-});
-
-continueBtn.addEventListener("click", function () { 
-    openSession("parent"); 
-});
-
-schoolKeyBtn.addEventListener("click", async function () {
-
-    if(!schoolKeyInput.value) 
-        return alert("أدخل رمز المؤسسة");
-
-    const spinner = document.getElementById("loadingSpinner");
-    spinner.style.display = "block";
-
-    try {
-        await loadSchoolKey();
-
-        if(schoolKeyInput.value !== SCHOOL_KEY) {
-            spinner.style.display = "none";
-            return alert("رمز المؤسسة غير صحيح");
+        if(this.value === "parent"){
+            studentBlock.style.display = "block";
+            loginBtn.style.display = "flex";
+            loadStudentsList();
         }
 
-        schoolKeyBlock.style.display="none";
-        employeeBlock.style.display="block";
-        await loadEmployeeList(userTypeSelect.value);
-        await loadPasswords();
-
-    } catch(err) {
-        console.error(err);
-        alert("حدث خطأ أثناء تحميل البيانات");
-    } finally {
-        spinner.style.display = "none";
-    }
-});
-
-employeeSelect.addEventListener("change", function() {
-    if(this.value!=="") { 
-        authBlock.style.display="block"; 
-        loginBtn.style.display="flex"; 
-    }
-});
-
-// ==================== تسجيل الدخول ====================
-loginBtn.addEventListener("click", function() {
-
-    if(userTypeSelect.value === "parent") {
-
-        let selectedLine = studentSelect.value;
-        if(!selectedLine) 
-            return alert("اختر التلميذ من القائمة");
-
-        let data = parseStudentLine(selectedLine);
-        if(!data) 
-            return alert("خطأ في بيانات التلميذ المختار");
-
-        parentData = data;
-
-        localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
-        localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
-
-        openSession("parent");
-        return;
-    }
-
-    if(!loginPassword.value) 
-        return alert("أدخل كلمة المرور");
-
-    const spinner = document.getElementById("loadingSpinner");
-    spinner.style.display = "block";
-
-    setTimeout(() => {
-        if(!PASSWORDS.includes(loginPassword.value)) {
-            spinner.style.display = "none";
-            return alert("كلمة المرور غير صحيحة");
+        if(this.value === "teacher" || this.value === "consultation"){
+            schoolKeyBlock.style.display = "block";
         }
-        openSession(userTypeSelect.value);
-        spinner.style.display = "none";
-    }, 300);
-});
+    });
 
+    // ==================== زر متابعة للولي ====================
+    continueBtn.addEventListener("click", function () { 
+        openSession("parent"); 
+    });
 
-// ==================== حفظ الجلسة ====================
-const savedType = localStorage.getItem("userType");
-const savedName = localStorage.getItem("employeeName");
+    // ==================== زر إدخال رمز المؤسسة ====================
+    schoolKeyBtn.addEventListener("click", async function () {
+        if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
 
-if(savedType) {
+        showLoader();
 
-    if(savedType === "parent"){
+        try {
+            await loadSchoolKey();
 
-        const corr = localStorage.getItem("Correspondence_Fille_ID");
-        const abs  = localStorage.getItem("SijileAbsence_Fille_ID");
+            if(schoolKeyInput.value !== SCHOOL_KEY) {
+                hideLoader();
+                return alert("رمز المؤسسة غير صحيح");
+            }
 
-        if(corr && abs){
-            parentData = {
-                correspondenceID: corr,
-                absenceID: abs
-            };
-        } else {
-            localStorage.removeItem("userType");
+            schoolKeyBlock.style.display = "none";
+            employeeBlock.style.display = "block";
+            await loadEmployeeList(userTypeSelect.value);
+            await loadPasswords();
+
+        } catch(err) {
+            console.error(err);
+            alert("حدث خطأ أثناء تحميل البيانات");
+        } finally {
+            hideLoader();
+        }
+    });
+
+    // ==================== تغيير الموظف ====================
+    employeeSelect.addEventListener("change", function() {
+        if(this.value!=="") { 
+            authBlock.style.display="block"; 
+            loginBtn.style.display="flex"; 
+        }
+    });
+
+    // ==================== تسجيل الدخول ====================
+    loginBtn.addEventListener("click", function() {
+        if(userTypeSelect.value === "parent") {
+            let selectedLine = studentSelect.value;
+            if(!selectedLine) return alert("اختر التلميذ من القائمة");
+
+            let data = parseStudentLine(selectedLine);
+            if(!data) return alert("خطأ في بيانات التلميذ المختار");
+
+            parentData = data;
+
+            localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
+            localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
+
+            openSession("parent");
             return;
         }
+
+        if(!loginPassword.value) return alert("أدخل كلمة المرور");
+
+        showLoader();
+        setTimeout(() => {
+            if(!PASSWORDS.includes(loginPassword.value)) {
+                hideLoader();
+                return alert("كلمة المرور غير صحيحة");
+            }
+            openSession(userTypeSelect.value);
+            hideLoader();
+        }, 300);
+    });
+
+    // ==================== تحميل قائمة الأقسام ====================
+    async function loadClassesList() {
+        classeSelect.disabled = true;
+        classeSelect.innerHTML = `<option value="">-- يرجى الإنتظار... --</option>`;
+        showLoader();
+
+        try {
+            const response = await fetch(getFileLink(CONFIG.ListeClasses_File_ID));
+            let classes = (await response.text())
+                .replace(/\r/g, "")
+                .split("\n")
+                .map(x => x.trim())
+                .filter(x => x);
+
+            classeSelect.innerHTML = `
+                <option value="">-- اختر القسم --</option>
+                <option value="all">كل الأقسام</option>
+            `;
+
+            classes.forEach(c => {
+                classeSelect.innerHTML += `<option value="${c}">${c}</option>`;
+            });
+
+        } catch (err) {
+            console.error("خطأ في تحميل الأقسام:", err);
+            classeSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل الأقسام</option>`;
+        } finally {
+            classeSelect.disabled = false;
+            hideLoader();
+        }
     }
 
-    menuBtn.disabled = false;
-    loginModal.style.display = "none";
-    fillMenu(savedType);
+    // ==================== تغيير القسم ====================
+    classeSelect.addEventListener("change", function () {
+        const selectedClasse = this.value || "all";
+        loadStudentsList(selectedClasse);
+    });
 
-    welcomeText.textContent = (savedType==="parent") 
-        ? "مرحبًا بك! افتح القائمة لاستخدام خدماتنا."
-        : `مرحبًا بك يا ${savedName}! افتح القائمة لاستخدام خدماتنا.`;
-}
-  
- // ==================== تحميل قائمة الأقسام ====================
-async function loadClassesList() {
-    classeSelect.disabled = true;
-    classeSelect.innerHTML = `<option value="">-- يرجى الإنتظار... --</option>`;
+    // ==================== تحميل قائمة الطلاب ====================
+    async function loadStudentsList(selectedClasse = "all") {
+        showLoader();
+        studentSelect.disabled = true;
+        studentSelect.innerHTML = `<option value="">يرجى الإنتظار...</option>`;
 
-    try {
-        const response = await fetch(getFileLink(CONFIG.ListeClasses_File_ID));
+        try {
+            const r = await fetch(getFileLink(CONFIG.ListeStudents_File_ID));
+            let list = (await r.text())
+                .replace(/\r/g,"")
+                .split("\n")
+                .map(x => x.trim())
+                .filter(x => x);
 
-        let classes = (await response.text())
-            .replace(/\r/g, "")
-            .split("\n")
-            .map(x => x.trim())
-            .filter(x => x);
+            STUDENTS_LIST = list;
 
-        classeSelect.innerHTML = `
-            <option value="">-- اختر القسم --</option>
-            <option value="all">كل الأقسام</option>
-        `;
+            let filteredList = selectedClasse === "all" || !selectedClasse
+                ? list
+                : list.filter(line => {
+                    const parts = line.split(";");
+                    return parts[1].trim() === selectedClasse.trim();
+                });
 
-        classes.forEach(c => {
-            classeSelect.innerHTML += `<option value="${c}">${c}</option>`;
-        });
+            studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+            filteredList.forEach(line => {
+                const parts = line.split(";");
+                studentSelect.innerHTML += `<option value="${line}">${parts[0]}</option>`;
+            });
 
-    } catch (err) {
-        console.error("خطأ في تحميل الأقسام:", err);
-        classeSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل الأقسام</option>`;
-    } finally {
-        classeSelect.disabled = false;
+        } catch(err) {
+            console.error(err);
+            studentSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل القائمة</option>`;
+        } finally {
+            studentSelect.disabled = false;
+            hideLoader();
+        }
     }
-}
 
-  // حدث تغيير القسم
-classeSelect.addEventListener("change", function () {
-    const selectedClasse = this.value || "all";
-    loadStudentsList(selectedClasse);
+    // ==================== تحميل الموظفين ====================
+    async function loadEmployeeList(type){
+        showLoader();
+        const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
+        employeeSelect.disabled = true;
+        employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... </option>`;
+
+        try {
+            const r = await fetch(getFileLink(fileId));
+            let list = (await r.text()).replace(/\r/g,"").split("\n").map(x=>x.trim()).filter(x=>x);
+            employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+            list.forEach(e => employeeSelect.innerHTML += `<option value="${e}">${e}</option>`);
+        } catch(err){
+            console.error(err);
+            employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
+        } finally {
+            employeeSelect.disabled = false;
+            hideLoader();
+        }
+    }
+
 });
-
-// ==================== دالة تحليل بيانات التلاميذ في القائمة المحملة ====================
-function parseStudentLine(line) {
-    if(!line) return null;
-    const parts = line.split(";");
-    if(parts.length < 5) return null;  // NonPrenom, Classe, Racord, Correspondence, Absence
-    return {
-        fullName: parts[0],
-        className: parts[1],
-        racord: parts[2],
-        correspondenceID: parts[3],
-        absenceID: parts[4]
-    };
-}
-
-// ==================== تحميل التلاميذ ====================
-async function loadStudentsList(selectedClasse = "all") {
-  showLoader();
-    studentSelect.disabled = true;
-    studentSelect.innerHTML = `<option value="">يرجى الإنتظار...</option>`;
-    try {
-        const r = await fetch(getFileLink(CONFIG.ListeStudents_File_ID));
-        let list = (await r.text())
-            .replace(/\r/g,"")
-            .split("\n")
-            .map(x => x.trim())
-            .filter(x => x);
-
-        STUDENTS_LIST = list;
-
-        // فرز/فلترة حسب القسم المحدد
-        let filteredList = selectedClasse === "all" ? list : list.filter(line => {
-            const parts = line.split(";");
-            return parts[1] === selectedClasse; // parts[1] = Classe
-        });
-
-        studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-
-        filteredList.forEach(line => {
-            const parts = line.split(";");
-            studentSelect.innerHTML += `<option value="${line}">${parts[0]}</option>`;
-        });
-
-    } catch(err) {
-        console.error(err);
-        studentSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل القائمة</option>`;
-    } finally {
-      
-        studentSelect.disabled = false;
-       hideLoader();
-    }
-}
-  
-});
- 
-  // ==================== FUNCTIONS ====================
-  function getFileLink(fileId) {
-    return `${GAS_SCRIPT_URL}?id=${fileId}`;
-  }
-
-  async function loadSchoolKey() {
-    const r = await fetch(getFileLink(CONFIG.School_Key_File_ID));
-    SCHOOL_KEY = (await r.text()).trim();
-  }
-
-  // ==================== تحميل كلمات المرور ====================
-  async function loadPasswords() {
-    const r = await fetch(getFileLink(CONFIG.Password_File_ID));
-    PASSWORDS = (await r.text())
-      .replace(/\r/g, "")
-      .split("\n")
-      .map(x => x.trim())
-      .filter(x => x);
-  }
-
-  // ====================تخميل الموظفين ====================
-  function loadEmployeeList(type) {
-     showLoader();
-    const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
-    employeeSelect.disabled = true;
-    employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... ${type==="teacher"?"الأساتذة":"الإشراف التربوي"}</option>`;
-
-    fetch(getFileLink(fileId))
-      .then(r => r.text())
-      .then(text => {
-        let list = text.replace(/\r/g, "").split("\n").map(x => x.trim()).filter(x => x);
-        employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-        list.forEach(e => employeeSelect.innerHTML += `<option value="${e}">${e}</option>`);
-        employeeSelect.disabled = false;
-      })
-      .catch(error => {
-        employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
-        console.error("خطأ في تحميل القائمة:", error);
-        employeeSelect.disabled = false;
-         })
-  .finally(() => {
-      hideLoader();
-  });
-  }
 
   function openSession(type) {
     const employeeName = employeeSelect.value;
@@ -674,6 +598,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
