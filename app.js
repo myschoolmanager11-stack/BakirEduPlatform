@@ -72,39 +72,12 @@ const studentBlock = document.getElementById("studentBlock");
 const studentSelect = document.getElementById("studentSelect");
 const scanStudentQR = document.getElementById("scanStudentQR");
 
+const correspondenceId = localStorage.getItem("Correspondence_Fille_ID");
+const absenceId = localStorage.getItem("SijileAbsence_Fille_ID");
+
+  
 let STUDENTS_LIST = [];
 let parentData = null;
-
-  // ==================== تحميل قائمة التلاميذ ====================
-async function loadStudentsList() {
-
-  studentSelect.disabled = true;
-  studentSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة التلاميذ</option>`;
-
-  try {
-      const r = await fetch(getFileLink(CONFIG.ListeStudents_File_ID));
-      let list = (await r.text())
-        .replace(/\r/g,"")
-        .split("\n")
-        .map(x=>x.trim())
-        .filter(x=>x);
-
-      STUDENTS_LIST = list;
-
-      studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-
-      list.forEach(line=>{
-          let parts = line.split(";");
-          studentSelect.innerHTML += `<option value="${line}">${parts[0]}</option>`;
-      });
-
-  } catch(err) {
-      studentSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل القائمة</option>`;
-      console.error(err);
-  }
-
-  studentSelect.disabled = false;
-}
 
  // ==================== تحليل QR للتلميذ ====================
 function parseStudentQR(qrText){
@@ -123,6 +96,17 @@ function parseStudentQR(qrText){
       correspondenceID: parts[3],
       absenceID: parts[4]
   };
+}
+
+   // ==================== دالة عرض نص الإنتضار والتحميل للبيانات ====================
+  function showLoading(text){
+    const overlay = document.getElementById("loadingOverlay");
+    overlay.innerText = text;
+    overlay.style.display = "flex";
+}
+
+function hideLoading(){
+    document.getElementById("loadingOverlay").style.display = "none";
 }
   
  // ==================== تثبيت عرض المودال ====================
@@ -213,13 +197,14 @@ function parseStudentQR(qrText){
       let label = document.createElement("span"); 
       label.textContent=item.label; 
       div.appendChild(label);
-
-      // حدث الضغط الواحد لكل div
+    
+      
+// حدث الضغط الواحد لكل div
     div.addEventListener('click', function(){
 
   itemDescription.textContent = item.desc || "";
 
-  // روابط خارجية
+// روابط خارجية
  if(item.label === "فضاء الأساتذة") {
     window.open("https://ostad.education.dz/auth", "_blank");
     dropdownMenu.style.display = "none";
@@ -232,7 +217,7 @@ function parseStudentQR(qrText){
     return;
 }
 
-  // مودال نظام الحضور الذكي
+// مودال نظام الحضور الذكي
   if(item.label === "نظام الحضور الذكي") {
     document.getElementById("attendanceModal").style.display = "flex";
       dropdownMenu.style.display = "none";
@@ -623,6 +608,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
