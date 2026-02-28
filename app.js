@@ -53,6 +53,7 @@ const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2X2ku8gwIIq5_n
 let currentFileURL = null;
 let PASSWORDS = [];
 let SCHOOL_KEY = "";
+let qrScanner = null;
 
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
@@ -299,8 +300,9 @@ userTypeSelect.addEventListener("change", function(){
     }
 
 });
- 
- qrLoginBtn.addEventListener("click", async function(){
+
+  // ==================== زر مسح QR ====================
+qrLoginBtn.addEventListener("click", function(){
 
     const type = userTypeSelect.value;
 
@@ -309,60 +311,45 @@ userTypeSelect.addEventListener("change", function(){
         return;
     }
 
-    let qrText = prompt("ضع نص QR للتجربة");
+    document.getElementById("qrScannerModal").style.display = "flex";
 
-    if(!qrText) return;
+    qrScanner = new Html5Qrcode("qrReader");
 
-    authenticateByQR(type, qrText);
+    qrScanner.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: 250 },
+        async (decodedText) => {
+
+            await authenticateByQR(type, decodedText);
+
+            stopQrScanner();
+
+        },
+        (errorMessage) => {}
+    ).catch(err=>{
+        console.error(err);
+        alert("تعذر تشغيل الكاميرا");
+    });
 
 });
-  
-// ==================== زر مسح QR ====================
-scanStudentQR.addEventListener("click", function(){
 
-    let qrText = prompt("ضع نص QR للتجربة");
+  // ==================== دالة إيقاف QR ====================
+  function stopQrScanner(){
 
-    if(!qrText) return;
-
-    let data = parseStudentQR(qrText);
-    if(!data) return;
-
-    parentData = data;
-
-    // اختيار الطالب تلقائياً
-    for(let opt of studentSelect.options){
-        if(opt.value.startsWith(data.name + ";")){
-            studentSelect.value = opt.value;
-            break;
-        }
+    if(qrScanner){
+        qrScanner.stop().then(()=>{
+            qrScanner.clear();
+        });
     }
 
-});
-  
-
- loginBtn.addEventListener("click", function() {
-   // ==================== دخول أولياء الأمور ====================
-if(userTypeSelect.value==="parent"){
-
-    let selectedLine = studentSelect.value;
-
-    if(!selectedLine && !parentData)
-        return alert("اختر التلميذ أو امسح QR");
-
-    let data = parentData ? parentData : parseStudentQR(selectedLine); 
-  
-if(!data) return;
-  
-    parentData = data;
-
- localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
-localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
-
-    openSession("parent");
-    return;
+    document.getElementById("qrScannerModal").style.display = "none";
 }
 
+  document.getElementById("closeQrModal").addEventListener("click", function(){
+    stopQrScanner();
+});
 
+// ==================== داالة اتصل بنا ====================
   document.getElementById("closeContactModal").addEventListener("click", function(){
     document.getElementById("contactModal").style.display="none";
   });
@@ -590,6 +577,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
