@@ -93,33 +93,46 @@ function parseStudentLine(line) {
 }
 
   // ==================== تحميل قائمة الأقسام ====================
-async function loadClassesList() {
-    classeSelect.disabled = true;
-    classeSelect.innerHTML = `<option value="">-- يرجى الإنتظار... --</option>`;
+document.addEventListener("DOMContentLoaded", async function () {
+    const classeSelect = document.getElementById("ClasseSelect");
 
-    try {
-        const r = await fetch(getFileLink(CONFIG.ListeClasses_File_ID));
-        let classes = (await r.text())
-            .replace(/\r/g,"")
-            .split("\n")
-            .map(x => x.trim())
-            .filter(x => x);
+    async function loadClassesList() {
+        classeSelect.disabled = true;
+        classeSelect.innerHTML = `<option value="">-- يرجى الإنتظار... --</option>`;
 
-        // إضافة خيار "كل الأقسام"
-        classeSelect.innerHTML = `<option value="">-- اختر القسم --</option>
-                                  <option value="all">كل الأقسام</option>`;
+        try {
+            const response = await fetch(getFileLink(CONFIG.ListeClasses_File_ID));
+            let classes = (await response.text())
+                .replace(/\r/g, "")
+                .split("\n")
+                .map(x => x.trim())
+                .filter(x => x);
 
-        classes.forEach(c => {
-            classeSelect.innerHTML += `<option value="${c}">${c}</option>`;
-        });
+            // إضافة خيار "كل الأقسام"
+            classeSelect.innerHTML = `<option value="">-- اختر القسم --</option>
+                                      <option value="all">كل الأقسام</option>`;
 
-    } catch(err) {
-        console.error(err);
-        classeSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل الأقسام</option>`;
-    } finally {
-        classeSelect.disabled = false;
+            classes.forEach(c => {
+                classeSelect.innerHTML += `<option value="${c}">${c}</option>`;
+            });
+
+        } catch (err) {
+            console.error("خطأ في تحميل الأقسام:", err);
+            classeSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل الأقسام</option>`;
+        } finally {
+            classeSelect.disabled = false;
+        }
     }
-}
+
+    await loadClassesList();
+    await loadStudentsList(); // تحميل جميع التلاميذ بشكل افتراضي
+
+    // حدث تغيير القسم
+    classeSelect.addEventListener("change", function() {
+        const selectedClasse = this.value || "all"; // كل الأقسام إذا لم يختار شيء
+        loadStudentsList(selectedClasse);
+    });
+});
   
 // ==================== تحميل التلاميذ ====================
 async function loadStudentsList(selectedClasse = "all") {
@@ -634,4 +647,5 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
