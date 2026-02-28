@@ -62,6 +62,10 @@ function showLoader() { document.getElementById("globalLoader").style.display = 
 function hideLoader() { document.getElementById("globalLoader").style.display = "none"; }
 
 async function fetchFile(fileId) {
+    if(!fileId) {
+        console.error("خطأ: لم يتم تحديد ID الملف");
+        return null;
+    }
     try {
         const response = await fetch(`${GAS_SCRIPT_URL}?fileId=${fileId}`);
         if(!response.ok) throw new Error("فشل تحميل الملف من Google Drive");
@@ -193,10 +197,12 @@ schoolKeyBtn.addEventListener("click", async function () {
         const list = await fetchFile(CONFIG.School_Key_File_ID);
         if(list && list.length>0) SCHOOL_KEY = list[0];
 
-        if(schoolKeyInput.value !== SCHOOL_KEY) {
-            hideLoader();
-            return alert("رمز المؤسسة غير صحيح");
-        }
+       SCHOOL_KEY = (list && list.length > 0) ? list[0].trim() : CONFIG.SchoolKey;
+
+if(schoolKeyInput.value.trim() !== SCHOOL_KEY) {
+    hideLoader();
+    return alert("رمز المؤسسة غير صحيح");
+}
 
         schoolKeyBlock.style.display = "none";
         employeeBlock.style.display = "block";
@@ -583,6 +589,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
