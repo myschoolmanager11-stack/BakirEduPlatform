@@ -56,10 +56,6 @@ let SCHOOL_KEY = "";
 let STUDENTS_LIST = [];
 let parentData = null;
 
-async function loadClassesList()
-async function loadStudentsList()
-function parseStudentLine()
-
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -138,7 +134,6 @@ async function loadStudentsList(selectedClasse = "all") {
   showLoader();
     studentSelect.disabled = true;
     studentSelect.innerHTML = `<option value="">يرجى الإنتظار...</option>`;
-
     try {
         const r = await fetch(getFileLink(CONFIG.ListeStudents_File_ID));
         let list = (await r.text())
@@ -173,21 +168,7 @@ async function loadStudentsList(selectedClasse = "all") {
 }
   
 });
-  
- // ==================== تثبيت عرض المودال ====================
-  loginModal.style.display = "flex";
-  loginModal.style.zIndex = "5000";
-  menuBtn.disabled = true;
  
-  // div وصف العنصر
-  let itemDescription = document.createElement("div");
-  itemDescription.id = "itemDescription";
-  itemDescription.style.fontSize = "13px";
-  itemDescription.style.color = "#555";
-  itemDescription.style.marginTop = "4px";
-  itemDescription.style.minHeight = "18px";
-  welcomeText.insertAdjacentElement('afterend', itemDescription);
-
   // ==================== FUNCTIONS ====================
   function getFileLink(fileId) {
     return `${GAS_SCRIPT_URL}?id=${fileId}`;
@@ -420,11 +401,7 @@ loginBtn.style.display =
 schoolKeyBlock.style.display =
 studentBlock.style.display = "none";
 
-if(this.value==="parent"){
-    studentBlock.style.display="block";
-    loginBtn.style.display="flex";
-    loadStudentsList();
-}
+loadClassesList();
 
 if(this.value==="teacher" || this.value==="consultation"){
     schoolKeyBlock.style.display="block";
@@ -680,6 +657,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
