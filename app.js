@@ -172,37 +172,34 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 300);
     });
 
+
+async function fetchFile(fileId) {
+  try {
+    const response = await fetch(`${GAS_SCRIPT_URL}?fileId=${fileId}`);
+    if(!response.ok) throw new Error("فشل تحميل الملف من Google Drive");
+    const text = await response.text();
+    return text.replace(/\r/g,"").split("\n").map(x=>x.trim()).filter(x=>x);
+  } catch(err) {
+    console.error(`خطأ في تحميل الملف ${fileId}:`, err);
+    return null;
+  }
+}
+  
     // ==================== تحميل قائمة الأقسام ====================
     async function loadClassesList() {
-        classeSelect.disabled = true;
-        classeSelect.innerHTML = `<option value="">-- يرجى الإنتظار... --</option>`;
-        showLoader();
-
-        try {
-            const response = await fetch(getFileLink(CONFIG.ListeClasses_File_ID));
-            let classes = (await response.text())
-                .replace(/\r/g, "")
-                .split("\n")
-                .map(x => x.trim())
-                .filter(x => x);
-
-            classeSelect.innerHTML = `
-                <option value="">-- اختر القسم --</option>
-                <option value="all">كل الأقسام</option>
-            `;
-
-            classes.forEach(c => {
-                classeSelect.innerHTML += `<option value="${c}">${c}</option>`;
-            });
-
-        } catch (err) {
-            console.error("خطأ في تحميل الأقسام:", err);
-            classeSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل الأقسام</option>`;
-        } finally {
-            classeSelect.disabled = false;
-            hideLoader();
-        }
+    classeSelect.disabled = true;
+    classeSelect.innerHTML = `<option value="">-- يرجى الإنتظار... --</option>`;
+    showLoader();
+    const classes = await fetchFile(CONFIG.ListeClasses_File_ID);
+    if(classes) {
+        classeSelect.innerHTML = `<option value="">-- اختر القسم --</option><option value="all">كل الأقسام</option>`;
+        classes.forEach(c => classeSelect.innerHTML += `<option value="${c}">${c}</option>`);
+    } else {
+        classeSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل الأقسام</option>`;
     }
+    classeSelect.disabled = false;
+    hideLoader();
+}
 
     // ==================== تغيير القسم ====================
     classeSelect.addEventListener("change", function () {
@@ -211,66 +208,55 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // ==================== تحميل قائمة الطلاب ====================
-    async function loadStudentsList(selectedClasse = "all") {
-        showLoader();
-        studentSelect.disabled = true;
-        studentSelect.innerHTML = `<option value="">يرجى الإنتظار...</option>`;
-
-        try {
-            const r = await fetch(getFileLink(CONFIG.ListeStudents_File_ID));
-            let list = (await r.text())
-                .replace(/\r/g,"")
-                .split("\n")
-                .map(x => x.trim())
-                .filter(x => x);
-
-            STUDENTS_LIST = list;
-
-            let filteredList = selectedClasse === "all" || !selectedClasse
-                ? list
-                : list.filter(line => {
-                    const parts = line.split(";");
-                    return parts[1].trim() === selectedClasse.trim();
-                });
-
-            studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-            filteredList.forEach(line => {
-                const parts = line.split(";");
-                studentSelect.innerHTML += `<option value="${line}">${parts[0]}</option>`;
-            });
-
-        } catch(err) {
-            console.error(err);
-            studentSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل القائمة</option>`;
-        } finally {
-            studentSelect.disabled = false;
-            hideLoader();
-        }
+ async function loadStudentsList(selectedClasse = "all") {
+    showLoader();
+    studentSelect.disabled = true;
+    studentSelect.innerHTML = `<option value="">يرجى الإنتظار...</option>`;
+    const list = await fetchFile(CONFIG.ListeStudents_File_ID);
+    if(list) {
+        STUDENTS_LIST = list;
+        let filteredList = selectedClasse === "all" ? list : list.filter(line => line.split(";")[1].trim()===selectedClasse);
+        studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+        filteredList.forEach(line => {
+            const parts = line.split(";");
+            studentSelect.innerHTML += `<option value="${line}">${parts[0]}</option>`;
+        });
+    } else {
+        studentSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل القائمة</option>`;
     }
+    studentSelect.disabled = false;
+    hideLoader();
+}
 
     // ==================== تحميل الموظفين ====================
-    async function loadEmployeeList(type){
-        showLoader();
-        const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
-        employeeSelect.disabled = true;
-        employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... </option>`;
-
-        try {
-            const r = await fetch(getFileLink(fileId));
-            let list = (await r.text()).replace(/\r/g,"").split("\n").map(x=>x.trim()).filter(x=>x);
-            employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-            list.forEach(e => employeeSelect.innerHTML += `<option value="${e}">${e}</option>`);
-        } catch(err){
-            console.error(err);
-            employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
-        } finally {
-            employeeSelect.disabled = false;
-            hideLoader();
-        }
+   async function loadEmployeeList(type){
+    showLoader();
+    const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
+    employeeSelect.disabled = true;
+    employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... </option>`;
+    const list = await fetchFile(fileId);
+    if(list){
+        employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+        list.forEach(e => employeeSelect.innerHTML += `<option value="${e}">${e}</option>`);
+    } else {
+        employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
     }
+    employeeSelect.disabled = false;
+    hideLoader();
+}
 
-});
+      // ==================== تحميل كلمات المرور ====================
+  async function loadPasswords(){
+    const list = await fetchFile(CONFIG.Password_File_ID);
+    if(list) PASSWORDS = list;
+}
 
+    // ==================== تحميل رمز المؤسسة ====================
+async function loadSchoolKey(){
+    const list = await fetchFile(CONFIG.School_Key_File_ID);
+    if(list && list.length>0) SCHOOL_KEY = list[0];
+}
+  
   function openSession(type) {
     const employeeName = employeeSelect.value;
     loginModal.style.display = "none";
@@ -598,6 +584,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
