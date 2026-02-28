@@ -136,8 +136,9 @@ function parseStudentLine(line) {
 
 // ==================== تحميل التلاميذ ====================
 async function loadStudentsList(selectedClasse = "all") {
+  showLoader();
     studentSelect.disabled = true;
-    studentSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة التلاميذ</option>`;
+    studentSelect.innerHTML = `<option value="">يرجى الإنتظار...</option>`;
 
     try {
         const r = await fetch(getFileLink(CONFIG.ListeStudents_File_ID));
@@ -166,7 +167,9 @@ async function loadStudentsList(selectedClasse = "all") {
         console.error(err);
         studentSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل القائمة</option>`;
     } finally {
+      
         studentSelect.disabled = false;
+       hideLoader();
     }
 }
 
@@ -200,6 +203,7 @@ classeSelect.addEventListener("change", function() {
     SCHOOL_KEY = (await r.text()).trim();
   }
 
+  // ==================== تحميل كلمات المرور ====================
   async function loadPasswords() {
     const r = await fetch(getFileLink(CONFIG.Password_File_ID));
     PASSWORDS = (await r.text())
@@ -209,10 +213,12 @@ classeSelect.addEventListener("change", function() {
       .filter(x => x);
   }
 
+  // ====================تخميل الموظفين ====================
   function loadEmployeeList(type) {
+     showLoader();
     const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
     employeeSelect.disabled = true;
-    employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة ${type==="teacher"?"الأساتذة":"الإشراف التربوي"}</option>`;
+    employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... ${type==="teacher"?"الأساتذة":"الإشراف التربوي"}</option>`;
 
     fetch(getFileLink(fileId))
       .then(r => r.text())
@@ -226,6 +232,8 @@ classeSelect.addEventListener("change", function() {
         employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
         console.error("خطأ في تحميل القائمة:", error);
         employeeSelect.disabled = false;
+         } finally {
+        hideLoader();
       });
   }
 
@@ -332,13 +340,13 @@ classeSelect.addEventListener("change", function() {
 
   if(item.icon === "logout") logout();
 
-  if(item.label === "سجل الغيابات"){
+  if(item.icon === "assignment" && type === "parent"){
     openFilePreview(localStorage.getItem("SijileAbsence_Fille_ID"));
     dropdownMenu.style.display = "none";
     return;
 }
 
-if(item.label === "سجل المراسلات الإدارية"){
+if(item.icon === "mail" && type === "parent"){
     openFilePreview(localStorage.getItem("Correspondence_Fille_ID"));
     dropdownMenu.style.display = "none";
     return;
@@ -357,32 +365,52 @@ if(FILE_ITEMS[item.label]) {
     });
   }
 
-  function logout() {
+// ==================== logout ====================
+function logout() {
+
+    // إرجاع النص الترحيبي
     welcomeText.textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
-    if(itemDescription) itemDescription.textContent = "";
+    itemDescription.textContent = "";
+
+    // إخفاء القائمة
     dropdownMenu.style.display = "none";
     menuBtn.disabled = true;
-    localStorage.removeItem("userType");
-localStorage.removeItem("employeeName");
-localStorage.removeItem("Correspondence_Fille_ID");
-localStorage.removeItem("SijileAbsence_Fille_ID");
+
+    // حذف التخزين
+    localStorage.clear();
+    parentData = null;
+
+    // إرجاع نافذة الدخول
     loginModal.style.display = "flex";
     loginModal.classList.remove("expanded");
+
+    // إعادة الحقول للقيم الافتراضية
     userTypeSelect.value = "";
     schoolKeyInput.value = "";
     loginPassword.value = "";
     employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-    schoolKeyBlock.style.display = employeeBlock.style.display = authBlock.style.display = continueBtn.style.display = loginBtn.style.display = "none";
-    document.getElementById("filePreviewPanel").style.display="none";
-  }
+    studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+    classeSelect.innerHTML = '<option value="">-- اختر القسم --</option>';
+
+    // إخفاء البلوكات
+    schoolKeyBlock.style.display =
+    employeeBlock.style.display =
+    authBlock.style.display =
+    continueBtn.style.display =
+    loginBtn.style.display =
+    studentBlock.style.display = "none";
+
+    // إغلاق أي معاينة مفتوحة
+    document.getElementById("filePreviewPanel").style.display = "none";
+}
 
   window.toggleMenu = function () {
     dropdownMenu.style.display = (dropdownMenu.style.display==="block") ? "none" : "block";
   };
 
-  // ==================== EVENTS ====================
-  userTypeSelect.addEventListener("change", function () {
-   employeeBlock.style.display =
+// ==================== EVENTS ====================
+userTypeSelect.addEventListener("change", function () {
+employeeBlock.style.display =
 authBlock.style.display =
 continueBtn.style.display =
 loginBtn.style.display =
@@ -404,11 +432,11 @@ if(this.value==="teacher" || this.value==="consultation"){
  schoolKeyBtn.addEventListener("click", async function () {
     if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
 
-    // إظهار سبينر التحميل
-    const spinner = document.getElementById("loadingSpinner");
+// إظهار سبينر التحميل
+const spinner = document.getElementById("loadingSpinner");
     spinner.style.display = "block";
 
-    try {
+try {
         await loadSchoolKey();
         if(schoolKeyInput.value !== SCHOOL_KEY) {
             spinner.style.display = "none";
@@ -428,12 +456,12 @@ if(this.value==="teacher" || this.value==="consultation"){
     }
 });
     
-  employeeSelect.addEventListener("change", function() {
+employeeSelect.addEventListener("change", function() {
     if(this.value!=="") { authBlock.style.display="block"; loginBtn.style.display="flex"; }
   });
 
 
-   // ==================== تسجيل الدخول ====================
+// ==================== تسجيل الدخول ====================
 loginBtn.addEventListener("click", function() {
     // تسجيل دخول التلميذ تلقائي
     if(userTypeSelect.value === "parent") {
@@ -544,6 +572,14 @@ function openFilePreview(fileId) {
   setTimeout(() => panel.style.opacity = 1, 50);
 }
 
+// ==================== تدالتين عامتين لعرض نص الإنتضار وتحميل البيانات ====================
+function showLoader(){
+    document.getElementById("globalLoader").style.display = "flex";
+}
+
+function hideLoader(){
+    document.getElementById("globalLoader").style.display = "none";
+}
 
 // ==================== تفعيل عناصر المعاينة بعد تحميل الصفحة ====================
 document.addEventListener("DOMContentLoaded", function(){
@@ -641,6 +677,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
