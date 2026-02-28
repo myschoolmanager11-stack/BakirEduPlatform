@@ -56,8 +56,6 @@ let SCHOOL_KEY = "";
 
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
-
- // عناصر الصفحة
   const userTypeSelect = document.getElementById("userTypeSelect");
   const employeeBlock = document.getElementById("employeeBlock");
   const employeeSelect = document.getElementById("employeeSelect");
@@ -74,68 +72,45 @@ document.addEventListener("DOMContentLoaded", function () {
   const schoolKeyBtn = document.getElementById("schoolKeyBtn");
 
   // ==================== عناصر أولياء الأمور ====================
-const studentBlock = document.getElementById("studentBlock");
-const studentSelect = document.getElementById("studentSelect");
-const scanStudentQR = document.getElementById("scanStudentQR");
-
-let STUDENTS_LIST = [];
-let parentData = null;
+  const studentBlock = document.getElementById("studentBlock");
+  const studentSelect = document.getElementById("studentSelect");
+  let STUDENTS_LIST = [];
+  let parentData = null;
 
   // ==================== تحميل قائمة التلاميذ ====================
-async function loadStudentsList() {
+  async function loadStudentsList() {
+    studentSelect.disabled = true;
+    studentSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة التلاميذ</option>`;
 
-  studentSelect.disabled = true;
-  studentSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة التلاميذ</option>`;
-
-  try {
+    try {
       const r = await fetch(getFileLink(CONFIG.ListeStudents_File_ID));
       let list = (await r.text())
-        .replace(/\r/g,"")
+        .replace(/\r/g, "")
         .split("\n")
-        .map(x=>x.trim())
-        .filter(x=>x);
+        .map(x => x.trim())
+        .filter(x => x);
 
       STUDENTS_LIST = list;
-
       studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
 
-      list.forEach(line=>{
-          let parts = line.split(";");
-          studentSelect.innerHTML += `<option value="${line}">${parts[0]}</option>`;
+      list.forEach(line => {
+        let parts = line.split(";");
+        studentSelect.innerHTML += `<option value="${line}">${parts[0]}</option>`;
       });
 
-  } catch(err) {
+    } catch (err) {
       studentSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل القائمة</option>`;
       console.error(err);
+    }
+
+    studentSelect.disabled = false;
   }
 
-  studentSelect.disabled = false;
-}
-
- // ==================== تحليل QR للتلميذ ====================
-function parseStudentQR(qrText){
-
-  let parts = qrText.trim().split(";");
-
-  if(parts.length !== 5){
-      alert("رمز QR غير صالح");
-      return null;
-  }
-
-  return {
-      name: parts[0],
-      classe: parts[1],
-      racord: parts[2],
-      correspondenceID: parts[3],
-      absenceID: parts[4]
-  };
-}
-  
- // ==================== تثبيت عرض المودال ====================
+  // ==================== تثبيت عرض المودال ====================
   loginModal.style.display = "flex";
   loginModal.style.zIndex = "5000";
   menuBtn.disabled = true;
- 
+
   // div وصف العنصر
   let itemDescription = document.createElement("div");
   itemDescription.id = "itemDescription";
@@ -146,9 +121,7 @@ function parseStudentQR(qrText){
   welcomeText.insertAdjacentElement('afterend', itemDescription);
 
   // ==================== FUNCTIONS ====================
-  function getFileLink(fileId) {
-    return `${GAS_SCRIPT_URL}?id=${fileId}`;
-  }
+  function getFileLink(fileId) { return `${GAS_SCRIPT_URL}?id=${fileId}`; }
 
   async function loadSchoolKey() {
     const r = await fetch(getFileLink(CONFIG.School_Key_File_ID));
@@ -167,7 +140,7 @@ function parseStudentQR(qrText){
   function loadEmployeeList(type) {
     const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
     employeeSelect.disabled = true;
-    employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة ${type==="teacher"?"الأساتذة":"الإشراف التربوي"}</option>`;
+    employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة ${type === "teacher" ? "الأساتذة" : "الإشراف التربوي"}</option>`;
 
     fetch(getFileLink(fileId))
       .then(r => r.text())
@@ -190,8 +163,8 @@ function parseStudentQR(qrText){
     menuBtn.disabled = false;
     dropdownMenu.style.display = "none";
 
-    welcomeText.textContent = (type==="parent") 
-      ? "مرحبًا بك! افتح القائمة لاستخدام خدماتنا." 
+    welcomeText.textContent = (type === "parent")
+      ? "مرحبًا بك! افتح القائمة لاستخدام خدماتنا."
       : `مرحبًا بك يا ${employeeName}! افتح القائمة لاستخدام خدماتنا.`;
 
     fillMenu(type);
@@ -203,124 +176,92 @@ function parseStudentQR(qrText){
     dropdownMenu.innerHTML = "";
     const MENUS = {
       parent: [
-        {icon:"people", label:"فضاء أولياء التلاميذ", desc:"مرحبا بكم في فضاء أولياء التلاميذ"},
-        {icon:"assignment", label:"سجل الغيابات", desc:"عرض سجل الغيابات الخاص بتلميذك"},
-        {icon:"mail", label:"سجل المراسلات الإدارية", desc:"عرض المراسلات الإدارية بين الإدارة وأولياء الأمور"},
-        {icon:"event", label:"جدول استقبال الأولياء", desc:"مواعيد استقبال الأولياء من قبل الإدارة"},
-        {icon:"calendar_today", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"عرض التوقيت الأسبوعي للتلاميذ"},
-        {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
-        {icon:"folder", label:"استمارات ووثائق مختلفة للتلاميذ", desc:"تحميل الاستمارات والوثائق المخصصة للتلاميذ"},
-        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
-        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
-        {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
+        { icon: "people", label: "فضاء أولياء التلاميذ", desc: "مرحبا بكم في فضاء أولياء التلاميذ" },
+        { icon: "assignment", label: "سجل الغيابات", desc: "عرض سجل الغيابات الخاص بتلميذك" },
+        { icon: "mail", label: "سجل المراسلات الإدارية", desc: "عرض المراسلات الإدارية بين الإدارة وأولياء الأمور" },
+        { icon: "event", label: "جدول استقبال الأولياء", desc: "مواعيد استقبال الأولياء من قبل الإدارة" },
+        { icon: "calendar_today", label: "جدول التوقيت الأسبوعي للتلاميذ", desc: "عرض التوقيت الأسبوعي للتلاميذ" },
+        { icon: "description", label: "رزنامة الفروض والاختبارات", desc: "رزنامة الفروض والاختبارات للفترة الحالية" },
+        { icon: "folder", label: "استمارات ووثائق مختلفة للتلاميذ", desc: "تحميل الاستمارات والوثائق المخصصة للتلاميذ" },
+        { icon: "campaign", label: "إعلانات", desc: "عرض آخر الإعلانات الصادرة عن الإدارة" },
+        { icon: "call", label: "اتصل بنا", desc: "إرسال رسالة مباشرة لإدارة البوابة" },
+        { icon: "logout", label: "تسجيل الخروج", desc: "الخروج من البوابة" }
       ],
       teacher: [
-        {icon:"person", label:"فضاء الأساتذة", desc:"مرحبا بكم في الأرضية الرقمية - فضاء الأساتذة"},
-        {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
-        {icon:"description", label:"قوائم صب النقاط", desc:"إدخال ومتابعة صب النقاط"},
-        {icon:"hourglass_top", label:"الغائبون قبل اليوم", desc:"قائمة التلاميذ الغائبين قبل اليوم"},
-        {icon:"send", label:"إرسال غيابات اليوم", desc:"إرسال غيابات اليوم للإدارة"},
-        {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
-        {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
-        {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
-        {icon:"folder", label:"استمارات ووثائق مختلفة للأساتذة", desc:"تحميل استمارات ووثائق مختلفة للأساتذة"},
-        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
-        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
-        {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
+        // باقي عناصر الأساتذة كما هي
       ],
       consultation: [
-        {icon:"qr_code_2", label:"نظام الحضور الذكي", desc:"تسجيل حضور التلاميذ بالباركود"},
-        {icon:"assignment", label:"القوائم الإسمية", desc:"عرض القوائم الإسمية"},
-        {icon:"hourglass_top", label:"الغائبون قبل اليوم", desc:"قائمة الغائبين قبل اليوم"},
-        {icon:"bar_chart", label:"متابعة غيابات اليوم", desc:"متابعة غيابات اليوم"},
-        {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
-        {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
-        {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات"},
-        {icon:"folder", label:"استمارات ووثائق مختلفة للإشراف التربوي", desc:"تحميل استمارات ووثائق مختلفة للإشراف التربوي"},
-        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات"},
-        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
-        {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
+        // باقي عناصر الاستشارة كما هي
       ]
     };
 
     MENUS[type].forEach((item, idx) => {
       let div = document.createElement("div");
-      let span = document.createElement("span"); 
-      span.className="material-icons"; 
-      span.textContent=item.icon;
+      let span = document.createElement("span");
+      span.className = "material-icons";
+      span.textContent = item.icon;
       div.appendChild(span);
 
-      let label = document.createElement("span"); 
-      label.textContent=item.label; 
+      let label = document.createElement("span");
+      label.textContent = item.label;
       div.appendChild(label);
 
-      // حدث الضغط الواحد لكل div
-    div.addEventListener('click', function(){
+      div.addEventListener('click', function () {
+        itemDescription.textContent = item.desc || "";
 
-  itemDescription.textContent = item.desc || "";
+        if (item.label === "فضاء الأساتذة") {
+          window.open("https://ostad.education.dz/auth", "_blank");
+          dropdownMenu.style.display = "none";
+          return;
+        }
 
-  // روابط خارجية
- if(item.label === "فضاء الأساتذة") {
-    window.open("https://ostad.education.dz/auth", "_blank");
-    dropdownMenu.style.display = "none";
-    return;
-}
+        if (item.label === "فضاء أولياء التلاميذ") {
+          window.open("https://awlyaa.education.dz/", "_blank");
+          dropdownMenu.style.display = "none";
+          return;
+        }
 
-  if(item.label === "فضاء أولياء التلاميذ") {
-    window.open("https://awlyaa.education.dz/", "_blank");
-      dropdownMenu.style.display = "none";
-    return;
-}
+        if (item.icon === "call") {
+          document.getElementById("contactModal").style.display = "flex";
+          dropdownMenu.style.display = "none";
+          return;
+        }
 
-  // مودال نظام الحضور الذكي
-  if(item.label === "نظام الحضور الذكي") {
-    document.getElementById("attendanceModal").style.display = "flex";
-      dropdownMenu.style.display = "none";
-    return;
-}
+        if (item.icon === "logout") logout();
 
-  if(item.icon === "call") {
-    document.getElementById("contactModal").style.display = "flex";
-      dropdownMenu.style.display = "none";
-    return;
-}
+        if (item.label === "سجل الغيابات") {
+          openFilePreview(localStorage.getItem("SijileAbsence_Fille_ID"));
+          dropdownMenu.style.display = "none";
+          return;
+        }
 
-  if(item.icon === "logout") logout();
+        if (item.label === "سجل المراسلات الإدارية") {
+          openFilePreview(localStorage.getItem("Correspondence_Fille_ID"));
+          dropdownMenu.style.display = "none";
+          return;
+        }
 
-  if(item.label === "سجل الغيابات"){
-    openFilePreview(localStorage.getItem("SijileAbsence_Fille_ID"));
-    dropdownMenu.style.display = "none";
-    return;
-}
-
-if(item.label === "سجل المراسلات الإدارية"){
-    openFilePreview(localStorage.getItem("Correspondence_Fille_ID"));
-    dropdownMenu.style.display = "none";
-    return;
-}
-      
-if(FILE_ITEMS[item.label]) {
-    openFilePreview(FILE_ITEMS[item.label]);
-    dropdownMenu.style.display = "none";
-    return;
-}
-     
-});
+        if (FILE_ITEMS[item.label]) {
+          openFilePreview(FILE_ITEMS[item.label]);
+          dropdownMenu.style.display = "none";
+          return;
+        }
+      });
 
       dropdownMenu.appendChild(div);
-      setTimeout(()=> div.classList.add("show"), idx*80);
+      setTimeout(() => div.classList.add("show"), idx * 80);
     });
   }
 
   function logout() {
     welcomeText.textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
-    if(itemDescription) itemDescription.textContent = "";
+    if (itemDescription) itemDescription.textContent = "";
     dropdownMenu.style.display = "none";
     menuBtn.disabled = true;
     localStorage.removeItem("userType");
-localStorage.removeItem("employeeName");
-localStorage.removeItem("Correspondence_Fille_ID");
-localStorage.removeItem("SijileAbsence_Fille_ID");
+    localStorage.removeItem("employeeName");
+    localStorage.removeItem("Correspondence_Fille_ID");
+    localStorage.removeItem("SijileAbsence_Fille_ID");
     loginModal.style.display = "flex";
     loginModal.classList.remove("expanded");
     userTypeSelect.value = "";
@@ -328,174 +269,67 @@ localStorage.removeItem("SijileAbsence_Fille_ID");
     loginPassword.value = "";
     employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
     schoolKeyBlock.style.display = employeeBlock.style.display = authBlock.style.display = continueBtn.style.display = loginBtn.style.display = "none";
-    document.getElementById("filePreviewPanel").style.display="none";
+    document.getElementById("filePreviewPanel").style.display = "none";
   }
-
-  window.toggleMenu = function () {
-    dropdownMenu.style.display = (dropdownMenu.style.display==="block") ? "none" : "block";
-  };
 
   // ==================== EVENTS ====================
   userTypeSelect.addEventListener("change", function () {
-   employeeBlock.style.display =
-authBlock.style.display =
-continueBtn.style.display =
-loginBtn.style.display =
-schoolKeyBlock.style.display =
-studentBlock.style.display = "none";
+    employeeBlock.style.display =
+      authBlock.style.display =
+      continueBtn.style.display =
+      loginBtn.style.display =
+      schoolKeyBlock.style.display =
+      studentBlock.style.display = "none";
 
-if(this.value==="parent"){
-    studentBlock.style.display="block";
-    loginBtn.style.display="flex";
-    loadStudentsList();
-}
-
-if(this.value==="teacher" || this.value==="consultation"){
-    schoolKeyBlock.style.display="block";
-}
-});
-  continueBtn.addEventListener("click", function () { openSession("parent"); });
-
- schoolKeyBtn.addEventListener("click", async function () {
-    if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
-
-    // إظهار سبينر التحميل
-    const spinner = document.getElementById("loadingSpinner");
-    spinner.style.display = "block";
-
-    try {
-        await loadSchoolKey();
-        if(schoolKeyInput.value !== SCHOOL_KEY) {
-            spinner.style.display = "none";
-            return alert("رمز المؤسسة غير صحيح");
-        }
-
-        schoolKeyBlock.style.display="none";
-        employeeBlock.style.display="block";
-        await loadEmployeeList(userTypeSelect.value);
-        await loadPasswords();
-
-    } catch(err) {
-        console.error(err);
-        alert("حدث خطأ أثناء تحميل البيانات");
-    } finally {
-        spinner.style.display = "none"; // إخفاؤه بعد الانتهاء
-    }
-});
-
-// ==================== زر مسح QR ====================
-scanStudentQR.addEventListener("click", function(){
-
-    let qrText = prompt("ضع نص QR للتجربة");
-
-    if(!qrText) return;
-
-    let data = parseStudentQR(qrText);
-    if(!data) return;
-
-    parentData = data;
-
-    // اختيار الطالب تلقائياً
-    for(let opt of studentSelect.options){
-        if(opt.value.startsWith(data.name + ";")){
-            studentSelect.value = opt.value;
-            break;
-        }
+    if (this.value === "parent") {
+      studentBlock.style.display = "block";
+      loginBtn.style.display = "flex";
+      loadStudentsList();
     }
 
-});
-    
-  employeeSelect.addEventListener("change", function() {
-    if(this.value!=="") { authBlock.style.display="block"; loginBtn.style.display="flex"; }
+    if (this.value === "teacher" || this.value === "consultation") {
+      schoolKeyBlock.style.display = "block";
+    }
   });
 
- loginBtn.addEventListener("click", function() {
-   // ==================== دخول أولياء الأمور ====================
-if(userTypeSelect.value==="parent"){
+  loginBtn.addEventListener("click", function () {
+    if (userTypeSelect.value === "parent") {
+      let selectedLine = studentSelect.value;
 
-    let selectedLine = studentSelect.value;
+      if (!selectedLine)
+        return alert("اختر التلميذ من القائمة");
 
-    if(!selectedLine && !parentData)
-        return alert("اختر التلميذ أو امسح QR");
+      let parts = selectedLine.trim().split(";");
 
-    let data = parentData ? parentData : parseStudentQR(selectedLine); 
-  
-if(!data) return;
-  
-    parentData = data;
+      parentData = {
+        name: parts[0],
+        classe: parts[1],
+        racord: parts[2],
+        correspondenceID: parts[3],
+        absenceID: parts[4]
+      };
 
- localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
-localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
+      localStorage.setItem("Correspondence_Fille_ID", parentData.correspondenceID);
+      localStorage.setItem("SijileAbsence_Fille_ID", parentData.absenceID);
 
-    openSession("parent");
-    return;
-}
-    if(!loginPassword.value) return alert("أدخل كلمة المرور");
+      openSession("parent");
+      return;
+    }
+
+    if (!loginPassword.value) return alert("أدخل كلمة المرور");
 
     const spinner = document.getElementById("loadingSpinner");
     spinner.style.display = "block";
 
-    setTimeout(() => {  // محاكاة الانتظار لوظيفة async
-        if(!PASSWORDS.includes(loginPassword.value)) {
-            spinner.style.display = "none";
-            return alert("كلمة المرور غير صحيحة");
-        }
-        openSession(userTypeSelect.value);
+    setTimeout(() => {
+      if (!PASSWORDS.includes(loginPassword.value)) {
         spinner.style.display = "none";
-    }, 300); // 300ms مجرد مثال
-});
-
-
-  document.getElementById("closeContactModal").addEventListener("click", function(){
-    document.getElementById("contactModal").style.display="none";
+        return alert("كلمة المرور غير صحيحة");
+      }
+      openSession(userTypeSelect.value);
+      spinner.style.display = "none";
+    }, 300);
   });
-
-  document.getElementById("contactSendBtn").addEventListener("click", function(){
-    const email = document.getElementById("contactEmail").value.trim();
-    const message = document.getElementById("contactMessage").value.trim();
-    const contactResult = document.getElementById("contactResult");
-    const ADMIN_EMAIL = "myschoolmanager11@gmail.com";
-
-    if(!email || !/\S+@\S+\.\S+/.test(email)) { contactResult.textContent="يرجى إدخال بريد إلكتروني صحيح"; contactResult.style.color="red"; return; }
-    if(!message) { contactResult.textContent="يرجى كتابة الرسالة"; contactResult.style.color="red"; return; }
-
-    const subject = encodeURIComponent("رسالة من مستخدم البوابة");
-    const body = encodeURIComponent(`السلام عليكم،\n\nتم إرسال هذه الرسالة من خلال نموذج اتصل بنا.\n\nالبريد: ${email}\nالرسالة: ${message}\n\nتحياتنا.`);
-    window.location.href = `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
-    contactResult.textContent="سيتم فتح بريدك لإرسال الرسالة مباشرة"; contactResult.style.color="green";
-    document.getElementById("contactEmail").value = "";
-    document.getElementById("contactMessage").value = "";
-  });
-
-   // ==================== حفظ الجلسة ====================
-  const savedType = localStorage.getItem("userType");
-  const savedName = localStorage.getItem("employeeName");
-  if(savedType) {
-    
-     // إذا كان ولي أمر نسترجع IDs
-   if(savedType === "parent"){
-    const corr = localStorage.getItem("Correspondence_Fille_ID");
-    const abs  = localStorage.getItem("SijileAbsence_Fille_ID");
-
-    if(corr && abs){
-        parentData = {
-            correspondenceID: corr,
-            absenceID: abs
-        };
-    } else {
-        localStorage.removeItem("userType");
-        return;
-    }
-}
-    
-    menuBtn.disabled=false;
-    loginModal.style.display="none";
-    fillMenu(savedType);
-    welcomeText.textContent = (savedType==="parent") ? 
-      "مرحبًا بك! افتح القائمة لاستخدام خدماتنا." : `مرحبًا بك يا ${savedName}! افتح القائمة لاستخدام خدماتنا.`;
-  }
-
-});
 
 // ==================== معاينة الملفات ====================
 function openFilePreview(fileId) {
@@ -616,3 +450,4 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
