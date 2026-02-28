@@ -78,7 +78,49 @@ document.addEventListener("DOMContentLoaded", function () {
   const studentSelect = document.getElementById("studentSelect");
  const classeSelect = document.getElementById("ClasseSelect");
   
-   // ==================== دالة تحليل بيانات التلاميذ في القائمة المحملة ====================
+ // ==================== تحميل قائمة الأقسام ====================
+   // ==================== تحميل قائمة الأقسام ====================
+async function loadClassesList() {
+    classeSelect.disabled = true;
+    classeSelect.innerHTML = `<option value="">-- يرجى الإنتظار... --</option>`;
+
+    try {
+        const response = await fetch(getFileLink(CONFIG.ListeClasses_File_ID));
+
+        let classes = (await response.text())
+            .replace(/\r/g, "")
+            .split("\n")
+            .map(x => x.trim())
+            .filter(x => x);
+
+        classeSelect.innerHTML = `
+            <option value="">-- اختر القسم --</option>
+            <option value="all">كل الأقسام</option>
+        `;
+
+        classes.forEach(c => {
+            classeSelect.innerHTML += `<option value="${c}">${c}</option>`;
+        });
+
+    } catch (err) {
+        console.error("خطأ في تحميل الأقسام:", err);
+        classeSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل الأقسام</option>`;
+    } finally {
+        classeSelect.disabled = false;
+    }
+}
+
+  // حدث تغيير القسم
+classeSelect.addEventListener("change", function () {
+    const selectedClasse = this.value || "all";
+    loadStudentsList(selectedClasse);
+});
+
+// تحميل أولي عند فتح الصفحة
+loadClassesList();
+loadStudentsList();
+
+// ==================== دالة تحليل بيانات التلاميذ في القائمة المحملة ====================
 function parseStudentLine(line) {
     if(!line) return null;
     const parts = line.split(";");
@@ -92,48 +134,6 @@ function parseStudentLine(line) {
     };
 }
 
-  // ==================== تحميل قائمة الأقسام ====================
-document.addEventListener("DOMContentLoaded", async function () {
-    const classeSelect = document.getElementById("ClasseSelect");
-
-    async function loadClassesList() {
-        classeSelect.disabled = true;
-        classeSelect.innerHTML = `<option value="">-- يرجى الإنتظار... --</option>`;
-
-        try {
-            const response = await fetch(getFileLink(CONFIG.ListeClasses_File_ID));
-            let classes = (await response.text())
-                .replace(/\r/g, "")
-                .split("\n")
-                .map(x => x.trim())
-                .filter(x => x);
-
-            // إضافة خيار "كل الأقسام"
-            classeSelect.innerHTML = `<option value="">-- اختر القسم --</option>
-                                      <option value="all">كل الأقسام</option>`;
-
-            classes.forEach(c => {
-                classeSelect.innerHTML += `<option value="${c}">${c}</option>`;
-            });
-
-        } catch (err) {
-            console.error("خطأ في تحميل الأقسام:", err);
-            classeSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل الأقسام</option>`;
-        } finally {
-            classeSelect.disabled = false;
-        }
-    }
-
-    await loadClassesList();
-    await loadStudentsList(); // تحميل جميع التلاميذ بشكل افتراضي
-
-    // حدث تغيير القسم
-    classeSelect.addEventListener("change", function() {
-        const selectedClasse = this.value || "all"; // كل الأقسام إذا لم يختار شيء
-        loadStudentsList(selectedClasse);
-    });
-});
-  
 // ==================== تحميل التلاميذ ====================
 async function loadStudentsList(selectedClasse = "all") {
     studentSelect.disabled = true;
@@ -174,12 +174,6 @@ async function loadStudentsList(selectedClasse = "all") {
 classeSelect.addEventListener("change", function() {
     const selectedClasse = this.value || "all"; // إذا لم يختر شيء → كل الأقسام
     loadStudentsList(selectedClasse);
-});
-
-// ==================== عند تحميل الصفحة ====================
-document.addEventListener("DOMContentLoaded", async function() {
-    await loadClassesList();
-    await loadStudentsList(); // تحميل جميع التلاميذ بشكل افتراضي
 });
   
  // ==================== تثبيت عرض المودال ====================
@@ -647,5 +641,6 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
