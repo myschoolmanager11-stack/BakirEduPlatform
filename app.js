@@ -54,6 +54,7 @@ let currentFileURL = null;
 let PASSWORDS = [];
 let SCHOOL_KEY = "";
 let qrScanner = null;
+let cachedUsers = [];
 
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
@@ -291,16 +292,36 @@ localStorage.removeItem("SijileAbsence_Fille_ID");
   };
 
   // ==================== EVENTS ====================
-userTypeSelect.addEventListener("change", function(){
+userTypeSelect.addEventListener("change", async function () {
 
-    studentBlock.style.display="none";
+    const type = this.value;
+    if (!type) return;
 
-    if(this.value==="parent"){
-        studentBlock.style.display="block";
+    showLoading("يرجى الانتظار جاري تحميل البيانات...");
+
+    try {
+
+        let fileId = "";
+
+        if (type === "parent") fileId = CONFIG.FILE_IDS.ListeStudents;
+        if (type === "teacher") fileId = CONFIG.FILE_IDS.ListeTeacher;
+        if (type === "consultation") fileId = CONFIG.FILE_IDS.ListeSupervisory;
+
+        const response = await fetch(buildDownloadURL(fileId));
+        const text = await response.text();
+
+        cachedUsers = text.split("\n").map(x => x.trim());
+
+        hideLoading();
+
+    } catch (err) {
+        hideLoading();
+        alert("تعذر تحميل البيانات");
+        console.error(err);
     }
 
 });
-
+  
   // ==================== زر مسح QR ====================
 qrLoginBtn.addEventListener("click", function(){
 
@@ -423,47 +444,72 @@ function openFilePreview(fileId) {
   setTimeout(() => panel.style.opacity = 1, 50);
 }
 
-async function authenticateByQR(type, qrText){
+async function authenticateByQR(type, qrText) {
 
-    function getFileLink(fileId){
-        return `${GAS_SCRIPT_URL}?id=${fileId}`;
-    }
+    const data = qrText.split(";");
 
-    let fileId = "";
+    // ======================
+    // ولي الأمر (5 بيانات)
+    // ======================
+    if (type === "parent") {
 
-    if(type === "parent")
-        fileId = CONFIG.ListeStudents_File_ID;
-    else if(type === "teacher")
-        fileId = CONFIG.ListeTeacher_File_ID;
-    else
-        fileId = CONFIG.ListeSupervisory_File_ID;
-
-    try{
-
-        const r = await fetch(getFileLink(fileId));
-        const text = await r.text();
-
-        const list = text.replace(/\r/g,"").split("\n").map(x=>x.trim()).filter(x=>x);
-
-        const matched = list.find(line => line === qrText);
-
-        if(!matched){
+        if (data.length !== 5) {
             alert("QR غير صالح");
             return;
         }
 
-        localStorage.setItem("userType", type);
+        const studentName = data[0];
+        const classe = data[1];
+        const recordCode = data[2];
+        const correspondenceId = data[3];
+        const absenceId = data[4];
 
-        if(type === "parent"){
+        // نبحث باستخدام RecordCode
+        const matched = cachedUsers.find(line => line.includes(recordCode));
 
-            const data = matched.split(";");
-
-            localStorage.setItem("Correspondence_Fille_ID", data[3]);
-            localStorage.setItem("SijileAbsence_Fille_ID", data[4]);
+        if (!matched) {
+            alert("QR غير صالح");
+            return;
         }
-        else{
-            localStorage.setItem("employeeName", matched);
+
+        // حفظ المعرفات
+        localStorage.setItem("Correspondence_Fille_ID", correspondenceId);
+        localStorage.setItem("SijileAbsence_Fille_ID", absenceId);
+        localStorage.setItem("studentName", studentName);
+        localStorage.setItem("classe", classe);
+
+    }
+
+    // ======================
+    // أستاذ / إشراف (3 بيانات)
+    // ======================
+    else {
+
+        if (data.length !== 3) {
+            alert("QR غير صالح");
+            return;
         }
+
+        const username = data[0];
+        const schoolKey = data[1];
+        const passport = data[2];
+
+        const matched = cachedUsers.find(line => line.includes(username));
+
+        if (!matched) {
+            alert("QR غير صالح");
+            return;
+        }
+
+        localStorage.setItem("username", username);
+    }
+
+    // ======================
+    // دخول مباشر
+    // ======================
+    localStorage.setItem("userType", type);
+    openSession(type);
+}
 
         document.getElementById("loginModal").style.display="none";
         document.getElementById("menuBtn").disabled=false;
@@ -577,6 +623,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
