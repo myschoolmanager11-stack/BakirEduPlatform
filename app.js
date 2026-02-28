@@ -10,7 +10,7 @@ const CONFIG = {
   "SchoolAdresse": "حي راس قلوش المدية",
   "SchoolMail": "YourMail@Gmail.com",
   "SchoolLink": "https://myschoolmanager11-stack.github.io/BakirEduPlatform/",
-  "SchoolKey": "7706-9P0RW",
+  "SchoolKey": "W6EM4BML7R",
   "School_Folder_ID": "1rjWam6hEkw7wnGB8EHpwRdLMlVpe-d2o",
   "Documents_Folder_ID": "1HNgCr3CMZHdZsDu1P5xvz1vso-uD5BCt",
   "Students_Correspondence_Folder_ID": "1u1wn0FwyCBnXyoIBno47Yr_lA3LIeJmv",
@@ -589,6 +589,7 @@ function hideLoader(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
