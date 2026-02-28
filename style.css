@@ -73,22 +73,7 @@ body {
     animation: fadeIn 0.3s ease;
 }
 
-
-.login-field { margin-bottom: 14px; }
-.login-field label {
-    font-weight:600;
-    color:#3f51b5;
-    margin-bottom:4px;
-    display:block;
-}
-.login-field input, .login-field select {
-    width: 100%;
-    padding:9px;
-    border-radius:10px;
-    border:1px solid #d0d6ff;
-}
-
-login-btn {
+QR-btn {
     height:38px;
     width: 100%;
     padding: 10px;
@@ -105,51 +90,7 @@ login-btn {
     box-shadow: 0 3px 6px rgba(0,0,0,0.15);
     transition: all 0.2s ease;
 }
-.login-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-}
-
-schoolKey-btn {
-    height:38px;
-    width: 100%;
-    padding: 10px;
-    border-radius: 12px;
-    border: none;
-    background: linear-gradient(135deg, #3f51b5, #5c6bc0);
-    color: white;
-    font-weight: bold;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-    transition: all 0.2s ease;
-}
-.schoolKey-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-}
-
-continue-btn {
-    height:38px;
-    width: 100%;
-    padding: 10px;
-    border-radius: 12px;
-    border: none;
-    background: linear-gradient(135deg, #3f51b5, #5c6bc0);
-    color: white;
-    font-weight: bold;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-    transition: all 0.2s ease;
-}
-.continue-btn:hover {
+.QR-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 10px rgba(0,0,0,0.2);
 }
@@ -411,21 +352,16 @@ Attendance-btn {
     font-weight: 600;
 }
 
-.student-row{
+.loading-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    color:white;
     display:flex;
     align-items:center;
-    gap:8px;
-}
-
-.small-btn{
-    width:120px;
-    height:40px;
-}
-
-.mini-spinner{
-    font-size:13px;
-    color:#ff0036;
-    margin-top:8px;
+    justify-content:center;
+    font-size:20px;
+    z-index:9999;
 }
 
 .app-footer {
@@ -448,6 +384,7 @@ Attendance-btn {
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
 
 
 
