@@ -71,56 +71,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const welcomeText = document.getElementById("welcomeText");
   const schoolKeyBtn = document.getElementById("schoolKeyBtn");
 
-  // ==================== عناصر أولياء الأمور ====================
   const studentBlock = document.getElementById("studentBlock");
   const studentSelect = document.getElementById("studentSelect");
   let STUDENTS_LIST = [];
   let parentData = null;
 
-  // ==================== تحميل قائمة التلاميذ ====================
-  async function loadStudentsList() {
-    studentSelect.disabled = true;
-    studentSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة التلاميذ</option>`;
-
-    try {
-      const r = await fetch(getFileLink(CONFIG.ListeStudents_File_ID));
-      let list = (await r.text())
-        .replace(/\r/g, "")
-        .split("\n")
-        .map(x => x.trim())
-        .filter(x => x);
-
-      STUDENTS_LIST = list;
-      studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-
-      list.forEach(line => {
-        let parts = line.split(";");
-        studentSelect.innerHTML += `<option value="${line}">${parts[0]}</option>`;
-      });
-
-    } catch (err) {
-      studentSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل القائمة</option>`;
-      console.error(err);
-    }
-
-    studentSelect.disabled = false;
-  }
-
-  // ==================== تثبيت عرض المودال ====================
   loginModal.style.display = "flex";
   loginModal.style.zIndex = "5000";
   menuBtn.disabled = true;
 
-  // div وصف العنصر
-  let itemDescription = document.createElement("div");
-  itemDescription.id = "itemDescription";
-  itemDescription.style.fontSize = "13px";
-  itemDescription.style.color = "#555";
-  itemDescription.style.marginTop = "4px";
-  itemDescription.style.minHeight = "18px";
-  welcomeText.insertAdjacentElement('afterend', itemDescription);
+  let itemDescription = document.getElementById("itemDescription");
 
-  // ==================== FUNCTIONS ====================
   function getFileLink(fileId) { return `${GAS_SCRIPT_URL}?id=${fileId}`; }
 
   async function loadSchoolKey() {
@@ -137,11 +98,29 @@ document.addEventListener("DOMContentLoaded", function () {
       .filter(x => x);
   }
 
+  async function loadStudentsList() {
+    studentSelect.disabled = true;
+    studentSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة التلاميذ</option>`;
+    try {
+      const r = await fetch(getFileLink(CONFIG.ListeStudents_File_ID));
+      let list = (await r.text()).replace(/\r/g, "").split("\n").map(x => x.trim()).filter(x => x);
+      STUDENTS_LIST = list;
+      studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+      list.forEach(line => {
+        let parts = line.split(";");
+        studentSelect.innerHTML += `<option value="${line}">${parts[0]}</option>`;
+      });
+    } catch (err) {
+      studentSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل القائمة</option>`;
+      console.error(err);
+    }
+    studentSelect.disabled = false;
+  }
+
   function loadEmployeeList(type) {
     const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
     employeeSelect.disabled = true;
     employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة ${type === "teacher" ? "الأساتذة" : "الإشراف التربوي"}</option>`;
-
     fetch(getFileLink(fileId))
       .then(r => r.text())
       .then(text => {
@@ -176,22 +155,43 @@ document.addEventListener("DOMContentLoaded", function () {
     dropdownMenu.innerHTML = "";
     const MENUS = {
       parent: [
-        { icon: "people", label: "فضاء أولياء التلاميذ", desc: "مرحبا بكم في فضاء أولياء التلاميذ" },
-        { icon: "assignment", label: "سجل الغيابات", desc: "عرض سجل الغيابات الخاص بتلميذك" },
-        { icon: "mail", label: "سجل المراسلات الإدارية", desc: "عرض المراسلات الإدارية بين الإدارة وأولياء الأمور" },
-        { icon: "event", label: "جدول استقبال الأولياء", desc: "مواعيد استقبال الأولياء من قبل الإدارة" },
-        { icon: "calendar_today", label: "جدول التوقيت الأسبوعي للتلاميذ", desc: "عرض التوقيت الأسبوعي للتلاميذ" },
-        { icon: "description", label: "رزنامة الفروض والاختبارات", desc: "رزنامة الفروض والاختبارات للفترة الحالية" },
-        { icon: "folder", label: "استمارات ووثائق مختلفة للتلاميذ", desc: "تحميل الاستمارات والوثائق المخصصة للتلاميذ" },
-        { icon: "campaign", label: "إعلانات", desc: "عرض آخر الإعلانات الصادرة عن الإدارة" },
-        { icon: "call", label: "اتصل بنا", desc: "إرسال رسالة مباشرة لإدارة البوابة" },
-        { icon: "logout", label: "تسجيل الخروج", desc: "الخروج من البوابة" }
+        {icon:"people", label:"فضاء أولياء التلاميذ", desc:"مرحبا بكم في فضاء أولياء التلاميذ"},
+        {icon:"assignment", label:"سجل الغيابات", desc:"عرض سجل الغيابات الخاص بتلميذك"},
+        {icon:"mail", label:"سجل المراسلات الإدارية", desc:"عرض المراسلات الإدارية بين الإدارة وأولياء الأمور"},
+        {icon:"event", label:"جدول استقبال الأولياء", desc:"مواعيد استقبال الأولياء من قبل الإدارة"},
+        {icon:"calendar_today", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"عرض التوقيت الأسبوعي للتلاميذ"},
+        {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
+        {icon:"folder", label:"استمارات ووثائق مختلفة للتلاميذ", desc:"تحميل الاستمارات والوثائق المخصصة للتلاميذ"},
+        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
+        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
+        {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
       ],
       teacher: [
-        // باقي عناصر الأساتذة كما هي
+        {icon:"person", label:"فضاء الأساتذة", desc:"مرحبا بكم في الأرضية الرقمية - فضاء الأساتذة"},
+        {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
+        {icon:"description", label:"قوائم صب النقاط", desc:"إدخال ومتابعة صب النقاط"},
+        {icon:"hourglass_top", label:"الغائبون قبل اليوم", desc:"قائمة التلاميذ الغائبين قبل اليوم"},
+        {icon:"send", label:"إرسال غيابات اليوم", desc:"إرسال غيابات اليوم للإدارة"},
+        {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
+        {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
+        {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
+        {icon:"folder", label:"استمارات ووثائق مختلفة للأساتذة", desc:"تحميل استمارات ووثائق مختلفة للأساتذة"},
+        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
+        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
+        {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
       ],
       consultation: [
-        // باقي عناصر الاستشارة كما هي
+        {icon:"qr_code_2", label:"نظام الحضور الذكي", desc:"تسجيل حضور التلاميذ بالباركود"},
+        {icon:"assignment", label:"القوائم الإسمية", desc:"عرض القوائم الإسمية"},
+        {icon:"hourglass_top", label:"الغائبون قبل اليوم", desc:"قائمة الغائبين قبل اليوم"},
+        {icon:"bar_chart", label:"متابعة غيابات اليوم", desc:"متابعة غيابات اليوم"},
+        {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
+        {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
+        {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات"},
+        {icon:"folder", label:"استمارات ووثائق مختلفة للإشراف التربوي", desc:"تحميل استمارات ووثائق مختلفة للإشراف التربوي"},
+        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات"},
+        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
+        {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
       ]
     };
 
@@ -209,12 +209,6 @@ document.addEventListener("DOMContentLoaded", function () {
       div.addEventListener('click', function () {
         itemDescription.textContent = item.desc || "";
 
-        if (item.label === "فضاء الأساتذة") {
-          window.open("https://ostad.education.dz/auth", "_blank");
-          dropdownMenu.style.display = "none";
-          return;
-        }
-
         if (item.label === "فضاء أولياء التلاميذ") {
           window.open("https://awlyaa.education.dz/", "_blank");
           dropdownMenu.style.display = "none";
@@ -228,18 +222,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (item.icon === "logout") logout();
-
-        if (item.label === "سجل الغيابات") {
-          openFilePreview(localStorage.getItem("SijileAbsence_Fille_ID"));
-          dropdownMenu.style.display = "none";
-          return;
-        }
-
-        if (item.label === "سجل المراسلات الإدارية") {
-          openFilePreview(localStorage.getItem("Correspondence_Fille_ID"));
-          dropdownMenu.style.display = "none";
-          return;
-        }
 
         if (FILE_ITEMS[item.label]) {
           openFilePreview(FILE_ITEMS[item.label]);
@@ -258,10 +240,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (itemDescription) itemDescription.textContent = "";
     dropdownMenu.style.display = "none";
     menuBtn.disabled = true;
-    localStorage.removeItem("userType");
-    localStorage.removeItem("employeeName");
-    localStorage.removeItem("Correspondence_Fille_ID");
-    localStorage.removeItem("SijileAbsence_Fille_ID");
+    localStorage.clear();
     loginModal.style.display = "flex";
     loginModal.classList.remove("expanded");
     userTypeSelect.value = "";
@@ -272,7 +251,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("filePreviewPanel").style.display = "none";
   }
 
-  // ==================== EVENTS ====================
   userTypeSelect.addEventListener("change", function () {
     employeeBlock.style.display =
       authBlock.style.display =
@@ -295,12 +273,8 @@ document.addEventListener("DOMContentLoaded", function () {
   loginBtn.addEventListener("click", function () {
     if (userTypeSelect.value === "parent") {
       let selectedLine = studentSelect.value;
-
-      if (!selectedLine)
-        return alert("اختر التلميذ من القائمة");
-
+      if (!selectedLine) return alert("اختر التلميذ من القائمة");
       let parts = selectedLine.trim().split(";");
-
       parentData = {
         name: parts[0],
         classe: parts[1],
@@ -308,16 +282,13 @@ document.addEventListener("DOMContentLoaded", function () {
         correspondenceID: parts[3],
         absenceID: parts[4]
       };
-
       localStorage.setItem("Correspondence_Fille_ID", parentData.correspondenceID);
       localStorage.setItem("SijileAbsence_Fille_ID", parentData.absenceID);
-
       openSession("parent");
       return;
     }
 
     if (!loginPassword.value) return alert("أدخل كلمة المرور");
-
     const spinner = document.getElementById("loadingSpinner");
     spinner.style.display = "block";
 
@@ -331,27 +302,28 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 300);
   });
 
-// ==================== معاينة الملفات ====================
-function openFilePreview(fileId) {
-  const panel = document.getElementById("filePreviewPanel");
-  const frame = document.getElementById("filePreviewFrame");
-  const previewDownload = document.getElementById("previewDownload");
-  const previewOpen = document.getElementById("previewOpen");
+  function openFilePreview(fileId) {
+    const panel = document.getElementById("filePreviewPanel");
+    const frame = document.getElementById("filePreviewFrame");
+    const previewDownload = document.getElementById("previewDownload");
+    const previewOpen = document.getElementById("previewOpen");
 
-  frame.style.display = "none";
-  panel.style.opacity = 0;
-  panel.style.display = "flex";
+    frame.style.display = "none";
+    panel.style.opacity = 0;
+    panel.style.display = "flex";
 
-  const url = `https://drive.google.com/file/d/${fileId}/preview`;
-  frame.src = url;
-  frame.onload = () => frame.style.display = "block";
+    const url = `https://drive.google.com/file/d/${fileId}/preview`;
+    frame.src = url;
+    frame.onload = () => frame.style.display = "block";
 
-  previewDownload.href = `https://drive.google.com/uc?id=${fileId}&export=download`;
-  previewOpen.href = url;
-  previewOpen.target = "_blank";
+    previewDownload.href = `https://drive.google.com/uc?id=${fileId}&export=download`;
+    previewOpen.href = url;
+    previewOpen.target = "_blank";
 
-  setTimeout(() => panel.style.opacity = 1, 50);
-}
+    setTimeout(() => panel.style.opacity = 1, 50);
+  }
+
+});
 
 
 // ==================== تفعيل عناصر المعاينة بعد تحميل الصفحة ====================
@@ -450,4 +422,5 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
