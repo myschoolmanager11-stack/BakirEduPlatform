@@ -55,9 +55,23 @@ let PASSWORDS = [];
 let SCHOOL_KEY = "";
 let STUDENTS_LIST = [];
 let parentData = null;
-
 // ==================== DOCUMENT READY ====================
-// ==================== دوال مساعدة ====================
+document.addEventListener("DOMContentLoaded", function () {
+
+ // عناصر الصفحة
+const userTypeSelect = document.getElementById("userTypeSelect");
+const employeeBlock = document.getElementById("employeeBlock");
+const employeeSelect = document.getElementById("employeeSelect");
+const authBlock = document.getElementById("authBlock");
+const continueBtn = document.getElementById("continueBtn");
+const loginBtn = document.getElementById("loginBtn");
+const loginPassword = document.getElementById("loginPassword");
+const schoolKeyBlock = document.getElementById("schoolKeyBlock");
+const schoolKeyInput = document.getElementById("schoolKeyInput");
+const studentBlock = document.getElementById("studentBlock");
+const studentSelect = document.getElementById("studentSelect");
+const classeSelect = document.getElementById("ClasseSelect");
+
 function showLoader() { document.getElementById("globalLoader").style.display = "flex"; }
 function hideLoader() { document.getElementById("globalLoader").style.display = "none"; }
 
@@ -89,19 +103,7 @@ function parseStudentLine(line) {
     };
 }
 
-// ==================== DOM Elements ====================
-const userTypeSelect = document.getElementById("userTypeSelect");
-const employeeBlock = document.getElementById("employeeBlock");
-const employeeSelect = document.getElementById("employeeSelect");
-const authBlock = document.getElementById("authBlock");
-const continueBtn = document.getElementById("continueBtn");
-const loginBtn = document.getElementById("loginBtn");
-const loginPassword = document.getElementById("loginPassword");
-const schoolKeyBlock = document.getElementById("schoolKeyBlock");
-const schoolKeyInput = document.getElementById("schoolKeyInput");
-const studentBlock = document.getElementById("studentBlock");
-const studentSelect = document.getElementById("studentSelect");
-const classeSelect = document.getElementById("ClasseSelect");
+
 
 // ==================== تغيير نوع المستخدم ====================
 userTypeSelect.addEventListener("change", async function () {
@@ -494,8 +496,6 @@ function hideLoader(){
 }
 
 // ==================== تفعيل عناصر المعاينة بعد تحميل الصفحة ====================
-document.addEventListener("DOMContentLoaded", function(){
-
   const panel = document.getElementById("filePreviewPanel");
   const header = panel.querySelector(".preview-header");
 
@@ -589,6 +589,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
