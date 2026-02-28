@@ -78,28 +78,29 @@ document.addEventListener("DOMContentLoaded", function () {
     const classeSelect = document.getElementById("ClasseSelect");
 
     // ==================== تغيير نوع المستخدم ====================
-    userTypeSelect.addEventListener("change", function () {
+    userTypeSelect.addEventListener("change", async function () {
 
-        // إخفاء جميع البلوكات أولاً
-        employeeBlock.style.display =
-        authBlock.style.display =
-        continueBtn.style.display =
-        loginBtn.style.display =
-        schoolKeyBlock.style.display =
-        studentBlock.style.display = "none";
+    // إخفاء جميع البلوكات أولاً
+    employeeBlock.style.display =
+    authBlock.style.display =
+    continueBtn.style.display =
+    loginBtn.style.display =
+    schoolKeyBlock.style.display =
+    studentBlock.style.display = "none";
 
-        loadClassesList();
+    const userType = this.value;
 
-        if(this.value === "parent"){
-            studentBlock.style.display = "block";
-            loginBtn.style.display = "flex";
-            loadStudentsList();
-        }
+    if(userType === "parent"){
+        studentBlock.style.display = "block";
+        loginBtn.style.display = "flex";
+        await loadClassesList();       // تحميل الأقسام أولاً
+        // لا نحمّل الطلاب إلا بعد اختيار القسم
+    }
 
-        if(this.value === "teacher" || this.value === "consultation"){
-            schoolKeyBlock.style.display = "block";
-        }
-    });
+    if(userType === "teacher" || userType === "consultation"){
+        schoolKeyBlock.style.display = "block";
+    }
+});
 
     // ==================== زر متابعة للولي ====================
     continueBtn.addEventListener("click", function () { 
@@ -202,10 +203,12 @@ async function fetchFile(fileId) {
 }
 
     // ==================== تغيير القسم ====================
-    classeSelect.addEventListener("change", function () {
-        const selectedClasse = this.value || "all";
-        loadStudentsList(selectedClasse);
-    });
+   classeSelect.addEventListener("change", async function () {
+    const selectedClasse = this.value;
+    if(selectedClasse) {
+        await loadStudentsList(selectedClasse);
+    }
+});
 
     // ==================== تحميل قائمة الطلاب ====================
  async function loadStudentsList(selectedClasse = "all") {
@@ -584,6 +587,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
