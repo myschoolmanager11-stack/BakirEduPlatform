@@ -76,37 +76,98 @@ document.addEventListener("DOMContentLoaded", function () {
   const schoolKeyBtn = document.getElementById("schoolKeyBtn");
   const studentBlock = document.getElementById("studentBlock");
   const studentSelect = document.getElementById("studentSelect");
+ const classeSelect = document.getElementById("ClasseSelect");
   
-  // ==================== تحميل قائمة التلاميذ ====================
-async function loadStudentsList() {
-
-  studentSelect.disabled = true;
-  studentSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة التلاميذ</option>`;
-
-  try {
-      const r = await fetch(getFileLink(CONFIG.ListeStudents_File_ID));
-      let list = (await r.text())
-        .replace(/\r/g,"")
-        .split("\n")
-        .map(x=>x.trim())
-        .filter(x=>x);
-
-      STUDENTS_LIST = list;
-
-      studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-
-      list.forEach(line=>{
-          let parts = line.split(";");
-          studentSelect.innerHTML += `<option value="${line}">${parts[0]}</option>`;
-      });
-
-  } catch(err) {
-      studentSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل القائمة</option>`;
-      console.error(err);
-  }
-
-  studentSelect.disabled = false;
+   // ==================== دالة تحليل بيانات التلاميذ في القائمة المحملة ====================
+function parseStudentLine(line) {
+    if(!line) return null;
+    const parts = line.split(";");
+    if(parts.length < 5) return null;  // NonPrenom, Classe, Racord, Correspondence, Absence
+    return {
+        fullName: parts[0],
+        className: parts[1],
+        racord: parts[2],
+        correspondenceID: parts[3],
+        absenceID: parts[4]
+    };
 }
+
+  // ==================== تحميل قائمة الأقسام ====================
+async function loadClassesList() {
+    classeSelect.disabled = true;
+    classeSelect.innerHTML = `<option value="">-- يرجى الإنتظار... --</option>`;
+
+    try {
+        const r = await fetch(getFileLink(CONFIG.ListeClasses_File_ID));
+        let classes = (await r.text())
+            .replace(/\r/g,"")
+            .split("\n")
+            .map(x => x.trim())
+            .filter(x => x);
+
+        // إضافة خيار "كل الأقسام"
+        classeSelect.innerHTML = `<option value="">-- اختر القسم --</option>
+                                  <option value="all">كل الأقسام</option>`;
+
+        classes.forEach(c => {
+            classeSelect.innerHTML += `<option value="${c}">${c}</option>`;
+        });
+
+    } catch(err) {
+        console.error(err);
+        classeSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل الأقسام</option>`;
+    } finally {
+        classeSelect.disabled = false;
+    }
+}
+  
+// ==================== تحميل التلاميذ ====================
+async function loadStudentsList(selectedClasse = "all") {
+    studentSelect.disabled = true;
+    studentSelect.innerHTML = `<option value="">يرجى الإنتظار... جاري تحميل قائمة التلاميذ</option>`;
+
+    try {
+        const r = await fetch(getFileLink(CONFIG.ListeStudents_File_ID));
+        let list = (await r.text())
+            .replace(/\r/g,"")
+            .split("\n")
+            .map(x => x.trim())
+            .filter(x => x);
+
+        STUDENTS_LIST = list;
+
+        // فرز/فلترة حسب القسم المحدد
+        let filteredList = selectedClasse === "all" ? list : list.filter(line => {
+            const parts = line.split(";");
+            return parts[1] === selectedClasse; // parts[1] = Classe
+        });
+
+        studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+
+        filteredList.forEach(line => {
+            const parts = line.split(";");
+            studentSelect.innerHTML += `<option value="${line}">${parts[0]}</option>`;
+        });
+
+    } catch(err) {
+        console.error(err);
+        studentSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل القائمة</option>`;
+    } finally {
+        studentSelect.disabled = false;
+    }
+}
+
+// ==================== حدث تغيير القسم ====================
+classeSelect.addEventListener("change", function() {
+    const selectedClasse = this.value || "all"; // إذا لم يختر شيء → كل الأقسام
+    loadStudentsList(selectedClasse);
+});
+
+// ==================== عند تحميل الصفحة ====================
+document.addEventListener("DOMContentLoaded", async function() {
+    await loadClassesList();
+    await loadStudentsList(); // تحميل جميع التلاميذ بشكل افتراضي
+});
   
  // ==================== تثبيت عرض المودال ====================
   loginModal.style.display = "flex";
@@ -364,40 +425,42 @@ if(this.value==="teacher" || this.value==="consultation"){
     if(this.value!=="") { authBlock.style.display="block"; loginBtn.style.display="flex"; }
   });
 
- loginBtn.addEventListener("click", function() {
-   // ==================== دخول أولياء الأمور ====================
-if(userTypeSelect.value==="parent"){
 
-    let selectedLine = studentSelect.value;
+   // ==================== تسجيل الدخول ====================
+loginBtn.addEventListener("click", function() {
+    // تسجيل دخول التلميذ تلقائي
+    if(userTypeSelect.value === "parent") {
+        let selectedLine = studentSelect.value;
+        if(!selectedLine) return alert("اختر التلميذ من القائمة");
 
-    if(!selectedLine && !parentData)
-        return alert("اختر التلميذ من القائمة");
+        let data = parseStudentLine(selectedLine);
+        if(!data) return alert("خطأ في بيانات التلميذ المختار");
 
-    let data = parentData ? parentData : parseStudentQR(selectedLine); 
-  
-if(!data) return;
-  
-    parentData = data;
+        parentData = data;
 
- localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
-localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
+        // حفظ IDs في localStorage
+        localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
+        localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
 
-    openSession("parent");
-    return;
-}
+        // تسجيل دخول تلقائي للتلميذ
+        openSession("parent");
+        return;
+    }
+
+    // الموظفين يبقى كما هو
     if(!loginPassword.value) return alert("أدخل كلمة المرور");
 
     const spinner = document.getElementById("loadingSpinner");
     spinner.style.display = "block";
 
-    setTimeout(() => {  // محاكاة الانتظار لوظيفة async
+    setTimeout(() => {
         if(!PASSWORDS.includes(loginPassword.value)) {
             spinner.style.display = "none";
             return alert("كلمة المرور غير صحيحة");
         }
         openSession(userTypeSelect.value);
         spinner.style.display = "none";
-    }, 300); // 300ms مجرد مثال
+    }, 300);
 });
 
 
@@ -571,3 +634,4 @@ document.addEventListener("DOMContentLoaded", function(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
