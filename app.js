@@ -434,80 +434,68 @@ function openFilePreview(fileId) {
   setTimeout(() => panel.style.opacity = 1, 50);
 }
 
+ // ==================== تقرائة الكود بار وتسجيل الدخول ====================
 async function authenticateByQR(type, qrText) {
 
-    const data = qrText.split(";");
+    try {
 
-    // ======================
-    // ولي الأمر (5 بيانات)
-    // ======================
-    if (type === "parent") {
+        const data = qrText.split(";");
 
-        if (data.length !== 5) {
-            alert("QR غير صالح");
-            return;
+        // ======================
+        // ولي الأمر (5 بيانات)
+        // ======================
+        if (type === "parent") {
+
+            if (data.length !== 5) {
+                alert("QR غير صالح");
+                return;
+            }
+
+            const studentName = data[0];
+            const classe = data[1];
+            const recordCode = data[2];
+            const correspondenceId = data[3];
+            const absenceId = data[4];
+
+            const matched = cachedUsers.find(line => line.includes(recordCode));
+
+            if (!matched) {
+                alert("QR غير صالح");
+                return;
+            }
+
+            localStorage.setItem("Correspondence_Fille_ID", correspondenceId);
+            localStorage.setItem("SijileAbsence_Fille_ID", absenceId);
+            localStorage.setItem("studentName", studentName);
+            localStorage.setItem("classe", classe);
         }
 
-        const studentName = data[0];
-        const classe = data[1];
-        const recordCode = data[2];
-        const correspondenceId = data[3];
-        const absenceId = data[4];
+        // ======================
+        // أستاذ / إشراف (3 بيانات)
+        // ======================
+        else {
 
-        // نبحث باستخدام RecordCode
-        const matched = cachedUsers.find(line => line.includes(recordCode));
+            if (data.length !== 3) {
+                alert("QR غير صالح");
+                return;
+            }
 
-        if (!matched) {
-            alert("QR غير صالح");
-            return;
+            const username = data[0];
+
+            const matched = cachedUsers.find(line => line.includes(username));
+
+            if (!matched) {
+                alert("QR غير صالح");
+                return;
+            }
+
+            localStorage.setItem("username", username);
         }
 
-        // حفظ المعرفات
-        localStorage.setItem("Correspondence_Fille_ID", correspondenceId);
-        localStorage.setItem("SijileAbsence_Fille_ID", absenceId);
-        localStorage.setItem("studentName", studentName);
-        localStorage.setItem("classe", classe);
+        // دخول ناجح
+        openSession(type);
 
-    }
-
-    // ======================
-    // أستاذ / إشراف (3 بيانات)
-    // ======================
-    else {
-
-        if (data.length !== 3) {
-            alert("QR غير صالح");
-            return;
-        }
-
-        const username = data[0];
-        const schoolKey = data[1];
-        const passport = data[2];
-
-        const matched = cachedUsers.find(line => line.includes(username));
-
-        if (!matched) {
-            alert("QR غير صالح");
-            return;
-        }
-
-        localStorage.setItem("username", username);
-    }
-
-    // ======================
-    // دخول مباشر
-    // ======================
-         document.getElementById("loginModal").style.display="none";
-        document.getElementById("menuBtn").disabled=false;
-
-        fillMenu(type);
-
-        document.getElementById("welcomeText").textContent =
-            type==="parent"
-            ? "مرحبًا بك! افتح القائمة لاستخدام خدماتنا."
-            : `مرحبًا بك يا ${matched}! افتح القائمة لاستخدام خدماتنا.`;
-
-    }catch(err){
+    } catch (err) {
         console.error(err);
         alert("حدث خطأ أثناء التحقق");
     }
@@ -606,9 +594,12 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 
 // إغلاق مودال الحضور
-document.getElementById("closeAttendanceModal").addEventListener("click", function(){
-  document.getElementById("attendanceModal").style.display = "none";
+document.addEventListener("DOMContentLoaded", function(){
+    document.getElementById("closeAttendanceModal").addEventListener("click", function(){
+        document.getElementById("attendanceModal").style.display = "none";
+    });
 });
+
 
 
 
