@@ -38,14 +38,18 @@ const CONFIG = {
 };
 
 const FILE_ITEMS = {
-  "جدول توقيت الأستاذ": CONFIG.Teacher_Timetable_File_ID,
-  "جدول استقبال الأولياء": CONFIG.Reception_Schedule_File_ID,
-  "جدول التوقيت الأسبوعي للتلاميذ": CONFIG.Weekly_Students_Timetable_File_ID,
-  "رزنامة الفروض والاختبارات": CONFIG.Exams_Calendar_File_ID,
-  "استمارات ووثائق مختلفة للتلاميذ": CONFIG.Students_Documents_File_ID,
-  "استمارات ووثائق مختلفة للأساتذة": CONFIG.Teacher_Documents_File_ID,
-  "استمارات ووثائق مختلفة للإشراف التربوي": CONFIG.Supervisory_Documents_File_ID,
-  "إعلانات": CONFIG.Announcements_File_ID
+"القوائم الإسمية للتلاميذ": CONFIG.ListePrinsipal_File_ID,
+"قوائم صب النقاط": CONFIG.Listepointage_File_ID,
+"الغائبون قبل اليوم": CONFIG.Old_Absented_File_ID,
+"متابعة غيابات اليوم": CONFIG.New_Absented_File_ID,
+"جدول توقيت الأستاذ": CONFIG.Teacher_Timetable_File_ID,
+"جدول استقبال الأولياء": CONFIG.Reception_Schedule_File_ID,
+"جدول التوقيت الأسبوعي للتلاميذ": CONFIG.Weekly_Students_Timetable_File_ID,
+"رزنامة الفروض والاختبارات": CONFIG.Exams_Calendar_File_ID,
+"استمارات ووثائق مختلفة للتلاميذ": CONFIG.Students_Documents_File_ID,
+"استمارات ووثائق مختلفة للأساتذة": CONFIG.Teacher_Documents_File_ID,
+"استمارات ووثائق مختلفة للإشراف التربوي": CONFIG.Supervisory_Documents_File_ID,
+"إعلانات": CONFIG.Announcements_File_ID
 };
 
 const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2X2ku8gwIIq5_nYjEykekNk27IiTzNFRfF5fUhzwnczdZKf1ilUXssxfC4o-KB0tE/exec";
@@ -414,8 +418,8 @@ function openSession(type) {
 
   if(item.icon === "logout") logout();
 
-  if(item.label === "سجل الغيابات" && type === "parent"){
-    const id = localStorage.getItem("SijileAbsence_Fille_ID");
+if(item.label === "سجل الغيابات" && type === "parent"){
+const id = localStorage.getItem("SijileAbsence_Fille_ID");
 if(id) openFilePreview(id);
 else alert("لم يتم العثور على الملف");
     dropdownMenu.style.display = "none";
@@ -431,43 +435,6 @@ else alert("لم يتم العثور على الملف");
     return;
 }
 
-
-if(item.label === "القوائم الإسمية للتلاميذ"){
-const id = localStorage.getItem("ListePrinsipal_File_ID");
-if(id) openFilePreview(id);
-else alert("لم يتم العثور على الملف");
-  
-    dropdownMenu.style.display = "none";
-    return;
-}
-      
-if(item.label === "قوائم صب النقاط"){
-const id = localStorage.getItem("Listepointage_File_ID");
-if(id) openFilePreview(id);
-else alert("لم يتم العثور على الملف");
-  
-    dropdownMenu.style.display = "none";
-    return;
-}
-
-if(item.label === "الغائبون قبل اليوم"){
-const id = localStorage.getItem("Old_Absented_File_ID");
-if(id) openFilePreview(id);
-else alert("لم يتم العثور على الملف");
-  
-    dropdownMenu.style.display = "none";
-    return;
-}
-      
-if(item.label === "متابعة غيابات اليوم"){
-const id = localStorage.getItem("New_Absented_File_ID");
-if(id) openFilePreview(id);
-else alert("لم يتم العثور على الملف");
-  
-    dropdownMenu.style.display = "none";
-    return;
-}
-      
 if(FILE_ITEMS[item.label]) {
     openFilePreview(FILE_ITEMS[item.label]);
     dropdownMenu.style.display = "none";
@@ -673,6 +640,7 @@ function hideLoader(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
