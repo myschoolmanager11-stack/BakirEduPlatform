@@ -453,6 +453,46 @@ Attendance-btn {
     to{ transform: rotate(360deg); }
 }
 
+
+/* ================= Loader داخل نافذة المعاينة ================= */
+
+.preview-loader {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.95);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.loader-content {
+    text-align: center;
+    color: #3f51b5;
+    font-weight: bold;
+}
+
+.loader-text {
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+/* سبينر احترافي */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #d0d6ff;
+    border-top: 4px solid #3f51b5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 .app-footer {
     background: rgba(255, 255, 255, 0);
     color: #0197c3;
@@ -473,6 +513,7 @@ Attendance-btn {
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
 
 
 
