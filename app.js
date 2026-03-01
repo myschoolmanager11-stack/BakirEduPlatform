@@ -430,6 +430,43 @@ else alert("لم يتم العثور على الملف");
     dropdownMenu.style.display = "none";
     return;
 }
+
+
+if(item.label === "القوائم الإسمية للتلاميذ"){
+const id = localStorage.getItem("ListePrinsipal_File_ID");
+if(id) openFilePreview(id);
+else alert("لم يتم العثور على الملف");
+  
+    dropdownMenu.style.display = "none";
+    return;
+}
+      
+if(item.label === "قوائم صب النقاط"){
+const id = localStorage.getItem("Listepointage_File_ID");
+if(id) openFilePreview(id);
+else alert("لم يتم العثور على الملف");
+  
+    dropdownMenu.style.display = "none";
+    return;
+}
+
+if(item.label === "الغائبون قبل اليوم"){
+const id = localStorage.getItem("Old_Absented_File_ID");
+if(id) openFilePreview(id);
+else alert("لم يتم العثور على الملف");
+  
+    dropdownMenu.style.display = "none";
+    return;
+}
+      
+if(item.label === "متابعة غيابات اليوم"){
+const id = localStorage.getItem("New_Absented_File_ID");
+if(id) openFilePreview(id);
+else alert("لم يتم العثور على الملف");
+  
+    dropdownMenu.style.display = "none";
+    return;
+}
       
 if(FILE_ITEMS[item.label]) {
     openFilePreview(FILE_ITEMS[item.label]);
@@ -636,6 +673,7 @@ function hideLoader(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
