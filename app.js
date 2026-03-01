@@ -523,19 +523,35 @@ function logout() {
   });
 
 // ==================== معاينة الملفات ====================
+// ==================== معاينة الملفات ====================
 function openFilePreview(fileId) {
+
   const panel = document.getElementById("filePreviewPanel");
   const frame = document.getElementById("filePreviewFrame");
   const previewDownload = document.getElementById("previewDownload");
   const previewOpen = document.getElementById("previewOpen");
+  const previewLoader = document.getElementById("previewLoader");
 
-  frame.style.display = "none";
+  // إظهار اللوحة
   panel.style.opacity = 0;
   panel.style.display = "flex";
 
+  // إظهار رسالة التحميل
+  previewLoader.style.display = "flex";
+  frame.style.display = "none";
+
   const url = `https://drive.google.com/file/d/${fileId}/preview`;
+
+  frame.onload = function () {
+      previewLoader.style.display = "none";
+      frame.style.display = "block";
+  };
+
+  frame.onerror = function () {
+      previewLoader.innerHTML = "⚠️ حدث خطأ أثناء تحميل الملف";
+  };
+
   frame.src = url;
-  frame.onload = () => frame.style.display = "block";
 
   previewDownload.href = `https://drive.google.com/uc?id=${fileId}&export=download`;
   previewOpen.href = url;
@@ -647,6 +663,7 @@ function hideLoader(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
