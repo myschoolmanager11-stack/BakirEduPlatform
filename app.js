@@ -62,6 +62,14 @@ let parentData = null;
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
 
+  // 🔵 تهيئة اسم المؤسسة والعنوان
+document.title = CONFIG.SchoolName;
+
+const schoolNameElement = document.getElementById("schoolName");
+if (schoolNameElement) {
+    schoolNameElement.textContent = CONFIG.SchoolName;
+}
+  
  // عناصر الصفحة
 const userTypeSelect = document.getElementById("userTypeSelect");
 const employeeBlock = document.getElementById("employeeBlock");
@@ -640,6 +648,7 @@ function hideLoader(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
