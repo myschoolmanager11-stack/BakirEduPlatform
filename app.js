@@ -81,7 +81,7 @@ async function fetchFile(fileId) {
         return null;
     }
     try {
-        const response = await fetch(`${GAS_SCRIPT_URL}?fileId=${fileId}`);
+        const response = await fetch(`${GAS_SCRIPT_URL}?id=${fileId}`);
         if(!response.ok) throw new Error("فشل تحميل الملف من Google Drive");
         const text = await response.text();
         return text.replace(/\r/g,"").split("\n").map(x=>x.trim()).filter(x=>x);
@@ -589,6 +589,7 @@ function hideLoader(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
