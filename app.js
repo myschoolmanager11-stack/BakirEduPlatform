@@ -40,7 +40,7 @@ const CONFIG = {
 const FILE_ITEMS = {
 "القوائم الإسمية للتلاميذ": CONFIG.ListePrinsipal_File_ID,
 "قوائم صب النقاط": CONFIG.Listepointage_File_ID,
-"الغائبون قبل اليوم": CONFIG.Old_Absented_File_ID,
+"قائمة التلاميذ الغائبون قبل اليوم": CONFIG.Old_Absented_File_ID,
 "متابعة غيابات اليوم": CONFIG.New_Absented_File_ID,
 "جدول توقيت الأستاذ": CONFIG.Teacher_Timetable_File_ID,
 "جدول استقبال الأولياء": CONFIG.Reception_Schedule_File_ID,
@@ -349,7 +349,7 @@ function openSession(type) {
         {icon:"person", label:"فضاء الأساتذة", desc:"مرحبا بكم في الأرضية الرقمية - فضاء الأساتذة"},
         {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
         {icon:"description", label:"قوائم صب النقاط", desc:"إدخال ومتابعة صب النقاط"},
-        {icon:"hourglass_top", label:"الغائبون قبل اليوم", desc:"قائمة التلاميذ الغائبين قبل اليوم"},
+        {icon:"hourglass_top", label:"قائمة التلاميذ الغائبون قبل اليوم", desc:"قائمة التلاميذ الغائبين قبل اليوم"},
         {icon:"send", label:"إرسال غيابات اليوم", desc:"إرسال غيابات اليوم للإدارة"},
         {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
         {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
@@ -361,8 +361,8 @@ function openSession(type) {
       ],
       consultation: [
         {icon:"qr_code_2", label:"نظام الحضور الذكي", desc:"تسجيل حضور التلاميذ بالباركود"},
-        {icon:"assignment", label:"القوائم الإسمية", desc:"عرض القوائم الإسمية"},
-        {icon:"hourglass_top", label:"الغائبون قبل اليوم", desc:"قائمة الغائبين قبل اليوم"},
+        {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
+        {icon:"hourglass_top", label:"قائمة التلاميذ الغائبون قبل اليوم", desc:"قائمة التلاميذ الغائبين قبل اليوم"},
         {icon:"bar_chart", label:"متابعة غيابات اليوم", desc:"متابعة غيابات اليوم"},
         {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
         {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
@@ -640,6 +640,7 @@ function hideLoader(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
