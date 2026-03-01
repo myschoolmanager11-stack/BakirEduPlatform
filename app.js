@@ -84,7 +84,7 @@ const studentBlock = document.getElementById("studentBlock");
 const studentSelect = document.getElementById("studentSelect");
 const classeSelect = document.getElementById("ClasseSelect");
 
-  const menuBtn = document.getElementById("menuBtn");
+const menuBtn = document.getElementById("menuBtn");
 const dropdownMenu = document.getElementById("dropdownMenu");
 const welcomeText = document.getElementById("welcomeText");
 const itemDescription = document.getElementById("itemDescription");
@@ -113,16 +113,15 @@ async function fetchFile(fileId) {
 // تعريف parseStudentLine
 function parseStudentLine(line) {
     const parts = line.split(";");
-    if(parts.length < 4) return null;
+    if (parts.length < 5) return null;
     return {
-        name: parts[0],
-        classe: parts[1],
-        correspondenceID: parts[2],
-        absenceID: parts[3]
+        name: parts[0].trim(),
+        classe: parts[1].trim(),
+        racord: parts[2].trim(),
+        correspondenceID: parts[3].trim(),
+        absenceID: parts[4].trim()
     };
 }
-
-
 
 // ==================== تغيير نوع المستخدم ====================
 userTypeSelect.addEventListener("change", async function () {
@@ -648,6 +647,7 @@ function hideLoader(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
