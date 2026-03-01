@@ -72,6 +72,13 @@ const studentBlock = document.getElementById("studentBlock");
 const studentSelect = document.getElementById("studentSelect");
 const classeSelect = document.getElementById("ClasseSelect");
 
+  const menuBtn = document.getElementById("menuBtn");
+const dropdownMenu = document.getElementById("dropdownMenu");
+const welcomeText = document.getElementById("welcomeText");
+const itemDescription = document.getElementById("itemDescription");
+const loginModal = document.getElementById("loginModal");
+const schoolKeyBtn = document.getElementById("schoolKeyBtn");
+  
 function showLoader() { document.getElementById("globalLoader").style.display = "flex"; }
 function hideLoader() { document.getElementById("globalLoader").style.display = "none"; }
 
@@ -236,6 +243,18 @@ async function loadEmployeeList(type){
     hideLoader();
 }
 
+  employeeSelect.addEventListener("change", function(){
+
+    if(this.value){
+        authBlock.style.display = "block";
+        loginBtn.style.display = "flex";
+    } else {
+        authBlock.style.display = "none";
+        loginBtn.style.display = "none";
+    }
+
+});
+  
 // ==================== تحميل كلمات المرور ====================
 async function loadPasswords(){
     const list = await fetchFile(CONFIG.Password_File_ID);
@@ -275,9 +294,27 @@ loginBtn.addEventListener("click", function() {
 // ==================== فتح الجلسة ====================
 function openSession(type) {
     console.log("فتح الجلسة للمستخدم:", type);
+
     document.getElementById("loginModal").style.display = "none";
+
     localStorage.setItem("userType", type);
+
+    // تفعيل زر القائمة
+    menuBtn.disabled = false;
+
+    // تحديث النص الترحيبي
+    if(type === "parent") {
+        welcomeText.textContent = "مرحبًا بك في فضاء أولياء التلاميذ";
+    } else if(type === "teacher") {
+        welcomeText.textContent = "مرحبًا بك في فضاء الأساتذة";
+    } else {
+        welcomeText.textContent = "مرحبًا بك في فضاء الإشراف التربوي";
+    }
+
+    // ملء القائمة
+    fillMenu(type);
 }
+  
 
   function fillMenu(type) {
     dropdownMenu.innerHTML = "";
@@ -589,6 +626,7 @@ function hideLoader(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
