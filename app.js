@@ -264,54 +264,64 @@ async function loadPasswords(){
 // ==================== تسجيل الدخول ====================
 loginBtn.addEventListener("click", function() {
     if(userTypeSelect.value === "parent") {
-        const selectedLine = studentSelect.value;
-        if(!selectedLine) return alert("اختر التلميذ من القائمة");
+    const selectedLine = studentSelect.value;
+    if(!selectedLine) return alert("اختر التلميذ من القائمة");
 
-        const data = parseStudentLine(selectedLine);
-        if(!data) return alert("خطأ في بيانات التلميذ المختار");
+    const data = parseStudentLine(selectedLine);
+    if(!data) return alert("خطأ في بيانات التلميذ المختار");
 
-        parentData = data;
-        localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
-        localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
+    parentData = data;
 
-        openSession("parent");
-        return;
-    }
+    localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
+    localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
+
+    // 🔥 تخزين الاسم
+    localStorage.setItem("userName", data.name);
+
+    openSession("parent");
+    return;
+}
 
     if(!loginPassword.value) return alert("أدخل كلمة المرور");
 
     showLoader();
     setTimeout(() => {
-        if(!PASSWORDS.includes(loginPassword.value)) {
-            hideLoader();
-            return alert("كلمة المرور غير صحيحة");
-        }
-        openSession(userTypeSelect.value);
+    if(!PASSWORDS.includes(loginPassword.value)) {
         hideLoader();
-    }, 300);
+        return alert("كلمة المرور غير صحيحة");
+    }
+
+    // 🔥 تخزين اسم الموظف
+    localStorage.setItem("userName", employeeSelect.value);
+
+    openSession(userTypeSelect.value);
+    hideLoader();
+}, 300);
 });
 
 // ==================== فتح الجلسة ====================
 function openSession(type) {
+
     console.log("فتح الجلسة للمستخدم:", type);
 
     document.getElementById("loginModal").style.display = "none";
 
     localStorage.setItem("userType", type);
 
-    // تفعيل زر القائمة
     menuBtn.disabled = false;
 
-    // تحديث النص الترحيبي
+    const userName = localStorage.getItem("userName") || "المستخدم";
+
     if(type === "parent") {
-        welcomeText.textContent = "مرحبًا بك في فضاء أولياء التلاميذ";
-    } else if(type === "teacher") {
-        welcomeText.textContent = "مرحبًا بك في فضاء الأساتذة";
-    } else {
-        welcomeText.textContent = "مرحبًا بك في فضاء الإشراف التربوي";
+        welcomeText.textContent = `مرحبًا بك ${userName} في فضاء أولياء التلاميذ`;
+    } 
+    else if(type === "teacher") {
+        welcomeText.textContent = `مرحبًا بك الأستاذ ${userName}`;
+    } 
+    else {
+        welcomeText.textContent = `مرحبًا بك ${userName} في فضاء الإشراف التربوي`;
     }
 
-    // ملء القائمة
     fillMenu(type);
 }
   
@@ -626,6 +636,7 @@ function hideLoader(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
