@@ -689,8 +689,8 @@ function hideLoader(){
 // إغلاق مودال الحضور
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
-});
 
+  
 // ==================== مودال الغيابات القديمة ====================
 
 const oldAbsModal = document.getElementById("ModalOldAbsented");
@@ -792,8 +792,7 @@ if(oldAbsSelect){
     });
 }
 
-
-
+});
 
 
 
