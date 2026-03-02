@@ -245,7 +245,17 @@ async function loadEmployeeList(type){
     const list = await fetchFile(fileId);
     if(list){
         employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-        list.forEach(e => employeeSelect.innerHTML += `<option value="${e}">${e}</option>`);
+        list.forEach(line => {
+
+    const parts = line.split(";");
+    const teacherName = parts[0]?.trim() || "";
+    const branche = parts[1]?.trim() || "";
+
+    employeeSelect.innerHTML += 
+        `<option value="${teacherName}" data-branche="${branche}">
+            ${teacherName}
+        </option>`;
+});
     } else {
         employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
     }
@@ -273,40 +283,50 @@ async function loadPasswords(){
 
 // ==================== تسجيل الدخول ====================
 loginBtn.addEventListener("click", function() {
+
+    // ===== دخول ولي =====
     if(userTypeSelect.value === "parent") {
-    const selectedLine = studentSelect.value;
-    if(!selectedLine) return alert("اختر التلميذ من القائمة");
 
-    const data = parseStudentLine(selectedLine);
-    if(!data) return alert("خطأ في بيانات التلميذ المختار");
+        const selectedLine = studentSelect.value;
+        if(!selectedLine) return alert("اختر التلميذ من القائمة");
 
-    parentData = data;
+        const data = parseStudentLine(selectedLine);
+        if(!data) return alert("خطأ في بيانات التلميذ المختار");
 
-    localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
-    localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
+        parentData = data;
 
-    // 🔥 تخزين الاسم
-    localStorage.setItem("userName", data.name);
+        localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
+        localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
+        localStorage.setItem("userName", data.fullName);
 
-    openSession("parent");
-    return;
-}
+        openSession("parent");
+        return;
+    }
 
+    // ===== دخول موظف =====
     if(!loginPassword.value) return alert("أدخل كلمة المرور");
 
     showLoader();
+
     setTimeout(() => {
-    if(!PASSWORDS.includes(loginPassword.value)) {
+
+        if(!PASSWORDS.includes(loginPassword.value)) {
+            hideLoader();
+            return alert("كلمة المرور غير صحيحة");
+        }
+
+        const selectedOption = employeeSelect.options[employeeSelect.selectedIndex];
+
+        const teacherName = selectedOption.value;
+        const branche = selectedOption.getAttribute("data-branche") || "";
+
+        localStorage.setItem("userName", teacherName);
+        localStorage.setItem("Branche_Id", branche);
+
+        openSession(userTypeSelect.value);
         hideLoader();
-        return alert("كلمة المرور غير صحيحة");
-    }
 
-    // 🔥 تخزين اسم الموظف
-    localStorage.setItem("userName", employeeSelect.value);
-
-    openSession(userTypeSelect.value);
-    hideLoader();
-}, 300);
+    }, 300);
 });
 
 // ==================== فتح الجلسة ====================
@@ -662,6 +682,7 @@ function hideLoader(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
