@@ -587,15 +587,6 @@ function openFilePreview(fileId) {
   setTimeout(() => panel.style.opacity = 1, 50);
 }
 
-// ==================== تدالتين عامتين لعرض نص الإنتضار وتحميل البيانات ====================
-function showLoader(){
-    document.getElementById("globalLoader").style.display = "flex";
-}
-
-function hideLoader(){
-    document.getElementById("globalLoader").style.display = "none";
-}
-
 // ==================== تفعيل عناصر المعاينة بعد تحميل الصفحة ====================
   const panel = document.getElementById("filePreviewPanel");
   const header = panel.querySelector(".preview-header");
@@ -793,6 +784,7 @@ if(oldAbsSelect){
 }
 
 });
+
 
 
 
