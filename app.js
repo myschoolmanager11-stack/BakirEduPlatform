@@ -696,13 +696,46 @@ document.getElementById("closeAttendanceModal").addEventListener("click", functi
 // ==================== دالة فتح مودال قائمة الغيابات القديمة ====================
 async function openOldAbsentedModal(){
 
-  document.getElementById("ModalOldAbsented").style.display = "flex";
+  const modal = document.getElementById("ModalOldAbsented");
+  const select = document.getElementById("oldAbsClassFilter");
 
-  if(OLD_ABS_DATA.length === 0){
-    await loadOldAbsentedData();
+  modal.style.display = "flex";
+
+  // 🔵 إظهار لودر عام
+  showLoader();
+
+  // 🔵 تفريغ الجدول
+  renderOldAbsTable([]);
+
+  // 🔵 تحميل الملف من جديد دائماً لضمان التحديث
+  const list = await fetchFile(CONFIG.Old_Absented_File_ID);
+
+  if(!list){
+      hideLoader();
+      alert("تعذر تحميل ملف الغيابات القديمة");
+      return;
   }
 
-  populateOldAbsClassFilter();
+  // 🔵 تخزين البيانات
+  OLD_ABS_DATA = list.map(line => {
+      const parts = line.split(";");
+      return {
+          fullName: parts[0]?.trim() || "",
+          classe: parts[1]?.trim() || "",
+          hours: parts[2]?.trim() || "0"
+      };
+  });
+
+  // 🔵 استخراج الأقسام
+  const classes = [...new Set(OLD_ABS_DATA.map(x => x.classe))];
+
+  // 🔵 تعبئة الكمبوبكس
+  select.innerHTML = `<option value="">-- اختر القسم --</option>`;
+  classes.forEach(c => {
+      select.innerHTML += `<option value="${c}">${c}</option>`;
+  });
+
+  hideLoader();
 }
 
 // ==================== دالة غلق مودال الغيابات القديمة ====================
@@ -750,9 +783,12 @@ document.getElementById("oldAbsClassFilter")
 
   const selectedClass = this.value;
 
-  const filtered = selectedClass
-    ? OLD_ABS_DATA.filter(x => x.classe === selectedClass)
-    : [];
+  if(!selectedClass){
+      renderOldAbsTable([]);
+      return;
+  }
+
+  const filtered = OLD_ABS_DATA.filter(x => x.classe === selectedClass);
 
   renderOldAbsTable(filtered);
 });
@@ -761,20 +797,31 @@ document.getElementById("oldAbsClassFilter")
 function renderOldAbsTable(data){
 
   const tbody = document.querySelector("#oldAbsTable tbody");
-
   tbody.innerHTML = "";
+
+  if(data.length === 0){
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="3" style="padding:15px; color:#777;">
+            لا توجد بيانات للعرض
+          </td>
+        </tr>
+      `;
+      return;
+  }
 
   data.forEach(row => {
 
     tbody.innerHTML += `
       <tr>
-        <td>${row.fullName}</td>
+        <td style="text-align:right;">${row.fullName}</td>
         <td>${row.classe}</td>
         <td>${row.hours}</td>
       </tr>
     `;
   });
 }
+
 
 
 
