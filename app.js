@@ -297,7 +297,7 @@ loginBtn.addEventListener("click", function() {
 
         localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
         localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
-        localStorage.setItem("userName", data.fullName);
+        localStorage.setItem("userName", data.name);
 
         openSession("parent");
         return;
@@ -682,6 +682,7 @@ function hideLoader(){
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
