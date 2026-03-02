@@ -691,136 +691,107 @@ document.getElementById("closeAttendanceModal").addEventListener("click", functi
   document.getElementById("attendanceModal").style.display = "none";
 });
 
+// ==================== مودال الغيابات القديمة ====================
 
+const oldAbsModal = document.getElementById("ModalOldAbsented");
+const oldAbsSelect = document.getElementById("oldAbsClassFilter");
+const oldAbsTableBody = document.querySelector("#oldAbsTable tbody");
 
-// ==================== دالة فتح مودال قائمة الغيابات القديمة ====================
-async function openOldAbsentedModal(){
-
-  const modal = document.getElementById("ModalOldAbsented");
-  const select = document.getElementById("oldAbsClassFilter");
-
-  modal.style.display = "flex";
-
-  // 🔵 إظهار لودر عام
-  showLoader();
-
-  // 🔵 تفريغ الجدول
-  renderOldAbsTable([]);
-
-  // 🔵 تحميل الملف من جديد دائماً لضمان التحديث
-  const list = await fetchFile(CONFIG.Old_Absented_File_ID);
-
-  if(!list){
-      hideLoader();
-      alert("تعذر تحميل ملف الغيابات القديمة");
-      return;
-  }
-
-  // 🔵 تخزين البيانات
-  OLD_ABS_DATA = list.map(line => {
-      const parts = line.split(";");
-      return {
-          fullName: parts[0]?.trim() || "",
-          classe: parts[1]?.trim() || "",
-          hours: parts[2]?.trim() || "0"
-      };
-  });
-
-  // 🔵 استخراج الأقسام
-  const classes = [...new Set(OLD_ABS_DATA.map(x => x.classe))];
-
-  // 🔵 تعبئة الكمبوبكس
-  select.innerHTML = `<option value="">-- اختر القسم --</option>`;
-  classes.forEach(c => {
-      select.innerHTML += `<option value="${c}">${c}</option>`;
-  });
-
-  hideLoader();
+// فرض نفس ستايل نافذة الدخول
+if(oldAbsSelect){
+    oldAbsSelect.classList.add("styled-select");
 }
 
-// ==================== دالة غلق مودال الغيابات القديمة ====================
-function closeOldAbsentedModal(){
-  document.getElementById("ModalOldAbsented").style.display = "none";
+// فتح المودال
+window.openOldAbsentedModal = async function(){
+
+    oldAbsModal.style.display = "flex";
+    showLoader();
+
+    oldAbsSelect.innerHTML = `<option value="">-- جاري التحميل... --</option>`;
+    oldAbsTableBody.innerHTML = "";
+
+    const list = await fetchFile(CONFIG.Old_Absented_File_ID);
+
+    if(!list){
+        hideLoader();
+        oldAbsSelect.innerHTML = `<option value="">تعذر تحميل البيانات</option>`;
+        return;
+    }
+
+    OLD_ABS_DATA = list.map(line=>{
+        const p = line.split(";");
+        return {
+            fullName: p[0]?.trim() || "",
+            classe: p[1]?.trim() || "",
+            hours: p[2]?.trim() || "0"
+        };
+    });
+
+    const classes = [...new Set(OLD_ABS_DATA.map(x=>x.classe).filter(x=>x))];
+
+    oldAbsSelect.innerHTML = `<option value="">-- اختر القسم --</option>`;
+
+    classes.forEach(c=>{
+        const option = document.createElement("option");
+        option.value = c;
+        option.textContent = c;
+        oldAbsSelect.appendChild(option);
+    });
+
+    hideLoader();
+};
+
+// غلق المودال
+window.closeOldAbsentedModal = function(){
+    oldAbsModal.style.display = "none";
+};
+
+// فلترة عند تغيير القسم
+if(oldAbsSelect){
+    oldAbsSelect.addEventListener("change", function(){
+
+        const selected = this.value;
+
+        oldAbsTableBody.innerHTML = "";
+
+        if(!selected){
+            oldAbsTableBody.innerHTML = `
+                <tr>
+                    <td colspan="3" style="padding:15px;color:#777;">
+                        اختر قسمًا لعرض التلاميذ
+                    </td>
+                </tr>`;
+            return;
+        }
+
+        const filtered = OLD_ABS_DATA.filter(x=>x.classe===selected);
+
+        if(filtered.length===0){
+            oldAbsTableBody.innerHTML = `
+                <tr>
+                    <td colspan="3" style="padding:15px;color:#777;">
+                        لا توجد بيانات
+                    </td>
+                </tr>`;
+            return;
+        }
+
+        filtered.forEach(row=>{
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+                <td style="text-align:right;font-weight:600;">${row.fullName}</td>
+                <td>${row.classe}</td>
+                <td>${row.hours}</td>
+            `;
+
+            oldAbsTableBody.appendChild(tr);
+        });
+
+    });
 }
 
-// ==================== دالة تحميل ملف الغيابات القديمة ====================
-async function loadOldAbsentedData(){
-
-  const list = await fetchFile(CONFIG.Old_Absented_File_ID);
-
-  if(!list) return alert("تعذر تحميل ملف الغيابات القديمة");
-
-  OLD_ABS_DATA = list.map(line => {
-
-    const parts = line.split(";");
-
-    return {
-      fullName: parts[0]?.trim() || "",
-      classe: parts[1]?.trim() || "",
-      hours: parts[2]?.trim() || "0"
-    };
-
-  });
-}
-
-// ==================== ComboBox بالأقسام دالة تعبئة ====================
-function populateOldAbsClassFilter(){
-
-  const select = document.getElementById("oldAbsClassFilter");
-
-  const classes = [...new Set(OLD_ABS_DATA.map(x => x.classe))];
-
-  select.innerHTML = '<option value="">-- اختر القسم --</option>';
-
-  classes.forEach(c => {
-    select.innerHTML += `<option value="${c}">${c}</option>`;
-  });
-}
-
-// ==================== الفلترة ====================
-document.getElementById("oldAbsClassFilter")
-.addEventListener("change", function(){
-
-  const selectedClass = this.value;
-
-  if(!selectedClass){
-      renderOldAbsTable([]);
-      return;
-  }
-
-  const filtered = OLD_ABS_DATA.filter(x => x.classe === selectedClass);
-
-  renderOldAbsTable(filtered);
-});
-
-// ==================== تعبئة الداتا قريد ====================
-function renderOldAbsTable(data){
-
-  const tbody = document.querySelector("#oldAbsTable tbody");
-  tbody.innerHTML = "";
-
-  if(data.length === 0){
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="3" style="padding:15px; color:#777;">
-            لا توجد بيانات للعرض
-          </td>
-        </tr>
-      `;
-      return;
-  }
-
-  data.forEach(row => {
-
-    tbody.innerHTML += `
-      <tr>
-        <td style="text-align:right;">${row.fullName}</td>
-        <td>${row.classe}</td>
-        <td>${row.hours}</td>
-      </tr>
-    `;
-  });
-}
 
 
 
