@@ -58,6 +58,8 @@ let PASSWORDS = [];
 let SCHOOL_KEY = "";
 let STUDENTS_LIST = [];
 let parentData = null;
+let OLD_ABS_DATA = [];
+
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -461,6 +463,12 @@ else alert("لم يتم العثور على الملف");
     return;
 }
 
+if(item.label === "قائمة التلاميذ الغائبون قبل اليوم"){
+    openOldAbsentedModal();
+    dropdownMenu.style.display = "none";
+    return;
+}
+      
 if(FILE_ITEMS[item.label]) {
     openFilePreview(FILE_ITEMS[item.label]);
     dropdownMenu.style.display = "none";
@@ -685,17 +693,88 @@ document.getElementById("closeAttendanceModal").addEventListener("click", functi
 
 
 
+// ==================== دالة فتح مودال قائمة الغيابات القديمة ====================
+async function openOldAbsentedModal(){
 
+  document.getElementById("ModalOldAbsented").style.display = "flex";
 
+  if(OLD_ABS_DATA.length === 0){
+    await loadOldAbsentedData();
+  }
 
+  populateOldAbsClassFilter();
+}
 
+// ==================== دالة غلق مودال الغيابات القديمة ====================
+function closeOldAbsentedModal(){
+  document.getElementById("ModalOldAbsented").style.display = "none";
+}
 
+// ==================== دالة تحميل ملف الغيابات القديمة ====================
+async function loadOldAbsentedData(){
 
+  const list = await fetchFile(CONFIG.Old_Absented_File_ID);
 
+  if(!list) return alert("تعذر تحميل ملف الغيابات القديمة");
 
+  OLD_ABS_DATA = list.map(line => {
 
+    const parts = line.split(";");
 
+    return {
+      fullName: parts[0]?.trim() || "",
+      classe: parts[1]?.trim() || "",
+      hours: parts[2]?.trim() || "0"
+    };
 
+  });
+}
+
+// ==================== ComboBox بالأقسام دالة تعبئة ====================
+function populateOldAbsClassFilter(){
+
+  const select = document.getElementById("oldAbsClassFilter");
+
+  const classes = [...new Set(OLD_ABS_DATA.map(x => x.classe))];
+
+  select.innerHTML = '<option value="">-- اختر القسم --</option>';
+
+  classes.forEach(c => {
+    select.innerHTML += `<option value="${c}">${c}</option>`;
+  });
+}
+
+// ==================== الفلترة ====================
+document.getElementById("oldAbsClassFilter")
+.addEventListener("change", function(){
+
+  const selectedClass = this.value;
+
+  const filtered = selectedClass
+    ? OLD_ABS_DATA.filter(x => x.classe === selectedClass)
+    : [];
+
+  renderOldAbsTable(filtered);
+});
+
+// ==================== تعبئة الداتا قريد ====================
+function renderOldAbsTable(data){
+
+  const tbody = document.querySelector("#oldAbsTable tbody");
+
+  tbody.innerHTML = "";
+
+  data.forEach(row => {
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${row.fullName}</td>
+        <td>${row.classe}</td>
+        <td>${row.hours}</td>
+      </tr>
+    `;
+  });
+}
 
 
 
