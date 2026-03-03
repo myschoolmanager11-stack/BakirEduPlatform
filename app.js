@@ -91,6 +91,10 @@ const welcomeText = document.getElementById("welcomeText");
 const itemDescription = document.getElementById("itemDescription");
 const loginModal = document.getElementById("loginModal");
 const schoolKeyBtn = document.getElementById("schoolKeyBtn");
+
+const oldAbsModal = document.getElementById("ModalOldAbsented");
+const oldAbsSelect = document.getElementById("oldAbsClassFilter");
+const oldAbsTableBody = document.querySelector("#oldAbsTable tbody");
   
 function showLoader() { document.getElementById("globalLoader").style.display = "flex"; }
 function hideLoader() { document.getElementById("globalLoader").style.display = "none"; }
@@ -549,7 +553,107 @@ function logout() {
     document.getElementById("contactMessage").value = "";
   });
 
-// ==================== معاينة الملفات ====================
+ // ==================== فتح مودال الغيابات القديمة ====================
+  window.openOldAbsentedModal = async function(){
+
+      oldAbsModal.style.display = "flex";
+      showLoader();
+
+      oldAbsSelect.innerHTML = `<option value="">-- جاري التحميل... --</option>`;
+      oldAbsTableBody.innerHTML = "";
+
+      const list = await fetchFile(CONFIG.Old_Absented_File_ID);
+
+      if(!list){
+          hideLoader();
+          oldAbsSelect.innerHTML = `<option value="">تعذر تحميل البيانات</option>`;
+          return;
+      }
+
+      OLD_ABS_DATA = list.map(line=>{
+          const p = line.split(";");
+          return {
+              fullName: p[0]?.trim() || "",
+              classe: p[1]?.trim() || "",
+              hours: p[2]?.trim() || "0"
+          };
+      });
+
+      const classes = [...new Set(OLD_ABS_DATA.map(x=>x.classe).filter(x=>x))];
+
+      oldAbsSelect.innerHTML = `<option value="">-- اختر القسم --</option>`;
+
+      classes.forEach(c=>{
+          const option = document.createElement("option");
+          option.value = c;
+          option.textContent = c;
+          oldAbsSelect.appendChild(option);
+      });
+
+      hideLoader();
+  };
+
+  // ==================== غلق المودال ====================
+  window.closeOldAbsentedModal = function(){
+      oldAbsModal.style.display = "none";
+  };
+
+  // ==================== فلترة حسب القسم ====================
+  oldAbsSelect.addEventListener("change", function(){
+
+      const selected = this.value;
+      oldAbsTableBody.innerHTML = "";
+
+      if(!selected){
+          oldAbsTableBody.innerHTML = `
+              <tr>
+                  <td colspan="3" style="padding:15px;color:#777;">
+                      اختر قسمًا لعرض التلاميذ
+                  </td>
+              </tr>`;
+          return;
+      }
+
+      const filtered = OLD_ABS_DATA
+          .filter(x=>x.classe===selected)
+          .sort((a,b)=>Number(b.hours)-Number(a.hours));
+
+      if(filtered.length===0){
+          oldAbsTableBody.innerHTML = `
+              <tr>
+                  <td colspan="3" style="padding:15px;color:#777;">
+                      لا توجد بيانات
+                  </td>
+              </tr>`;
+          return;
+      }
+
+      filtered.forEach(row=>{
+          const tr = document.createElement("tr");
+
+          if(Number(row.hours) >= 10){
+              tr.style.background = "#ffe6e6";
+          }
+
+          tr.innerHTML = `
+              <td style="text-align:right;font-weight:600;">${row.fullName}</td>
+              <td>${row.classe}</td>
+              <td>${row.hours}</td>
+          `;
+
+          oldAbsTableBody.appendChild(tr);
+      });
+
+  });
+
+  // ==================== إغلاق مودال الحضور ====================
+  document.getElementById("closeAttendanceModal").addEventListener("click", function(){
+      document.getElementById("attendanceModal").style.display = "none";
+  });
+
+});
+
+  
 // ==================== معاينة الملفات ====================
 function openFilePreview(fileId) {
 
@@ -680,110 +784,8 @@ function openFilePreview(fileId) {
 // إغلاق مودال الحضور
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
-
-  
-// ==================== مودال الغيابات القديمة ====================
-
-const oldAbsModal = document.getElementById("ModalOldAbsented");
-const oldAbsSelect = document.getElementById("oldAbsClassFilter");
-const oldAbsTableBody = document.querySelector("#oldAbsTable tbody");
-
-// فرض نفس ستايل نافذة الدخول
-if(oldAbsSelect){
-    oldAbsSelect.classList.add("styled-select");
-}
-
-// فتح المودال
-window.openOldAbsentedModal = async function(){
-
-    oldAbsModal.style.display = "flex";
-    showLoader();
-
-    oldAbsSelect.innerHTML = `<option value="">-- جاري التحميل... --</option>`;
-    oldAbsTableBody.innerHTML = "";
-
-    const list = await fetchFile(CONFIG.Old_Absented_File_ID);
-
-    if(!list){
-        hideLoader();
-        oldAbsSelect.innerHTML = `<option value="">تعذر تحميل البيانات</option>`;
-        return;
-    }
-
-    OLD_ABS_DATA = list.map(line=>{
-        const p = line.split(";");
-        return {
-            fullName: p[0]?.trim() || "",
-            classe: p[1]?.trim() || "",
-            hours: p[2]?.trim() || "0"
-        };
-    });
-
-    const classes = [...new Set(OLD_ABS_DATA.map(x=>x.classe).filter(x=>x))];
-
-    oldAbsSelect.innerHTML = `<option value="">-- اختر القسم --</option>`;
-
-    classes.forEach(c=>{
-        const option = document.createElement("option");
-        option.value = c;
-        option.textContent = c;
-        oldAbsSelect.appendChild(option);
-    });
-
-    hideLoader();
-};
-
-// غلق المودال
-window.closeOldAbsentedModal = function(){
-    oldAbsModal.style.display = "none";
-};
-
-// فلترة عند تغيير القسم
-if(oldAbsSelect){
-    oldAbsSelect.addEventListener("change", function(){
-
-        const selected = this.value;
-
-        oldAbsTableBody.innerHTML = "";
-
-        if(!selected){
-            oldAbsTableBody.innerHTML = `
-                <tr>
-                    <td colspan="3" style="padding:15px;color:#777;">
-                        اختر قسمًا لعرض التلاميذ
-                    </td>
-                </tr>`;
-            return;
-        }
-
-        const filtered = OLD_ABS_DATA.filter(x=>x.classe===selected);
-
-        if(filtered.length===0){
-            oldAbsTableBody.innerHTML = `
-                <tr>
-                    <td colspan="3" style="padding:15px;color:#777;">
-                        لا توجد بيانات
-                    </td>
-                </tr>`;
-            return;
-        }
-
-        filtered.forEach(row=>{
-            const tr = document.createElement("tr");
-
-            tr.innerHTML = `
-                <td style="text-align:right;font-weight:600;">${row.fullName}</td>
-                <td>${row.classe}</td>
-                <td>${row.hours}</td>
-            `;
-
-            oldAbsTableBody.appendChild(tr);
-        });
-
-    });
-}
-
 });
+
 
 
 
