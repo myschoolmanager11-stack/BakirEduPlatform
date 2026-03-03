@@ -642,8 +642,7 @@ oldAbsSelect.addEventListener("change", function(){
             </td>
             <td>${row.classe}</td>
             <td>${row.hours}</td>
-            <td></td>
-        `;
+          `;
 
         oldAbsTableBody.appendChild(tr);
     });
@@ -787,6 +786,7 @@ function openFilePreview(fileId) {
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
