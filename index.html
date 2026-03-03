@@ -299,6 +299,61 @@
   </div>
 </div>
 
+<!-- مودال متابعة الغيابات اليومية -->
+<div id="ModalNewAbsented" class="custom-modal">
+
+  <div class="modal-content large">
+
+    <!-- العنوان -->
+    <h3 class="modal-title">
+      📋 متابعة الغيابات اليومية
+    </h3>
+
+    <div class="modal-body">
+
+      <!-- صف الفلترة + زر الإغلاق -->
+      <div class="newabs-toolbar">
+
+        <select id="newAbsClassFilter" class="styled-select">
+          <option value="">-- اختر القسم --</option>
+        </select>
+
+        <button id="DownloadNewAbsented"
+                class="preview-btn"
+                onclick="DownloadNewAbsented()" title="تحميل">
+          <span class="material-icons">download</span>
+        </button>
+
+        <button id="CloseModalNewAbsented"
+                class="preview-btn"
+                onclick="closeNewAbsentedModal()" title="إغلاق">
+          <span class="material-icons">close</span>
+        </button>
+
+      </div>
+
+      <!-- حاوية الجدول -->
+      <div class="table-container">
+
+        <table id="newAbsTable" class="styled-table">
+          <thead>
+            <tr>
+              <th class="Count-col">الرقم</th>
+              <th class="name-col">اللقب والإسم</th>
+              <th class="Classe-col">القسم</th>
+              <th class="Hore-col">الساعات</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+    
     
     <!-- محتوى إضافي مستقبلي -->
     <div id="mainContent"></div>
