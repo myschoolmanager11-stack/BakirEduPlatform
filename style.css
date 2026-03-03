@@ -549,6 +549,12 @@ Attendance-btn {
   width: 50%;
 }
 
+.Count-col {
+  width: 05%;
+}
+
+
+
 #oldAbsTable td:first-child {
     font-weight: 600;
     text-align: right;
@@ -591,6 +597,7 @@ Attendance-btn {
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
 
 
 
