@@ -580,14 +580,17 @@ oldAbsModal.classList.add("show");
 
       const classes = [...new Set(OLD_ABS_DATA.map(x=>x.classe).filter(x=>x))];
 
-      oldAbsSelect.innerHTML = `<option value="">-- اختر القسم --</option>`;
+      oldAbsSelect.innerHTML = `
+    <option value="">-- اختر القسم --</option>
+    <option value="all">كل الأقسام</option>
+`;
 
-      classes.forEach(c=>{
-          const option = document.createElement("option");
-          option.value = c;
-          option.textContent = c;
-          oldAbsSelect.appendChild(option);
-      });
+     classes.forEach(c=>{
+    const option = document.createElement("option");
+    option.value = c;
+    option.textContent = c;
+    oldAbsSelect.appendChild(option);
+});
 
       hideLoader();
   };
@@ -606,21 +609,27 @@ oldAbsSelect.addEventListener("change", function(){
     if(!selected){
         oldAbsTableBody.innerHTML = `
             <tr>
-                <td colspan="5" style="padding:15px;color:#777;">
+                <td colspan="4" style="padding:15px;color:#777;">
                     اختر قسمًا لعرض التلاميذ
                 </td>
             </tr>`;
         return;
     }
 
-    const filtered = OLD_ABS_DATA
-        .filter(x => x.classe === selected)
-        .sort((a,b)=>Number(b.hours)-Number(a.hours));
+    let filtered;
+
+    if(selected === "all"){
+        filtered = OLD_ABS_DATA;
+    } else {
+        filtered = OLD_ABS_DATA.filter(x => x.classe === selected);
+    }
+
+    filtered = filtered.sort((a,b)=>Number(b.hours)-Number(a.hours));
 
     if(filtered.length === 0){
         oldAbsTableBody.innerHTML = `
             <tr>
-                <td colspan="5" style="padding:15px;color:#777;">
+                <td colspan="4" style="padding:15px;color:#777;">
                     لا توجد بيانات
                 </td>
             </tr>`;
@@ -642,7 +651,7 @@ oldAbsSelect.addEventListener("change", function(){
             </td>
             <td>${row.classe}</td>
             <td>${row.hours}</td>
-          `;
+        `;
 
         oldAbsTableBody.appendChild(tr);
     });
@@ -804,6 +813,7 @@ function DownloadOldAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
