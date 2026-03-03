@@ -554,9 +554,8 @@ function logout() {
   });
 
  // ==================== فتح مودال الغيابات القديمة ====================
-  window.openOldAbsentedModal = async function(){
-
-      oldAbsModal.style.display = "flex";
+window.openOldAbsentedModal = async function(){
+oldAbsModal.classList.add("show");
       showLoader();
 
       oldAbsSelect.innerHTML = `<option value="">-- جاري التحميل... --</option>`;
@@ -595,7 +594,7 @@ function logout() {
 
   // ==================== غلق المودال ====================
   window.closeOldAbsentedModal = function(){
-      oldAbsModal.style.display = "none";
+     oldAbsModal.classList.remove("show");
   };
 
   // ==================== فلترة حسب القسم ====================
@@ -785,6 +784,7 @@ function openFilePreview(fileId) {
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
