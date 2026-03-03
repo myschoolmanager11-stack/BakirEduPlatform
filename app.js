@@ -39,8 +39,6 @@ const CONFIG = {
 const FILE_ITEMS = {
 "القوائم الإسمية للتلاميذ": CONFIG.ListePrinsipal_File_ID,
 "قوائم صب النقاط": CONFIG.Listepointage_File_ID,
-"قائمة التلاميذ الغائبون قبل اليوم": CONFIG.Old_Absented_File_ID,
-"متابعة غيابات اليوم": CONFIG.New_Absented_File_ID,
 "جدول توقيت الأستاذ": CONFIG.Teacher_Timetable_File_ID,
 "جدول استقبال الأولياء": CONFIG.Reception_Schedule_File_ID,
 "جدول التوقيت الأسبوعي للتلاميذ": CONFIG.Weekly_Students_Timetable_File_ID,
@@ -50,6 +48,9 @@ const FILE_ITEMS = {
 "استمارات ووثائق مختلفة للإشراف التربوي": CONFIG.Supervisory_Documents_File_ID,
 "إعلانات": CONFIG.Announcements_File_ID
 };
+
+//"قائمة التلاميذ الغائبون قبل اليوم": CONFIG.Old_Absented_File_ID,
+//"متابعة غيابات اليوم": CONFIG.New_Absented_File_ID,
 
 const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2X2ku8gwIIq5_nYjEykekNk27IiTzNFRfF5fUhzwnczdZKf1ilUXssxfC4o-KB0tE/exec";
 
@@ -947,3 +948,4 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
