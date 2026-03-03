@@ -244,35 +244,51 @@
   <div style="color:white;font-size:20px;">يرجى الانتظار...</div>
 </div>
 
- <!-- مدال استعراض قائمة التلاميذ الغائبين قبل اليوم --> 
+<!-- مدال استعراض قائمة التلاميذ الغائبين قبل اليوم --> 
 <div id="ModalOldAbsented" class="custom-modal">
 
   <div class="modal-content large">
 
-    <div class="modal-header">
-      <span>📋 قائمة التلاميذ الغائبون قبل اليوم</span>
-      <button  id="CloseModalOldAbsented" class="preview-btn" onclick="closeOldAbsentedModal()">
-          <span class="material-icons">close</span>
-  </button>
-    </div>
+    <!-- العنوان فقط بدون شريط أزرق -->
+    <h3 class="modal-title">
+      📋 قائمة التلاميذ الغائبون قبل اليوم
+    </h3>
 
     <div class="modal-body">
 
-      <select id="oldAbsClassFilter" class="styled-select"></select>
-        <option value="">-- اختر القسم --</option>
-      </select>
+      <!-- صف الفلترة + زر الإغلاق في نفس المستوى -->
+      <div class="oldabs-toolbar">
 
-      <table id="oldAbsTable" class="styled-table">
-        <thead>
-          <tr>
-            <th class="name-col">الاسم واللقب</th>
-            <th>القسم</th>
-            <th>عدد الساعات</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-        
+        <select id="oldAbsClassFilter" class="styled-select">
+          <option value="">-- اختر القسم --</option>
+        </select>
+
+        <button id="CloseModalOldAbsented"
+                class="preview-btn"
+                onclick="closeOldAbsentedModal()">
+          <span class="material-icons">close</span>
+        </button>
+
+      </div>
+
+      <!-- حاوية سكرول للجدول -->
+      <div class="table-container">
+
+        <table id="oldAbsTable" class="styled-table">
+          <thead>
+            <tr>
+              <th class="Count-col">الرقم</th>
+              <th class="name-col">اللقب والإسم</th>
+              <th>القسم</th>
+              <th>عدد ساعات الغياب</th>
+              <th>ملاحضات</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+      </div>
+
     </div>
 
   </div>
