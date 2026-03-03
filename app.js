@@ -598,52 +598,57 @@ oldAbsModal.classList.add("show");
   };
 
   // ==================== فلترة حسب القسم ====================
-  oldAbsSelect.addEventListener("change", function(){
+oldAbsSelect.addEventListener("change", function(){
 
-      const selected = this.value;
-      oldAbsTableBody.innerHTML = "";
+    const selected = this.value;
+    oldAbsTableBody.innerHTML = "";
 
-      if(!selected){
-          oldAbsTableBody.innerHTML = `
-              <tr>
-                  <td colspan="3" style="padding:15px;color:#777;">
-                      اختر قسمًا لعرض التلاميذ
-                  </td>
-              </tr>`;
-          return;
-      }
+    if(!selected){
+        oldAbsTableBody.innerHTML = `
+            <tr>
+                <td colspan="5" style="padding:15px;color:#777;">
+                    اختر قسمًا لعرض التلاميذ
+                </td>
+            </tr>`;
+        return;
+    }
 
-      const filtered = OLD_ABS_DATA
-          .filter(x=>x.classe===selected)
-          .sort((a,b)=>Number(b.hours)-Number(a.hours));
+    const filtered = OLD_ABS_DATA
+        .filter(x => x.classe === selected)
+        .sort((a,b)=>Number(b.hours)-Number(a.hours));
 
-      if(filtered.length===0){
-          oldAbsTableBody.innerHTML = `
-              <tr>
-                  <td colspan="3" style="padding:15px;color:#777;">
-                      لا توجد بيانات
-                  </td>
-              </tr>`;
-          return;
-      }
+    if(filtered.length === 0){
+        oldAbsTableBody.innerHTML = `
+            <tr>
+                <td colspan="5" style="padding:15px;color:#777;">
+                    لا توجد بيانات
+                </td>
+            </tr>`;
+        return;
+    }
 
-      filtered.forEach(row=>{
-          const tr = document.createElement("tr");
+    filtered.forEach((row, index) => {
 
-          if(Number(row.hours) >= 10){
-              tr.style.background = "#ffe6e6";
-          }
+        const tr = document.createElement("tr");
 
-          tr.innerHTML = `
-              <td style="text-align:right;font-weight:600;">${row.fullName}</td>
-              <td>${row.classe}</td>
-              <td>${row.hours}</td>
-          `;
+        if(Number(row.hours) >= 10){
+            tr.style.background = "#ffe6e6";
+        }
 
-          oldAbsTableBody.appendChild(tr);
-      });
+        tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td style="text-align:right;font-weight:600;">
+                ${row.fullName}
+            </td>
+            <td>${row.classe}</td>
+            <td>${row.hours}</td>
+            <td></td>
+        `;
 
-  });
+        oldAbsTableBody.appendChild(tr);
+    });
+
+});
 
   // ==================== إغلاق مودال الحضور ====================
   document.getElementById("closeAttendanceModal").addEventListener("click", function(){
@@ -782,6 +787,7 @@ function openFilePreview(fileId) {
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
