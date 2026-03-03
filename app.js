@@ -799,16 +799,12 @@ function DownloadOldAbsented() {
         return;
     }
 
-    showLoader();
-
     const downloadUrl =
         `https://drive.google.com/uc?id=${fileId}&export=download`;
 
-    setTimeout(()=>{
-        window.open(downloadUrl, "_blank");
-        hideLoader();
-    }, 500);
+    window.open(downloadUrl, "_blank");
 }
+
 
 
 
