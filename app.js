@@ -778,12 +778,11 @@ function openFilePreview(fileId) {
       panel.classList.toggle("fullscreen");
   });
 
-});
-
 // إغلاق مودال الحضور
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
