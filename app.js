@@ -656,6 +656,26 @@ oldAbsSelect.addEventListener("change", function(){
 
 });
 
+// ==================== زر تحميل OldAbsented.txt ====================
+function DownloadOldAbsented() {
+
+    const fileId = CONFIG.Old_Absented_File_ID;
+
+    if(!fileId){
+        alert("معرف الملف غير موجود");
+        return;
+    }
+
+    showLoader();
+
+    const downloadUrl =
+        `https://drive.google.com/uc?id=${fileId}&export=download`;
+
+    setTimeout(()=>{
+        window.open(downloadUrl, "_blank");
+        hideLoader();
+    }, 500);
+}
   
 // ==================== معاينة الملفات ====================
 function openFilePreview(fileId) {
@@ -786,6 +806,7 @@ function openFilePreview(fileId) {
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
   document.getElementById("attendanceModal").style.display = "none";
 });
+
 
 
 
