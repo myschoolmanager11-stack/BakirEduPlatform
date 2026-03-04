@@ -697,25 +697,32 @@ window.openNewAbsentedModal = async function(){
 
         const fullName = p[0]?.trim();
         const classe   = p[1]?.trim();
-        const hour     = p[2]?.trim();
+     // قراءة جميع أعمدة الساعات
+const hoursColumns = ["8","9","10","11","13","14","15","16"];
 
-        if(!fullName || !classe || !hour) return;
+if(!fullName || !classe) return;
 
-        const key = fullName + "|" + classe;
+const key = fullName + "|" + classe;
 
-        if(!studentsMap[key]){
-            studentsMap[key] = {
-                fullName: fullName,
-                classe: classe,
-                hours: []
-            };
+if(!studentsMap[key]){
+    studentsMap[key] = {
+        fullName: fullName,
+        classe: classe,
+        hours: []
+    };
+}
+
+// المرور على أعمدة الساعات (من p[2] إلى p[9])
+for(let i = 0; i < hoursColumns.length; i++){
+
+    const value = p[i + 2]?.trim(); // يبدأ من العمود الثالث
+
+    if(value && value !== ""){
+        if(!studentsMap[key].hours.includes(hoursColumns[i])){
+            studentsMap[key].hours.push(hoursColumns[i]);
         }
-
-        // منع تكرار نفس الساعة
-        if(!studentsMap[key].hours.includes(hour)){
-            studentsMap[key].hours.push(hour);
-        }
-    });
+    }
+}
 
     NEW_ABS_DATA = Object.values(studentsMap);
 
@@ -992,6 +999,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
