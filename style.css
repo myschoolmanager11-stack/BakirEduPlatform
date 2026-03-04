@@ -536,32 +536,33 @@ Attendance-btn {
 }
 
 /* حاوية الجدول */
-/* حاوية الجدول تسمح بالتمرير الأفقي */
+/* حاوية الجدول للتمرير الأفقي */
 .table-container {
-    overflow-x: auto; /* التمرير أفقي */
-    -webkit-overflow-scrolling: touch; /* تحسين التمرير على iOS */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* الجدول نفسه */
+/* الجدول */
 .styled-table {
     width: 100%;
-    border-collapse: collapse;
-    min-width: 800px; /* عرض أدنى للجدول حتى تظهر الأعمدة */
+    border-collapse: collapse; /* مهم لإظهار الحدود المشتركة بين الخلايا */
+    min-width: 900px; /* تأكد من أن جميع الأعمدة تظهر على الهاتف */
+    border: 1px solid #ccc; /* حد خارجي للجدول */
 }
 
-/* الخلايا */
-.styled-table th, .styled-table td {
+/* رؤوس وأعمدة الجدول */
+.styled-table th,
+.styled-table td {
+    border: 1px solid #ccc; /* الحدود بين الخلايا */
     padding: 8px 10px;
     text-align: center;
-    white-space: nowrap; /* منع الانكسار داخل الخلية */
+    white-space: nowrap;
 }
 
-/* تحسين تجربة المستخدم على الهاتف */
+/* تحسين الهواتف */
 @media (max-width: 768px) {
-    .table-container {
-        max-width: 100%;
-    }
-    .styled-table th, .styled-table td {
+    .styled-table th,
+    .styled-table td {
         font-size: 14px;
         padding: 6px 8px;
     }
@@ -696,6 +697,7 @@ Attendance-btn {
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
 
 
 
