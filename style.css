@@ -536,23 +536,35 @@ Attendance-btn {
 }
 
 /* حاوية الجدول */
+/* حاوية الجدول تسمح بالتمرير الأفقي */
 .table-container {
-    flex: 1;
-    overflow-y: auto;   /* 🔥 هذا هو السكرول */
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    overflow-x: auto; /* التمرير أفقي */
+    -webkit-overflow-scrolling: touch; /* تحسين التمرير على iOS */
 }
 
+/* الجدول نفسه */
 .styled-table {
-  width: 100%;
-  border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px; /* عرض أدنى للجدول حتى تظهر الأعمدة */
 }
 
-.styled-table th,
-.styled-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
+/* الخلايا */
+.styled-table th, .styled-table td {
+    padding: 8px 10px;
+    text-align: center;
+    white-space: nowrap; /* منع الانكسار داخل الخلية */
+}
+
+/* تحسين تجربة المستخدم على الهاتف */
+@media (max-width: 768px) {
+    .table-container {
+        max-width: 100%;
+    }
+    .styled-table th, .styled-table td {
+        font-size: 14px;
+        padding: 6px 8px;
+    }
 }
 
 .Count-col {
@@ -684,6 +696,7 @@ Attendance-btn {
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
 
 
 
