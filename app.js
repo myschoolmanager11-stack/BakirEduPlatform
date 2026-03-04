@@ -742,6 +742,7 @@ window.closeNewAbsentedModal = function(){
 };
 
 // ==================== فلترة حسب القسم ====================
+// ==================== فلترة حسب القسم ====================
 newAbsSelect.addEventListener("change", function(){
 
     const selected = this.value;
@@ -750,32 +751,28 @@ newAbsSelect.addEventListener("change", function(){
     if(!selected){
         newAbsTableBody.innerHTML = `
             <tr>
-                <td colspan="11" style="padding:15px;color:#777;">
+                <td colspan="12" style="padding:15px;color:#777;">
                     اختر قسمًا لعرض التلاميذ
                 </td>
             </tr>`;
         return;
     }
 
-    let filtered;
-
-    if(selected === "all"){
-        filtered = NEW_ABS_DATA;
-    } else {
-        filtered = NEW_ABS_DATA.filter(x => x.classe === selected);
-    }
+    let filtered = (selected === "all")
+        ? NEW_ABS_DATA
+        : NEW_ABS_DATA.filter(x => x.classe === selected);
 
     if(filtered.length === 0){
         newAbsTableBody.innerHTML = `
             <tr>
-                <td colspan="11" style="padding:15px;color:#777;">
+                <td colspan="12" style="padding:15px;color:#777;">
                     لا توجد بيانات
                 </td>
             </tr>`;
         return;
     }
 
-    // ترتيب حسب عدد الساعات
+    // ترتيب حسب عدد الساعات (تنازلي)
     filtered.sort((a,b)=> b.hours.length - a.hours.length);
 
     const hoursColumns = ["8","9","10","11","13","14","15","16"];
@@ -783,28 +780,37 @@ newAbsSelect.addEventListener("change", function(){
     filtered.forEach((row, index) => {
 
         const tr = document.createElement("tr");
-
         const totalHours = row.hours.length;
 
+        // تلوين إذا تجاوز 4 ساعات
         if(totalHours >= 4){
-            tr.style.background = "#ffe6e6";
+            tr.style.backgroundColor = "#ffe6e6";
         }
 
-        let hoursHtml = "";
+        let hoursCells = "";
 
         hoursColumns.forEach(h => {
-            const checked = row.hours.includes(h) ? "checked" : "";
-            hoursHtml += `<td><input type="checkbox" disabled ${checked}></td>`;
+            const isChecked = row.hours.includes(h) ? "checked" : "";
+            hoursCells += `
+                <td class="Checkbox-col">
+                    <input type="checkbox" disabled ${isChecked}>
+                </td>`;
         });
 
         tr.innerHTML = `
-            <td>${index + 1}</td>
-            <td style="text-align:right;font-weight:600;">
+            <td class="Count-col">${index + 1}</td>
+
+            <td class="name-col" style="font-weight:600;text-align:right;">
                 ${row.fullName}
             </td>
-            <td>${row.classe}</td>
-            ${hoursHtml}
-            <td style="font-weight:bold;color:#b30000;">
+
+            <td class="Classe-col">
+                ${row.classe}
+            </td>
+
+            ${hoursCells}
+
+            <td class="Hore-col" style="font-weight:bold;color:#b30000;">
                 ${totalHours}
             </td>
         `;
@@ -986,6 +992,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
