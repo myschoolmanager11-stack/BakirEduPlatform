@@ -690,6 +690,7 @@ window.openNewAbsentedModal = async function(){
 
     // ====== تجميع البيانات ======
     const studentsMap = {};
+    const hoursColumns = ["8","9","10","11","13","14","15","16"];
 
     list.forEach(line => {
 
@@ -697,33 +698,34 @@ window.openNewAbsentedModal = async function(){
 
         const fullName = p[0]?.trim();
         const classe   = p[1]?.trim();
-     // قراءة جميع أعمدة الساعات
-const hoursColumns = ["8","9","10","11","13","14","15","16"];
 
-if(!fullName || !classe) return;
+        if(!fullName || !classe) return;
 
-const key = fullName + "|" + classe;
+        const key = fullName + "|" + classe;
 
-if(!studentsMap[key]){
-    studentsMap[key] = {
-        fullName: fullName,
-        classe: classe,
-        hours: []
-    };
-}
-
-// المرور على أعمدة الساعات (من p[2] إلى p[9])
-for(let i = 0; i < hoursColumns.length; i++){
-
-    const value = p[i + 2]?.trim(); // يبدأ من العمود الثالث
-
-    if(value && value !== ""){
-        if(!studentsMap[key].hours.includes(hoursColumns[i])){
-            studentsMap[key].hours.push(hoursColumns[i]);
+        if(!studentsMap[key]){
+            studentsMap[key] = {
+                fullName: fullName,
+                classe: classe,
+                hours: []
+            };
         }
-    }
-}
 
+        // قراءة أعمدة الساعات
+        for(let i = 0; i < hoursColumns.length; i++){
+
+            const value = p[i + 2]?.trim();
+
+            if(value){
+                if(!studentsMap[key].hours.includes(hoursColumns[i])){
+                    studentsMap[key].hours.push(hoursColumns[i]);
+                }
+            }
+        }
+
+    }); // ← هذا هو القوس الذي كان ناقص 👈
+
+    // تحويل إلى مصفوفة بعد انتهاء التجميع
     NEW_ABS_DATA = Object.values(studentsMap);
 
     // تحميل الأقسام
@@ -748,7 +750,6 @@ window.closeNewAbsentedModal = function(){
     newAbsModal.classList.remove("show");
 };
 
-// ==================== فلترة حسب القسم ====================
 // ==================== فلترة حسب القسم ====================
 newAbsSelect.addEventListener("change", function(){
 
@@ -999,6 +1000,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
