@@ -671,7 +671,7 @@ oldAbsSelect.addEventListener("change", function(){
 });
 // ==================== نهاية مودال الغيابات القديمة ====================
   
- // ==================== فتح مودال الغيابات اليومية ====================
+ // ==================== فتح مودال متابعة الغيابات اليومية ====================
 window.openNewAbsentedModal = async function(){
     newAbsModal.classList.add("show");
     showLoader();
@@ -696,19 +696,18 @@ window.openNewAbsentedModal = async function(){
         };
     });
 
-    const classes = [...new Set(NEW_ABS_DATA.map(x=>x.classe).filter(x=>x))];
+    const classes = await fetchFile(CONFIG.ListeClasses_File_ID);
 
     newAbsSelect.innerHTML = `
-        <option value="">-- اختر القسم --</option>
-        <option value="all">كل الأقسام</option>
-    `;
+    <option value="">-- اختر القسم --</option>
+    <option value="all">كل الأقسام</option>
+`;
 
+if(classes){
     classes.forEach(c=>{
-        const option = document.createElement("option");
-        option.value = c;
-        option.textContent = c;
-        newAbsSelect.appendChild(option);
+        newAbsSelect.innerHTML += `<option value="${c}">${c}</option>`;
     });
+}
 
     hideLoader();
 };
@@ -948,5 +947,6 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
