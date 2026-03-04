@@ -671,15 +671,16 @@ oldAbsSelect.addEventListener("change", function(){
 });
 // ==================== نهاية مودال الغيابات القديمة ====================
   
- // ==================== فتح مودال متابعة الغيابات اليومية ====================
+// ==================== فتح مودال متابعة الغيابات اليومية ====================
 window.openNewAbsentedModal = async function(){
+
     newAbsModal.classList.add("show");
     showLoader();
 
     newAbsSelect.innerHTML = `<option value="">-- جاري التحميل... --</option>`;
     newAbsTableBody.innerHTML = "";
 
-    const list = await fetchFile(CONFIG.New_Absented_File_ID); // تغيير المصدر فقط
+    const list = await fetchFile(CONFIG.New_Absented_File_ID);
 
     if(!list){
         hideLoader();
@@ -687,27 +688,50 @@ window.openNewAbsentedModal = async function(){
         return;
     }
 
-    NEW_ABS_DATA = list.map(line=>{
+    // ====== تجميع البيانات ======
+    const studentsMap = {};
+
+    list.forEach(line => {
+
         const p = line.split(";");
-        return {
-            fullName: p[0]?.trim() || "",
-            classe: p[1]?.trim() || "",
-            hours: p[2]?.trim() || "0"
-        };
+
+        const fullName = p[0]?.trim();
+        const classe   = p[1]?.trim();
+        const hour     = p[2]?.trim();
+
+        if(!fullName || !classe || !hour) return;
+
+        const key = fullName + "|" + classe;
+
+        if(!studentsMap[key]){
+            studentsMap[key] = {
+                fullName: fullName,
+                classe: classe,
+                hours: []
+            };
+        }
+
+        // منع تكرار نفس الساعة
+        if(!studentsMap[key].hours.includes(hour)){
+            studentsMap[key].hours.push(hour);
+        }
     });
 
+    NEW_ABS_DATA = Object.values(studentsMap);
+
+    // تحميل الأقسام
     const classes = await fetchFile(CONFIG.ListeClasses_File_ID);
 
     newAbsSelect.innerHTML = `
-    <option value="">-- اختر القسم --</option>
-    <option value="all">كل الأقسام</option>
-`;
+        <option value="">-- اختر القسم --</option>
+        <option value="all">كل الأقسام</option>
+    `;
 
-if(classes){
-    classes.forEach(c=>{
-        newAbsSelect.innerHTML += `<option value="${c}">${c}</option>`;
-    });
-}
+    if(classes){
+        classes.forEach(c=>{
+            newAbsSelect.innerHTML += `<option value="${c}">${c}</option>`;
+        });
+    }
 
     hideLoader();
 };
@@ -726,7 +750,7 @@ newAbsSelect.addEventListener("change", function(){
     if(!selected){
         newAbsTableBody.innerHTML = `
             <tr>
-                <td colspan="4" style="padding:15px;color:#777;">
+                <td colspan="11" style="padding:15px;color:#777;">
                     اختر قسمًا لعرض التلاميذ
                 </td>
             </tr>`;
@@ -741,25 +765,37 @@ newAbsSelect.addEventListener("change", function(){
         filtered = NEW_ABS_DATA.filter(x => x.classe === selected);
     }
 
-    filtered = filtered.sort((a,b)=>Number(b.hours)-Number(a.hours));
-
     if(filtered.length === 0){
         newAbsTableBody.innerHTML = `
             <tr>
-                <td colspan="4" style="padding:15px;color:#777;">
+                <td colspan="11" style="padding:15px;color:#777;">
                     لا توجد بيانات
                 </td>
             </tr>`;
         return;
     }
 
+    // ترتيب حسب عدد الساعات
+    filtered.sort((a,b)=> b.hours.length - a.hours.length);
+
+    const hoursColumns = ["8","9","10","11","13","14","15","16"];
+
     filtered.forEach((row, index) => {
 
         const tr = document.createElement("tr");
 
-        if(Number(row.hours) >= 10){
+        const totalHours = row.hours.length;
+
+        if(totalHours >= 4){
             tr.style.background = "#ffe6e6";
         }
+
+        let hoursHtml = "";
+
+        hoursColumns.forEach(h => {
+            const checked = row.hours.includes(h) ? "checked" : "";
+            hoursHtml += `<td><input type="checkbox" disabled ${checked}></td>`;
+        });
 
         tr.innerHTML = `
             <td>${index + 1}</td>
@@ -767,7 +803,10 @@ newAbsSelect.addEventListener("change", function(){
                 ${row.fullName}
             </td>
             <td>${row.classe}</td>
-            <td>${row.hours}</td>
+            ${hoursHtml}
+            <td style="font-weight:bold;color:#b30000;">
+                ${totalHours}
+            </td>
         `;
 
         newAbsTableBody.appendChild(tr);
@@ -947,6 +986,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
