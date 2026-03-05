@@ -65,7 +65,7 @@ let NEW_ABS_DATA = [];
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
 
-  // 🔵 تهيئة اسم المؤسسة والعنوان
+  // ߔՠتهيئة اسم المؤسسة والعنوان
 document.title = CONFIG.SchoolName;
 
 const schoolNameElement = document.getElementById("schoolName");
@@ -102,8 +102,6 @@ const newAbsModal = document.getElementById("ModalNewAbsented");
 const newAbsSelect = document.getElementById("newAbsClassFilter");
 const newAbsTableBody = document.querySelector("#newAbsTable tbody");
 
-const previewLoader = document.getElementById("previewLoader");
-  
 function showLoader() { document.getElementById("globalLoader").style.display = "flex"; }
 function hideLoader() { document.getElementById("globalLoader").style.display = "none"; }
 
@@ -162,7 +160,7 @@ userTypeSelect.addEventListener("change", async function () {
 async function loadClassesList() {
     classeSelect.disabled = true;
     classeSelect.innerHTML = `<option value="">-- يرجى الإنتظار... --</option>`;
-      previewLoader.style.display = "flex";
+    showLoader();
 
     const classes = await fetchFile(CONFIG.ListeClasses_File_ID);
 
@@ -174,7 +172,7 @@ async function loadClassesList() {
     }
 
     classeSelect.disabled = false;
-    previewLoader.style.display = "none";
+    hideLoader();
 }
 
 // ==================== تغيير القسم ====================
@@ -185,7 +183,7 @@ classeSelect.addEventListener("change", async function () {
 
 // ==================== تحميل قائمة الطلاب ====================
 async function loadStudentsList(selectedClasse = "all") {
-      previewLoader.style.display = "flex";
+    showLoader();
     studentSelect.disabled = true;
     studentSelect.innerHTML = `<option value="">يرجى الإنتظار...</option>`;
 
@@ -203,7 +201,7 @@ async function loadStudentsList(selectedClasse = "all") {
     }
 
     studentSelect.disabled = false;
-    previewLoader.style.display = "none";
+    hideLoader();
 }
 
 // ==================== زر متابعة للولي ====================
@@ -225,7 +223,7 @@ continueBtn.addEventListener("click", function () {
 schoolKeyBtn.addEventListener("click", async function () {
     if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
 
-      previewLoader.style.display = "flex";
+    showLoader();
     try {
         const list = await fetchFile(CONFIG.School_Key_File_ID);
         if(list && list.length>0) SCHOOL_KEY = list[0];
@@ -233,7 +231,7 @@ schoolKeyBtn.addEventListener("click", async function () {
        SCHOOL_KEY = (list && list.length > 0) ? list[0].trim() : CONFIG.SchoolKey;
 
 if(schoolKeyInput.value.trim() !== SCHOOL_KEY) {
-   previewLoader.style.display = "none";
+    hideLoader();
     return alert("رمز المؤسسة غير صحيح");
 }
 
@@ -246,13 +244,13 @@ if(schoolKeyInput.value.trim() !== SCHOOL_KEY) {
         console.error(err);
         alert("حدث خطأ أثناء تحميل البيانات");
     } finally {
-        previewLoader.style.display = "none";
+        hideLoader();
     }
 });
 
 // ==================== تحميل الموظفين ====================
 async function loadEmployeeList(type){
-      previewLoader.style.display = "flex";
+    showLoader();
     const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
     employeeSelect.disabled = true;
     employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... </option>`;
@@ -274,7 +272,7 @@ async function loadEmployeeList(type){
         employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
     }
     employeeSelect.disabled = false;
-   previewLoader.style.display = "none";
+    hideLoader();
 }
 
   employeeSelect.addEventListener("change", function(){
@@ -320,12 +318,12 @@ loginBtn.addEventListener("click", function() {
     // ===== دخول موظف =====
     if(!loginPassword.value) return alert("أدخل كلمة المرور");
 
-      previewLoader.style.display = "flex";
+    showLoader();
 
     setTimeout(() => {
 
         if(!PASSWORDS.includes(loginPassword.value)) {
-           previewLoader.style.display = "none";
+            hideLoader();
             return alert("كلمة المرور غير صحيحة");
         }
 
@@ -338,7 +336,7 @@ loginBtn.addEventListener("click", function() {
         localStorage.setItem("Branche_Id", branche);
 
         openSession(userTypeSelect.value);
-        previewLoader.style.display = "none";
+        hideLoader();
 
     }, 300);
 });
@@ -570,7 +568,7 @@ function logout() {
  // ==================== فتح مودال الغيابات القديمة ====================
 window.openOldAbsentedModal = async function(){
 oldAbsModal.classList.add("show");
-        previewLoader.style.display = "flex";
+      showLoader();
 
       oldAbsSelect.innerHTML = `<option value="">-- جاري التحميل... --</option>`;
       oldAbsTableBody.innerHTML = "";
@@ -578,7 +576,7 @@ oldAbsModal.classList.add("show");
       const list = await fetchFile(CONFIG.Old_Absented_File_ID);
 
       if(!list){
-          previewLoader.style.display = "none";
+          hideLoader();
           oldAbsSelect.innerHTML = `<option value="">تعذر تحميل البيانات</option>`;
           return;
       }
@@ -606,7 +604,7 @@ oldAbsModal.classList.add("show");
     oldAbsSelect.appendChild(option);
 });
 
-      previewLoader.style.display = "none";
+      hideLoader();
   };
 
   // ==================== غلق المودال ====================
@@ -677,7 +675,7 @@ oldAbsSelect.addEventListener("change", function(){
 window.openNewAbsentedModal = async function(){
 
     newAbsModal.classList.add("show");
-      previewLoader.style.display = "flex";
+    showLoader();
 
     newAbsSelect.innerHTML = `<option value="">-- جاري التحميل... --</option>`;
     newAbsTableBody.innerHTML = "";
@@ -685,7 +683,7 @@ window.openNewAbsentedModal = async function(){
     const list = await fetchFile(CONFIG.New_Absented_File_ID);
 
     if(!list){
-        previewLoader.style.display = "none";
+        hideLoader();
         newAbsSelect.innerHTML = `<option value="">تعذر تحميل البيانات</option>`;
         return;
     }
@@ -725,7 +723,7 @@ window.openNewAbsentedModal = async function(){
             }
         }
 
-    }); // ← هذا هو القوس الذي كان ناقص 👈
+    }); // ← هذا هو القوس الذي كان ناقص ߑȍ
 
     // تحويل إلى مصفوفة بعد انتهاء التجميع
     NEW_ABS_DATA = Object.values(studentsMap);
@@ -744,7 +742,7 @@ window.openNewAbsentedModal = async function(){
         });
     }
 
-    previewLoader.style.display = "none";
+    hideLoader();
 };
 
 // ==================== غلق المودال ====================
@@ -846,7 +844,8 @@ function openFilePreview(fileId) {
   const frame = document.getElementById("filePreviewFrame");
   const previewDownload = document.getElementById("previewDownload");
   const previewOpen = document.getElementById("previewOpen");
-  
+  const previewLoader = document.getElementById("previewLoader");
+
   // إظهار اللوحة
   panel.style.opacity = 0;
   panel.style.display = "flex";
@@ -1001,11 +1000,3 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
-
-
-
-
-
-
-
-
