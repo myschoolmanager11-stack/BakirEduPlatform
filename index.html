@@ -1,48 +1,53 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<link rel="icon" type="image/png" href="favicon.png">
-<title>الفضاء الرقمي الموحد</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>الفضاء الرقمي الموحد</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- أيقونات Material -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- ملف التنسيقات -->
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+<!-- ==================== الشريط العلوي ==================== -->
 <header class="top-bar">
     <button class="menu-btn" id="menuBtn" onclick="toggleMenu()" disabled>
         <span class="material-icons">menu</span>
     </button>
 
-   <div class="app-title">
-    <h2 id="selectedTitle">
-        <span class="material-icons">school</span>
-        <span id="schoolName"></span>
-    </h2>
-
-    <p class="welcome-text" id="welcomeText">
-        مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.
-    </p>
-
-<!-- عنوان فرعي ديناميكي -->
-    <div id="itemDescription" class="item-description"></div>
-</div>
+    <div class="app-title">
+        <h2 id="selectedTitle">
+            <span class="material-icons">school</span>
+            <span id="schoolName"></span>
+        </h2>
+        <p class="welcome-text" id="welcomeText">
+            مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.
+        </p>
+        <div id="itemDescription" class="item-description"></div>
+    </div>
 
     <div class="dropdown-menu" id="dropdownMenu"></div>
 </header>
 
+<!-- ==================== المحتوى الرئيسي ==================== -->
 <main class="container">
 
-<!-- نافذة تسجيل الدخول -->
+    <!-- ==================== مودال تسجيل الدخول ==================== -->
     <div id="loginModal" class="modal">
         <div class="modal-content login-content">
+
             <h3>
                 <span class="material-icons">login</span>
                 تسجيل الدخول
             </h3>
 
+            <!-- اختيار نوع المستخدم -->
             <div class="login-field">
                 <label>نوع المستخدم</label>
                 <select id="userTypeSelect">
@@ -53,37 +58,28 @@
                 </select>
             </div>
 
+            <!-- ==================== اختيار التلميذ ==================== -->
             <div id="studentBlock" style="display:none;">
+                <div class="login-field">
+                    <label>اختر القسم واسم ولقب التلميذ</label>
+                    <div class="student-row">
+                        <select id="ClasseSelect">
+                            <option value="">-- اختر القسم --</option>
+                        </select>
+                        <select id="studentSelect">
+                            <option value="">-- اختر الاسم واللقب --</option>
+                        </select>
+                    </div>
 
-    <div class="login-field">
-        <label>
-            إختر القسم و اسم ولقب التلميذ من القائمة 
-        </label>
+                    <!-- Spinner تحميل الأقسام والتلاميذ -->
+                    <div id="studentLoadingSpinner" class="mini-loader" style="display:none">
+                        <div class="spinner"></div>
+                        <div class="loader-text">جاري تحميل الأقسام والتلاميذ...</div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="student-row">
-              <select id="ClasseSelect">
-                <option value="">-- اختر لقسم --</option>
-            </select>
-            
-            <select id="studentSelect">
-                <option value="">-- اختر الاسم واللقب --</option>
-            </select>
-            
-        </div>
-
-        <div id="studentLoadingSpinner" class="mini-loader" style="display:none">
-
-    <div class="spinner"></div>
-
-    <div class="loader-text">
-        جاري تحميل الأقسام والتلاميذ...
-    </div>
-
-</div>
-    </div>
-
-</div>
-            
+            <!-- ==================== رمز المؤسسة ==================== -->
             <div id="schoolKeyBlock" style="display:none;">
                 <div class="login-field">
                     <label>رمز المؤسسة الموحد</label>
@@ -95,35 +91,23 @@
                 </button>
             </div>
 
-             
-            <div id="loadingSpinner" align="center" style="
-                 display:none; 
-                  margin-top:10px; 
-                  font-size:14px; 
-                 color:#ff0036;
-                    ">
-                  ⏳ يرجى الإنتضار جاري التحميل...
-               </div>
-
-            
+            <!-- ==================== اختيار الموظف ==================== -->
             <div id="employeeBlock" style="display:none;">
                 <div class="login-field">
                     <label>اختر اسم ولقب الموظف</label>
                     <select id="employeeSelect">
                         <option value="">-- اختر الاسم واللقب --</option>
                     </select>
-                    <div id="loadingSpinner" class="mini-loader" style="display:none">
 
-    <div class="spinner"></div>
-
-    <div class="loader-text">
-        جاري تحميل بيانات الموظفين...
-    </div>
-
-</div>
+                    <!-- Spinner تحميل الموظفين -->
+                    <div id="employeeLoadingSpinner" class="mini-loader" style="display:none">
+                        <div class="spinner"></div>
+                        <div class="loader-text">جاري تحميل بيانات الموظفين...</div>
+                    </div>
                 </div>
             </div>
 
+            <!-- ==================== كلمة المرور ==================== -->
             <div id="authBlock" style="display:none;">
                 <div class="login-field">
                     <label>كلمة المرور</label>
@@ -131,6 +115,7 @@
                 </div>
             </div>
 
+            <!-- أزرار متابعة وتسجيل الدخول -->
             <button id="continueBtn" class="continue-btn" style="display:none;">
                 <span class="material-icons btn-icon">arrow_forward</span>
                 متابعة
@@ -140,46 +125,38 @@
                 <span class="material-icons btn-icon">login</span>
                 تسجيل الدخول
             </button>
+
         </div>
     </div>
 
-<!-- ============= لوحة معاينة الملفات العامة ============ -->
-<div id="filePreviewPanel" class="file-preview-panel" style="display:none;">
+    <!-- ==================== لوحة معاينة الملفات ==================== -->
+    <div id="filePreviewPanel" class="file-preview-panel" style="display:none;">
+        <div class="preview-header">
+            <button class="preview-btn" id="previewClose" title="إغلاق">
+                <span class="material-icons">close</span>
+            </button>
+            <button class="preview-btn" id="previewDownload" title="تحميل">
+                <span class="material-icons">download</span>
+            </button>
+            <button class="preview-btn" id="previewOpen" title="فتح في صفحة جديدة">
+                <span class="material-icons">open_in_new</span>
+            </button>
+            <button class="preview-btn" id="previewToggle" title="تكبير/تصغير">
+                <span class="material-icons">fullscreen</span>
+            </button>
+        </div>
 
-    <div class="preview-header">
-
-        <button class="preview-btn" id="previewClose" title="إغلاق">
-            <span class="material-icons">close</span>
-        </button>
-
-        <button class="preview-btn" id="previewDownload" title="تحميل">
-            <span class="material-icons">download</span>
-        </button>
-
-        <button class="preview-btn" id="previewOpen" title="فتح في صفحة جديدة">
-            <span class="material-icons">open_in_new</span>
-        </button>
-        
-    <!-- زر تكبير/تصغير -->
-    <button class="preview-btn" id="previewToggle" title="تكبير/تصغير">
-        <span class="material-icons">fullscreen</span>
-    </button>
-
-    </div>
-
-     <div id="previewLoader" class="preview-loader">
-        <div class="loader-content">
-            <div class="spinner"></div>
-            <div class="loader-text">
-                ⏳ جاري تحميل الملف، يرجى الإنتظار...
+        <div id="previewLoader" class="preview-loader">
+            <div class="loader-content">
+                <div class="spinner"></div>
+                <div class="loader-text">⏳ جاري تحميل الملف، يرجى الإنتظار...</div>
             </div>
         </div>
+
+        <iframe id="filePreviewFrame"></iframe>
     </div>
 
-    <iframe id="filePreviewFrame"></iframe>
-</div>
-
-<!-- مودال اتصل بنا -->
+   <!-- مودال اتصل بنا -->
 <div id="contactModal" class="modal" style="display:none;">
     <div class="modal-content">
         <button id="closeContactModal" class="preview-btn" style="align-self:flex-end;">
@@ -257,7 +234,7 @@
 
     <!-- العنوان فقط بدون شريط أزرق -->
     <h3 class="modal-title">
-      📋 قائمة التلاميذ الغائبون قبل اليوم
+      ߓˠقائمة التلاميذ الغائبون قبل اليوم
     </h3>
 
     <div class="modal-body">
@@ -307,7 +284,7 @@
 
     <!-- العنوان -->
     <h3 class="modal-title">
-      📋 متابعة الغيابات اليومية
+      ߓˠمتابعة الغيابات اليومية
     </h3>
 
     <div class="modal-body">
@@ -363,13 +340,17 @@
     <!-- محتوى إضافي مستقبلي -->
     <div id="mainContent"></div>
 
+
 </main>
 
+<!-- ==================== الفوتر ==================== -->
 <footer class="app-footer">
     <div class="footer-marquee">
         Myschoolmanager | © – Designed by Latreche Abdelkader
     </div>
 </footer>
+
+<!-- ==================== سكريبت التطبيق ==================== -->
 <script src="app.js"></script>
 </body>
 </html>
