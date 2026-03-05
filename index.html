@@ -71,14 +71,15 @@
             
         </div>
 
-        <div id="studentLoadingSpinner" class="mini-spinner" style="
-                 display:none; 
-                  margin-top:10px; 
-                  font-size:14px; 
-                 color:#ff0036;
-                    ">
-                  ⏳ يرجى الإنتضار جاري التحميل...
-               </div>
+        <div id="studentLoadingSpinner" class="mini-loader" style="display:none">
+
+    <div class="spinner"></div>
+
+    <div class="loader-text">
+        جاري تحميل الأقسام والتلاميذ...
+    </div>
+
+</div>
     </div>
 
 </div>
@@ -111,6 +112,15 @@
                     <select id="employeeSelect">
                         <option value="">-- اختر الاسم واللقب --</option>
                     </select>
+                    <div id="loadingSpinner" class="mini-loader" style="display:none">
+
+    <div class="spinner"></div>
+
+    <div class="loader-text">
+        جاري تحميل بيانات الموظفين...
+    </div>
+
+</div>
                 </div>
             </div>
 
