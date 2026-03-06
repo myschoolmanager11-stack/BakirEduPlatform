@@ -920,7 +920,7 @@ sendAbsSelect.addEventListener("change", function(){
         return;
     }
 
-    // عرض التلاميذ
+// ==================== عرض التلاميذ مع دعم اللون والضغط على الصف ====================
 filtered.forEach((line, index)=>{
 
     const p = line.split(";");
@@ -932,7 +932,10 @@ filtered.forEach((line, index)=>{
     const tr = document.createElement("tr");
 
     // تحقق إذا كان هذا التلميذ محدد مسبقًا
-    const isChecked = TEMP_SELECTED_ABS.some(x => x.record === record) ? "checked" : "";
+    const isChecked = TEMP_SELECTED_ABS.some(x => x.record === record);
+
+    // تلوين الصف إذا كان محدد
+    tr.style.backgroundColor = isChecked ? "rgba(1,151,195,0.15)" : "";
 
     tr.innerHTML = `
     <td class="Count-col">${index + 1}</td>
@@ -951,45 +954,36 @@ filtered.forEach((line, index)=>{
            data-name="${name}"
            data-classe="${classe}"
            data-record="${record}"
-           ${isChecked}>
+           ${isChecked ? "checked" : ""}>
     </td>
     `;
 
     sendAbsTableBody.appendChild(tr);
 
-});
+    // عند الضغط على أي مكان في الصف (باستثناء الشيك بوكس) يتم التبديل
+    tr.addEventListener("click", function(e){
+        if(e.target.tagName.toLowerCase() === "input") return; // تجاهل الشيك بوكس نفسه
+        const checkbox = tr.querySelector(".abs-check");
+        checkbox.checked = !checkbox.checked;
 
-});
+        // تحديث القائمة المؤقتة
+        const name = checkbox.dataset.name;
+        const classe = checkbox.dataset.classe;
+        const record = checkbox.dataset.record;
 
- sendAbsTableBody.addEventListener("change", function(e){
-
-    if(!e.target.classList.contains("abs-check")) return;
-
-    const checkbox = e.target;
-
-    const name = checkbox.dataset.name;
-    const classe = checkbox.dataset.classe;
-    const record = checkbox.dataset.record;
-
-    if(checkbox.checked){
-
-        const exists = TEMP_SELECTED_ABS.some(x => x.record === record);
-
-        if(!exists){
-            TEMP_SELECTED_ABS.push({
-                name: name,
-                classe: classe,
-                record: record
-            });
+        if(checkbox.checked){
+            if(!TEMP_SELECTED_ABS.some(x => x.record === record)){
+                TEMP_SELECTED_ABS.push({name, classe, record});
+            }
+        }else{
+            TEMP_SELECTED_ABS = TEMP_SELECTED_ABS.filter(x => x.record !== record);
         }
 
-    }else{
+        // تحديث لون الصف
+        tr.style.backgroundColor = checkbox.checked ? "rgba(1,151,195,0.15)" : "";
+    });
 
-        TEMP_SELECTED_ABS = TEMP_SELECTED_ABS.filter(x => x.record !== record);
-
-    }
-
-}); 
+});
 // ==================== نهاية مودال إرسال الغيابات ====================
 
   
@@ -1175,6 +1169,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
