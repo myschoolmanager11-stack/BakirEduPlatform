@@ -61,6 +61,7 @@ let STUDENTS_LIST = [];
 let parentData = null;
 let OLD_ABS_DATA = [];
 let NEW_ABS_DATA = [];
+let TEMP_SELECTED_ABS = [];
 
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
@@ -926,6 +927,7 @@ sendAbsSelect.addEventListener("change", function(){
 
         const name = p[0]?.trim() || "";
         const classe = p[1]?.trim() || "";
+        const record = p[2]?.trim() || "";
 
         const tr = document.createElement("tr");
 
@@ -941,7 +943,11 @@ tr.innerHTML = `
 </td>
 
 <td class="Checkbox-col">
-    <input type="checkbox" class="abs-check">
+    <input type="checkbox"
+       class="abs-check"
+       data-name="${name}"
+       data-classe="${classe}"
+       data-record="${record}">
 </td>
 `;
 
@@ -951,6 +957,35 @@ tr.innerHTML = `
 
 });
 
+ sendAbsTableBody.addEventListener("change", function(e){
+
+    if(!e.target.classList.contains("abs-check")) return;
+
+    const checkbox = e.target;
+
+    const name = checkbox.dataset.name;
+    const classe = checkbox.dataset.classe;
+    const record = checkbox.dataset.record;
+
+    if(checkbox.checked){
+
+        const exists = TEMP_SELECTED_ABS.some(x => x.record === record);
+
+        if(!exists){
+            TEMP_SELECTED_ABS.push({
+                name: name,
+                classe: classe,
+                record: record
+            });
+        }
+
+    }else{
+
+        TEMP_SELECTED_ABS = TEMP_SELECTED_ABS.filter(x => x.record !== record);
+
+    }
+
+}); 
 // ==================== نهاية مودال إرسال الغيابات ====================
 
   
@@ -961,7 +996,18 @@ tr.innerHTML = `
 
 });
 
-  
+ sendAbsTableBody.addEventListener("click", function(e){
+
+    if(!e.target.classList.contains("student-name")) return;
+
+    const row = e.target.closest("tr");
+    const checkbox = row.querySelector(".abs-check");
+
+    checkbox.checked = !checkbox.checked;
+    checkbox.dispatchEvent(new Event("change"));
+
+});
+
 // ==================== معاينة الملفات ====================
 function openFilePreview(fileId) {
 
@@ -1125,6 +1171,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
