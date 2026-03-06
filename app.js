@@ -373,9 +373,12 @@ function openSession(type) {
 }
   
 
-  function fillMenu(type) {
+function fillMenu(type) {
+
     dropdownMenu.innerHTML = "";
+
     const MENUS = {
+
       parent: [
         {icon:"people", label:"فضاء أولياء التلاميذ", desc:"مرحبا بكم في فضاء أولياء التلاميذ"},
         {icon:"assignment", label:"سجل الغيابات", desc:"عرض سجل الغيابات الخاص بتلميذك"},
@@ -383,11 +386,12 @@ function openSession(type) {
         {icon:"event", label:"جدول استقبال الأولياء", desc:"مواعيد استقبال الأولياء من قبل الإدارة"},
         {icon:"calendar_today", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"عرض التوقيت الأسبوعي للتلاميذ"},
         {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
-        {icon:"folder", label:"استمارات ووثائق مختلفة للتلاميذ", desc:"تحميل الاستمارات والوثائق المخصصة للتلاميذ"},
+        {icon:"folder", label:"استمارات ووثائق مختلفة للتلاميذ", desc:"تحميل الاستمارات والوثائق"},
         {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
         {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
         {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
       ],
+
       teacher: [
         {icon:"person", label:"فضاء الأساتذة", desc:"مرحبا بكم في الأرضية الرقمية - فضاء الأساتذة"},
         {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
@@ -397,117 +401,136 @@ function openSession(type) {
         {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
         {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
         {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
-        {icon:"folder", label:"استمارات ووثائق مختلفة للأساتذة", desc:"تحميل استمارات ووثائق مختلفة للأساتذة"},
-        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
-        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
+        {icon:"folder", label:"استمارات ووثائق مختلفة للأساتذة", desc:"تحميل استمارات ووثائق"},
+        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات"},
+        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة"},
         {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
       ],
+
       consultation: [
         {icon:"qr_code_2", label:"نظام الحضور الذكي", desc:"تسجيل حضور التلاميذ بالباركود"},
-        {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
-        {icon:"hourglass_top", label:"قائمة التلاميذ الغائبون قبل اليوم", desc:"قائمة التلاميذ الغائبين قبل اليوم"},
+        {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية"},
+        {icon:"hourglass_top", label:"قائمة التلاميذ الغائبون قبل اليوم", desc:"قائمة الغيابات القديمة"},
         {icon:"bar_chart", label:"متابعة غيابات اليوم", desc:"متابعة غيابات اليوم"},
         {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
         {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
         {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات"},
-        {icon:"folder", label:"استمارات ووثائق مختلفة للإشراف التربوي", desc:"تحميل استمارات ووثائق مختلفة للإشراف التربوي"},
+        {icon:"folder", label:"استمارات ووثائق مختلفة للإشراف التربوي", desc:"تحميل الوثائق"},
         {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات"},
-        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
+        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة"},
         {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
       ]
     };
 
+    if(!MENUS[type]) return;
+
     MENUS[type].forEach((item, idx) => {
-      let div = document.createElement("div");
-      let span = document.createElement("span"); 
-      span.className="material-icons"; 
-      span.textContent=item.icon;
-      div.appendChild(span);
 
-      let label = document.createElement("span"); 
-      label.textContent=item.label; 
-      div.appendChild(label);
+        let div = document.createElement("div");
 
-      // حدث الضغط الواحد لكل div
-    div.addEventListener('click', function(){
+        let span = document.createElement("span");
+        span.className = "material-icons";
+        span.textContent = item.icon;
+        div.appendChild(span);
 
-  itemDescription.textContent = item.desc || "";
+        let label = document.createElement("span");
+        label.textContent = item.label;
+        div.appendChild(label);
 
-  // روابط خارجية
- if(item.label === "فضاء الأساتذة") {
-    window.open("https://ostad.education.dz/auth", "_blank");
-    dropdownMenu.style.display = "none";
-    return;
-}
+        div.addEventListener("click", function(){
 
-  if(item.label === "فضاء أولياء التلاميذ") {
-    window.open("https://awlyaa.education.dz/", "_blank");
-      dropdownMenu.style.display = "none";
-    return;
-}
+            itemDescription.textContent = item.desc || "";
 
-  // مودال نظام الحضور الذكي
-  if(item.label === "نظام الحضور الذكي") {
-    document.getElementById("attendanceModal").style.display = "flex";
-      dropdownMenu.style.display = "none";
-    return;
-}
+            // روابط خارجية
+            if(item.label === "فضاء الأساتذة"){
+                window.open("https://ostad.education.dz/auth","_blank");
+                dropdownMenu.style.display="none";
+                return;
+            }
 
-  if(item.icon === "call") {
-    document.getElementById("contactModal").style.display = "flex";
-      dropdownMenu.style.display = "none";
-    return;
-}
+            if(item.label === "فضاء أولياء التلاميذ"){
+                window.open("https://awlyaa.education.dz/","_blank");
+                dropdownMenu.style.display="none";
+                return;
+            }
 
-  if(item.icon === "logout") logout();
+            // مودال الحضور
+            if(item.label === "نظام الحضور الذكي"){
+                document.getElementById("attendanceModal").style.display="flex";
+                dropdownMenu.style.display="none";
+                return;
+            }
 
-if(item.label === "سجل الغيابات" && type === "parent"){
-const id = localStorage.getItem("SijileAbsence_Fille_ID");
-if(id) openFilePreview(id);
-else alert("لم يتم العثور على الملف");
-    dropdownMenu.style.display = "none";
-    return;
-}
+            // الاتصال
+            if(item.icon === "call"){
+                document.getElementById("contactModal").style.display="flex";
+                dropdownMenu.style.display="none";
+                return;
+            }
 
-if(item.label === "سجل المراسلات الإدارية" && type === "parent"){
-const id = localStorage.getItem("Correspondence_Fille_ID");
-if(id) openFilePreview(id);
-else alert("لم يتم العثور على الملف");
-  
-    dropdownMenu.style.display = "none";
-    return;
-}
+            // تسجيل الخروج
+            if(item.icon === "logout"){
+                logout();
+                return;
+            }
 
-if(item.label === "قائمة التلاميذ الغائبون قبل اليوم"){
-    openOldAbsentedModal();
-    dropdownMenu.style.display = "none";
-    return;
-}
+            // سجل الغيابات للولي
+            if(item.label === "سجل الغيابات" && type === "parent"){
+                const id = localStorage.getItem("SijileAbsence_Fille_ID");
+                if(id) openFilePreview(id);
+                else alert("لم يتم العثور على الملف");
+                dropdownMenu.style.display="none";
+                return;
+            }
 
-if(item.label === "متابعة غيابات اليوم"){
-    openNewAbsentedModal();
-    dropdownMenu.style.display = "none";
-    return;
-}
+            // المراسلات
+            if(item.label === "سجل المراسلات الإدارية" && type === "parent"){
+                const id = localStorage.getItem("Correspondence_Fille_ID");
+                if(id) openFilePreview(id);
+                else alert("لم يتم العثور على الملف");
+                dropdownMenu.style.display="none";
+                return;
+            }
 
-if(item.label === "إرسال غيابات اليوم"){
-    openSendAbsentedModal();
-    dropdownMenu.style.display = "none";
-    return;
-}
-      
-if(FILE_ITEMS[item.label]) {
-    openFilePreview(FILE_ITEMS[item.label]);
-    dropdownMenu.style.display = "none";
-    return;
-}
-     
-});
+            // الغيابات القديمة
+            if(item.label === "قائمة التلاميذ الغائبون قبل اليوم"){
+                openOldAbsentedModal();
+                dropdownMenu.style.display="none";
+                return;
+            }
 
-      dropdownMenu.appendChild(div);
-      setTimeout(()=> div.classList.add("show"), idx*80);
+            // متابعة اليوم
+            if(item.label === "متابعة غيابات اليوم"){
+                openNewAbsentedModal();
+                dropdownMenu.style.display="none";
+                return;
+            }
+
+            // إرسال الغيابات
+            if(item.label === "إرسال غيابات اليوم"){
+                openSendAbsentedModal();
+                dropdownMenu.style.display="none";
+                return;
+            }
+
+            // فتح الملفات
+            if(FILE_ITEMS[item.label]){
+                openFilePreview(FILE_ITEMS[item.label]);
+                dropdownMenu.style.display="none";
+                return;
+            }
+
+        });
+
+        dropdownMenu.appendChild(div);
+
+        setTimeout(()=>{
+            div.classList.add("show");
+        }, idx*80);
+
     });
-  }
+
+}
 
 // ==================== logout ====================
 function logout() {
@@ -1215,6 +1238,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
