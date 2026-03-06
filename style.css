@@ -627,6 +627,17 @@ h1, h2, h3 {
     flex: 1;
 }
 
+.Sendabs-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* مسافة بين الزر والكمبوبكس */
+    margin-bottom: 15px;
+}
+
+.Sendabs-toolbar select {
+    flex: 1;
+}
+
 #CloseModalNewAbsented {
     width: 42px;
     height: 42px;
@@ -672,6 +683,7 @@ h1, h2, h3 {
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
 
 
 
