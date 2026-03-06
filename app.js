@@ -61,7 +61,6 @@ let STUDENTS_LIST = [];
 let parentData = null;
 let OLD_ABS_DATA = [];
 let NEW_ABS_DATA = [];
-let TEMP_SELECTED_ABS = [];
 
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
@@ -373,12 +372,9 @@ function openSession(type) {
 }
   
 
-function fillMenu(type) {
-
+  function fillMenu(type) {
     dropdownMenu.innerHTML = "";
-
     const MENUS = {
-
       parent: [
         {icon:"people", label:"فضاء أولياء التلاميذ", desc:"مرحبا بكم في فضاء أولياء التلاميذ"},
         {icon:"assignment", label:"سجل الغيابات", desc:"عرض سجل الغيابات الخاص بتلميذك"},
@@ -386,12 +382,11 @@ function fillMenu(type) {
         {icon:"event", label:"جدول استقبال الأولياء", desc:"مواعيد استقبال الأولياء من قبل الإدارة"},
         {icon:"calendar_today", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"عرض التوقيت الأسبوعي للتلاميذ"},
         {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
-        {icon:"folder", label:"استمارات ووثائق مختلفة للتلاميذ", desc:"تحميل الاستمارات والوثائق"},
+        {icon:"folder", label:"استمارات ووثائق مختلفة للتلاميذ", desc:"تحميل الاستمارات والوثائق المخصصة للتلاميذ"},
         {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
         {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
         {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
       ],
-
       teacher: [
         {icon:"person", label:"فضاء الأساتذة", desc:"مرحبا بكم في الأرضية الرقمية - فضاء الأساتذة"},
         {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
@@ -401,136 +396,117 @@ function fillMenu(type) {
         {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
         {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
         {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
-        {icon:"folder", label:"استمارات ووثائق مختلفة للأساتذة", desc:"تحميل استمارات ووثائق"},
-        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات"},
-        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة"},
+        {icon:"folder", label:"استمارات ووثائق مختلفة للأساتذة", desc:"تحميل استمارات ووثائق مختلفة للأساتذة"},
+        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
+        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
         {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
       ],
-
       consultation: [
         {icon:"qr_code_2", label:"نظام الحضور الذكي", desc:"تسجيل حضور التلاميذ بالباركود"},
-        {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية"},
-        {icon:"hourglass_top", label:"قائمة التلاميذ الغائبون قبل اليوم", desc:"قائمة الغيابات القديمة"},
+        {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
+        {icon:"hourglass_top", label:"قائمة التلاميذ الغائبون قبل اليوم", desc:"قائمة التلاميذ الغائبين قبل اليوم"},
         {icon:"bar_chart", label:"متابعة غيابات اليوم", desc:"متابعة غيابات اليوم"},
         {icon:"calendar_today", label:"جدول توقيت الأستاذ", desc:"عرض جدول توقيت الأستاذ"},
         {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
         {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات"},
-        {icon:"folder", label:"استمارات ووثائق مختلفة للإشراف التربوي", desc:"تحميل الوثائق"},
+        {icon:"folder", label:"استمارات ووثائق مختلفة للإشراف التربوي", desc:"تحميل استمارات ووثائق مختلفة للإشراف التربوي"},
         {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات"},
-        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة"},
+        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
         {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
       ]
     };
 
-    if(!MENUS[type]) return;
-
     MENUS[type].forEach((item, idx) => {
+      let div = document.createElement("div");
+      let span = document.createElement("span"); 
+      span.className="material-icons"; 
+      span.textContent=item.icon;
+      div.appendChild(span);
 
-        let div = document.createElement("div");
+      let label = document.createElement("span"); 
+      label.textContent=item.label; 
+      div.appendChild(label);
 
-        let span = document.createElement("span");
-        span.className = "material-icons";
-        span.textContent = item.icon;
-        div.appendChild(span);
+      // حدث الضغط الواحد لكل div
+    div.addEventListener('click', function(){
 
-        let label = document.createElement("span");
-        label.textContent = item.label;
-        div.appendChild(label);
+  itemDescription.textContent = item.desc || "";
 
-        div.addEventListener("click", function(){
-
-            itemDescription.textContent = item.desc || "";
-
-            // روابط خارجية
-            if(item.label === "فضاء الأساتذة"){
-                window.open("https://ostad.education.dz/auth","_blank");
-                dropdownMenu.style.display="none";
-                return;
-            }
-
-            if(item.label === "فضاء أولياء التلاميذ"){
-                window.open("https://awlyaa.education.dz/","_blank");
-                dropdownMenu.style.display="none";
-                return;
-            }
-
-            // مودال الحضور
-            if(item.label === "نظام الحضور الذكي"){
-                document.getElementById("attendanceModal").style.display="flex";
-                dropdownMenu.style.display="none";
-                return;
-            }
-
-            // الاتصال
-            if(item.icon === "call"){
-                document.getElementById("contactModal").style.display="flex";
-                dropdownMenu.style.display="none";
-                return;
-            }
-
-            // تسجيل الخروج
-            if(item.icon === "logout"){
-                logout();
-                return;
-            }
-
-            // سجل الغيابات للولي
-            if(item.label === "سجل الغيابات" && type === "parent"){
-                const id = localStorage.getItem("SijileAbsence_Fille_ID");
-                if(id) openFilePreview(id);
-                else alert("لم يتم العثور على الملف");
-                dropdownMenu.style.display="none";
-                return;
-            }
-
-            // المراسلات
-            if(item.label === "سجل المراسلات الإدارية" && type === "parent"){
-                const id = localStorage.getItem("Correspondence_Fille_ID");
-                if(id) openFilePreview(id);
-                else alert("لم يتم العثور على الملف");
-                dropdownMenu.style.display="none";
-                return;
-            }
-
-            // الغيابات القديمة
-            if(item.label === "قائمة التلاميذ الغائبون قبل اليوم"){
-                openOldAbsentedModal();
-                dropdownMenu.style.display="none";
-                return;
-            }
-
-            // متابعة اليوم
-            if(item.label === "متابعة غيابات اليوم"){
-                openNewAbsentedModal();
-                dropdownMenu.style.display="none";
-                return;
-            }
-
-            // إرسال الغيابات
-            if(item.label === "إرسال غيابات اليوم"){
-                openSendAbsentedModal();
-                dropdownMenu.style.display="none";
-                return;
-            }
-
-            // فتح الملفات
-            if(FILE_ITEMS[item.label]){
-                openFilePreview(FILE_ITEMS[item.label]);
-                dropdownMenu.style.display="none";
-                return;
-            }
-
-        });
-
-        dropdownMenu.appendChild(div);
-
-        setTimeout(()=>{
-            div.classList.add("show");
-        }, idx*80);
-
-    });
-
+  // روابط خارجية
+ if(item.label === "فضاء الأساتذة") {
+    window.open("https://ostad.education.dz/auth", "_blank");
+    dropdownMenu.style.display = "none";
+    return;
 }
+
+  if(item.label === "فضاء أولياء التلاميذ") {
+    window.open("https://awlyaa.education.dz/", "_blank");
+      dropdownMenu.style.display = "none";
+    return;
+}
+
+  // مودال نظام الحضور الذكي
+  if(item.label === "نظام الحضور الذكي") {
+    document.getElementById("attendanceModal").style.display = "flex";
+      dropdownMenu.style.display = "none";
+    return;
+}
+
+  if(item.icon === "call") {
+    document.getElementById("contactModal").style.display = "flex";
+      dropdownMenu.style.display = "none";
+    return;
+}
+
+  if(item.icon === "logout") logout();
+
+if(item.label === "سجل الغيابات" && type === "parent"){
+const id = localStorage.getItem("SijileAbsence_Fille_ID");
+if(id) openFilePreview(id);
+else alert("لم يتم العثور على الملف");
+    dropdownMenu.style.display = "none";
+    return;
+}
+
+if(item.label === "سجل المراسلات الإدارية" && type === "parent"){
+const id = localStorage.getItem("Correspondence_Fille_ID");
+if(id) openFilePreview(id);
+else alert("لم يتم العثور على الملف");
+  
+    dropdownMenu.style.display = "none";
+    return;
+}
+
+if(item.label === "قائمة التلاميذ الغائبون قبل اليوم"){
+    openOldAbsentedModal();
+    dropdownMenu.style.display = "none";
+    return;
+}
+
+if(item.label === "متابعة غيابات اليوم"){
+    openNewAbsentedModal();
+    dropdownMenu.style.display = "none";
+    return;
+}
+
+if(item.label === "إرسال غيابات اليوم"){
+    openSendAbsentedModal();
+    dropdownMenu.style.display = "none";
+    return;
+}
+      
+if(FILE_ITEMS[item.label]) {
+    openFilePreview(FILE_ITEMS[item.label]);
+    dropdownMenu.style.display = "none";
+    return;
+}
+     
+});
+
+      dropdownMenu.appendChild(div);
+      setTimeout(()=> div.classList.add("show"), idx*80);
+    });
+  }
 
 // ==================== logout ====================
 function logout() {
@@ -901,12 +877,10 @@ window.openSendAbsentedModal = async function(){
     hideLoader();
 };
 
-
 // ==================== غلق المودال ====================
 window.closeSendAbsentedModal = function(){
     sendAbsModal.classList.remove("show");
 };
-
 
 // ==================== فلترة حسب القسم ====================
 sendAbsSelect.addEventListener("change", function(){
@@ -945,111 +919,35 @@ sendAbsSelect.addEventListener("change", function(){
         return;
     }
 
-
-    // ==================== عرض التلاميذ ====================
+    // عرض التلاميذ
     filtered.forEach((line, index)=>{
 
         const p = line.split(";");
 
         const name = p[0]?.trim() || "";
         const classe = p[1]?.trim() || "";
-        const record = p[2]?.trim() || "";
 
         const tr = document.createElement("tr");
 
-        // تحقق إذا كان التلميذ محدد
-        const isChecked = TEMP_SELECTED_ABS.some(x => x.record === record);
+tr.innerHTML = `
+<td class="Count-col">${index + 1}</td>
 
-        if(isChecked){
-            tr.style.backgroundColor = "rgba(1,151,195,0.15)";
-        }
+<td class="name-col student-name" style="font-weight:600;text-align:right;cursor:pointer;">
+    ${name}
+</td>
 
-        tr.innerHTML = `
-        <td class="Count-col">${index + 1}</td>
+<td class="Classe-col">
+    ${classe}
+</td>
 
-        <td class="name-col student-name" style="font-weight:600;text-align:right;cursor:pointer;">
-            ${name}
-        </td>
-
-        <td class="Classe-col">
-            ${classe}
-        </td>
-
-        <td class="Checkbox-col">
-            <input type="checkbox"
-               class="abs-check"
-               data-name="${name}"
-               data-classe="${classe}"
-               data-record="${record}"
-               ${isChecked ? "checked" : ""}>
-        </td>
-        `;
+<td class="Checkbox-col">
+    <input type="checkbox" class="abs-check">
+</td>
+`;
 
         sendAbsTableBody.appendChild(tr);
 
-
-        // ==================== الضغط على الصف ====================
-        tr.addEventListener("click", function(e){
-
-            if(e.target.tagName.toLowerCase() === "input") return;
-
-            const checkbox = tr.querySelector(".abs-check");
-            checkbox.checked = !checkbox.checked;
-
-            const name = checkbox.dataset.name;
-            const classe = checkbox.dataset.classe;
-            const record = checkbox.dataset.record;
-
-            if(checkbox.checked){
-
-                if(!TEMP_SELECTED_ABS.some(x => x.record === record)){
-                    TEMP_SELECTED_ABS.push({name, classe, record});
-                }
-
-                tr.style.backgroundColor = "rgba(1,151,195,0.15)";
-
-            }else{
-
-                TEMP_SELECTED_ABS = TEMP_SELECTED_ABS.filter(x => x.record !== record);
-
-                tr.style.backgroundColor = "";
-
-            }
-
-        });
-
     });
-
-});
-
-
-// ==================== حفظ التحديد عند تغيير checkbox ====================
-sendAbsTableBody.addEventListener("change", function(e){
-
-    if(!e.target.classList.contains("abs-check")) return;
-
-    const checkbox = e.target;
-    const tr = checkbox.closest("tr");
-
-    const name = checkbox.dataset.name;
-    const classe = checkbox.dataset.classe;
-    const record = checkbox.dataset.record;
-
-    if(checkbox.checked){
-
-        if(!TEMP_SELECTED_ABS.some(x => x.record === record)){
-            TEMP_SELECTED_ABS.push({name, classe, record});
-        }
-
-        tr.style.backgroundColor = "rgba(1,151,195,0.15)";
-
-    }else{
-
-        TEMP_SELECTED_ABS = TEMP_SELECTED_ABS.filter(x => x.record !== record);
-
-        tr.style.backgroundColor = "";
-
-    }
 
 });
 
@@ -1063,199 +961,131 @@ sendAbsTableBody.addEventListener("change", function(e){
 
 });
 
- sendAbsTableBody.addEventListener("click", function(e){
-
-    if(!e.target.classList.contains("student-name")) return;
-
-    const row = e.target.closest("tr");
-    const checkbox = row.querySelector(".abs-check");
-
-    checkbox.checked = !checkbox.checked;
-    checkbox.dispatchEvent(new Event("change"));
-
-});
-
+  
 // ==================== معاينة الملفات ====================
 function openFilePreview(fileId) {
 
-    const panel = document.getElementById("filePreviewPanel");
-    const frame = document.getElementById("filePreviewFrame");
-    const previewDownload = document.getElementById("previewDownload");
-    const previewOpen = document.getElementById("previewOpen");
-    const previewLoader = document.getElementById("previewLoader");
+  const panel = document.getElementById("filePreviewPanel");
+  const frame = document.getElementById("filePreviewFrame");
+  const previewDownload = document.getElementById("previewDownload");
+  const previewOpen = document.getElementById("previewOpen");
+  const previewLoader = document.getElementById("previewLoader");
 
-    if (!panel || !frame) return;
+  // إظهار اللوحة
+  panel.style.opacity = 0;
+  panel.style.display = "flex";
 
-    // إظهار اللوحة
-    panel.style.opacity = 0;
-    panel.style.display = "flex";
+  // إظهار رسالة التحميل
+  previewLoader.style.display = "flex";
+  frame.style.display = "none";
 
-    // إظهار رسالة التحميل
-    previewLoader.style.display = "flex";
-    frame.style.display = "none";
+  const url = `https://drive.google.com/file/d/${fileId}/preview`;
 
-    const url = `https://drive.google.com/file/d/${fileId}/preview`;
+  frame.onload = function () {
+      previewLoader.style.display = "none";
+      frame.style.display = "block";
+  };
 
-    frame.onload = function () {
-        previewLoader.style.display = "none";
-        frame.style.display = "block";
-    };
+  frame.onerror = function () {
+      previewLoader.innerHTML = "⚠️ حدث خطأ أثناء تحميل الملف";
+  };
 
-    frame.onerror = function () {
-        previewLoader.innerHTML = "⚠️ حدث خطأ أثناء تحميل الملف";
-    };
+  frame.src = url;
 
-    frame.src = url;
+  previewDownload.href = `https://drive.google.com/uc?id=${fileId}&export=download`;
+  previewOpen.href = url;
+  previewOpen.target = "_blank";
 
-    if (previewDownload) {
-        previewDownload.href = `https://drive.google.com/uc?id=${fileId}&export=download`;
-    }
-
-    if (previewOpen) {
-        previewOpen.href = url;
-        previewOpen.target = "_blank";
-    }
-
-    setTimeout(() => panel.style.opacity = 1, 50);
+  setTimeout(() => panel.style.opacity = 1, 50);
 }
 
-
 // ==================== تفعيل عناصر المعاينة بعد تحميل الصفحة ====================
-document.addEventListener("DOMContentLoaded", function () {
+  const panel = document.getElementById("filePreviewPanel");
+  const header = panel.querySelector(".preview-header");
 
-    const panel = document.getElementById("filePreviewPanel");
-    if (!panel) return;
+  const previewClose = document.getElementById("previewClose");
+  const previewDownload = document.getElementById("previewDownload");
+  const previewOpen = document.getElementById("previewOpen");
+  const previewToggle = document.getElementById("previewToggle");
 
-    const header = panel.querySelector(".preview-header");
+  // زر الإغلاق
+  previewClose.addEventListener("click", () => {
+      panel.style.display = "none";
+  });
 
-    const previewClose = document.getElementById("previewClose");
-    const previewDownload = document.getElementById("previewDownload");
-    const previewOpen = document.getElementById("previewOpen");
-    const previewToggle = document.getElementById("previewToggle");
+  // زر التحميل
+  previewDownload.addEventListener("click", () => {
+      window.open(previewDownload.href, "_blank");
+  });
 
-    // زر الإغلاق
-    if (previewClose) {
-        previewClose.addEventListener("click", () => {
-            panel.style.display = "none";
-        });
-    }
+  // زر فتح في تبويب جديد
+  previewOpen.addEventListener("click", () => {
+      window.open(previewOpen.href, "_blank");
+  });
 
-    // زر التحميل
-    if (previewDownload) {
-        previewDownload.addEventListener("click", () => {
-            window.open(previewDownload.href, "_blank");
-        });
-    }
+  // ==================== السحب والتحريك ====================
+  let isDragging = false, startX, startY, startLeft, startTop;
 
-    // زر فتح في تبويب جديد
-    if (previewOpen) {
-        previewOpen.addEventListener("click", () => {
-            window.open(previewOpen.href, "_blank");
-        });
-    }
+  header.addEventListener("mousedown", e => {
+      if(panel.classList.contains("fullscreen")) return;
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      const rect = panel.getBoundingClientRect();
+      startLeft = rect.left;
+      startTop = rect.top;
+      panel.style.transition = "none";
+      document.body.style.userSelect = "none";
+  });
 
-    // ==================== السحب والتحريك ====================
-    let isDragging = false;
-    let startX, startY, startLeft, startTop;
+  document.addEventListener("mousemove", e => {
+      if(!isDragging) return;
+      let dx = e.clientX - startX;
+      let dy = e.clientY - startY;
+      panel.style.left = startLeft + dx + "px";
+      panel.style.top = startTop + dy + "px";
+  });
 
-    if (header) {
+  document.addEventListener("mouseup", () => {
+      if(!isDragging) return;
+      isDragging = false;
+      panel.style.transition = "all 0.3s ease";
+      document.body.style.userSelect = "";
+  });
 
-        header.addEventListener("mousedown", e => {
+  // ==================== دعم اللمس ====================
+  header.addEventListener("touchstart", e => {
+      if(panel.classList.contains("fullscreen")) return;
+      isDragging = true;
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      const rect = panel.getBoundingClientRect();
+      startLeft = rect.left;
+      startTop = rect.top;
+      panel.style.transition = "none";
+  });
 
-            if (panel.classList.contains("fullscreen")) return;
+  header.addEventListener("touchmove", e => {
+      if(!isDragging) return;
+      const touch = e.touches[0];
+      let dx = touch.clientX - startX;
+      let dy = touch.clientY - startY;
+      panel.style.left = startLeft + dx + "px";
+      panel.style.top = startTop + dy + "px";
+      e.preventDefault();
+  }, {passive: false});
 
-            isDragging = true;
+  header.addEventListener("touchend", () => {
+      if(!isDragging) return;
+      isDragging = false;
+      panel.style.transition = "all 0.3s ease";
+  });
 
-            startX = e.clientX;
-            startY = e.clientY;
-
-            const rect = panel.getBoundingClientRect();
-            startLeft = rect.left;
-            startTop = rect.top;
-
-            panel.style.transition = "none";
-            document.body.style.userSelect = "none";
-        });
-
-        document.addEventListener("mousemove", e => {
-
-            if (!isDragging) return;
-
-            let dx = e.clientX - startX;
-            let dy = e.clientY - startY;
-
-            panel.style.left = startLeft + dx + "px";
-            panel.style.top = startTop + dy + "px";
-
-        });
-
-        document.addEventListener("mouseup", () => {
-
-            if (!isDragging) return;
-
-            isDragging = false;
-
-            panel.style.transition = "all 0.3s ease";
-            document.body.style.userSelect = "";
-
-        });
-
-        // ==================== دعم اللمس ====================
-
-        header.addEventListener("touchstart", e => {
-
-            if (panel.classList.contains("fullscreen")) return;
-
-            isDragging = true;
-
-            const touch = e.touches[0];
-
-            startX = touch.clientX;
-            startY = touch.clientY;
-
-            const rect = panel.getBoundingClientRect();
-            startLeft = rect.left;
-            startTop = rect.top;
-
-            panel.style.transition = "none";
-
-        });
-
-        header.addEventListener("touchmove", e => {
-
-            if (!isDragging) return;
-
-            const touch = e.touches[0];
-
-            let dx = touch.clientX - startX;
-            let dy = touch.clientY - startY;
-
-            panel.style.left = startLeft + dx + "px";
-            panel.style.top = startTop + dy + "px";
-
-            e.preventDefault();
-
-        }, { passive: false });
-
-        header.addEventListener("touchend", () => {
-
-            if (!isDragging) return;
-
-            isDragging = false;
-
-            panel.style.transition = "all 0.3s ease";
-
-        });
-    }
-
-    // ==================== تكبير / تصغير ====================
-    if (previewToggle) {
-        previewToggle.addEventListener("click", () => {
-            panel.classList.toggle("fullscreen");
-        });
-    }
-
-});
+  // ==================== تكبير / تصغير ====================
+  previewToggle.addEventListener("click", () => {
+      panel.classList.toggle("fullscreen");
+  });
 
 // إغلاق مودال الحضور
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
@@ -1295,13 +1125,6 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
-
-
-
-
-
-
-
 
 
 
