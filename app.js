@@ -842,18 +842,18 @@ newAbsSelect.addEventListener("change", function(){
 // ==================== فتح مودال إرسال الغيابات ====================
 window.openSendAbsentedModal = async function(){
 
-    newAbsModal.classList.add("show");
+    sendAbsModall.classList.add("show");
     showLoader();
 
-    newAbsSelect.innerHTML = `<option value="">-- جاري التحميل... --</option>`;
-    newAbsTableBody.innerHTML = "";
+    sendAbsSelect.innerHTML = `<option value="">-- جاري التحميل... --</option>`;
+    sendAbsTableBody.innerHTML = "";
 
     // تحميل قائمة التلاميذ
     const list = await fetchFile(CONFIG.ListeStudents_File_ID);
 
     if(!list){
         hideLoader();
-        newAbsSelect.innerHTML = `<option value="">تعذر تحميل البيانات</option>`;
+        sendAbsSelect.innerHTML = `<option value="">تعذر تحميل البيانات</option>`;
         return;
     }
 
@@ -863,14 +863,14 @@ window.openSendAbsentedModal = async function(){
     // تحميل الأقسام
     const classes = await fetchFile(CONFIG.ListeClasses_File_ID);
 
-    newAbsSelect.innerHTML = `
+    sendAbsSelect.innerHTML = `
         <option value="">-- اختر القسم --</option>
         <option value="all">كل الأقسام</option>
     `;
 
     if(classes){
         classes.forEach(c=>{
-            newAbsSelect.innerHTML += `<option value="${c}">${c}</option>`;
+            sendAbsSelect.innerHTML += `<option value="${c}">${c}</option>`;
         });
     }
 
@@ -879,17 +879,17 @@ window.openSendAbsentedModal = async function(){
 
 // ==================== غلق المودال ====================
 window.closeSendAbsentedModal = function(){
-    newAbsModal.classList.remove("show");
+    sendAbsModal.classList.remove("show");
 };
 
 // ==================== فلترة حسب القسم ====================
-newAbsSelect.addEventListener("change", function(){
+sendAbsSelect.addEventListener("change", function(){
 
     const selected = this.value;
-    newAbsTableBody.innerHTML = "";
+    sendAbsTableBody.innerHTML = "";
 
     if(!selected){
-        newAbsTableBody.innerHTML = `
+        sendAbsTableBody.innerHTML = `
         <tr>
             <td colspan="4" style="padding:15px;color:#777;">
                 اختر قسمًا لعرض التلاميذ
@@ -910,7 +910,7 @@ newAbsSelect.addEventListener("change", function(){
     }
 
     if(filtered.length === 0){
-        newAbsTableBody.innerHTML = `
+        sendAbsTableBody.innerHTML = `
         <tr>
             <td colspan="4" style="padding:15px;color:#777;">
                 لا توجد بيانات
@@ -945,7 +945,7 @@ newAbsSelect.addEventListener("change", function(){
         </td>
         `;
 
-        newAbsTableBody.appendChild(tr);
+        sendAbsTableBody.appendChild(tr);
 
     });
 
@@ -1125,4 +1125,5 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
