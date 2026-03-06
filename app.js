@@ -921,39 +921,43 @@ sendAbsSelect.addEventListener("change", function(){
     }
 
     // عرض التلاميذ
-    filtered.forEach((line, index)=>{
+filtered.forEach((line, index)=>{
 
-        const p = line.split(";");
+    const p = line.split(";");
 
-        const name = p[0]?.trim() || "";
-        const classe = p[1]?.trim() || "";
-        const record = p[2]?.trim() || "";
+    const name = p[0]?.trim() || "";
+    const classe = p[1]?.trim() || "";
+    const record = p[2]?.trim() || "";
 
-        const tr = document.createElement("tr");
+    const tr = document.createElement("tr");
 
-tr.innerHTML = `
-<td class="Count-col">${index + 1}</td>
+    // تحقق إذا كان هذا التلميذ محدد مسبقًا
+    const isChecked = TEMP_SELECTED_ABS.some(x => x.record === record) ? "checked" : "";
 
-<td class="name-col student-name" style="font-weight:600;text-align:right;cursor:pointer;">
-    ${name}
-</td>
+    tr.innerHTML = `
+    <td class="Count-col">${index + 1}</td>
 
-<td class="Classe-col">
-    ${classe}
-</td>
+    <td class="name-col student-name" style="font-weight:600;text-align:right;cursor:pointer;">
+        ${name}
+    </td>
 
-<td class="Checkbox-col">
-    <input type="checkbox"
-       class="abs-check"
-       data-name="${name}"
-       data-classe="${classe}"
-       data-record="${record}">
-</td>
-`;
+    <td class="Classe-col">
+        ${classe}
+    </td>
 
-        sendAbsTableBody.appendChild(tr);
+    <td class="Checkbox-col">
+        <input type="checkbox"
+           class="abs-check"
+           data-name="${name}"
+           data-classe="${classe}"
+           data-record="${record}"
+           ${isChecked}>
+    </td>
+    `;
 
-    });
+    sendAbsTableBody.appendChild(tr);
+
+});
 
 });
 
@@ -1171,6 +1175,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
