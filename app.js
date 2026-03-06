@@ -842,7 +842,7 @@ newAbsSelect.addEventListener("change", function(){
 // ==================== فتح مودال إرسال الغيابات ====================
 window.openSendAbsentedModal = async function(){
 
-    sendAbsModall.classList.add("show");
+    sendAbsModal.classList.add("show");
     showLoader();
 
     sendAbsSelect.innerHTML = `<option value="">-- جاري التحميل... --</option>`;
@@ -1125,5 +1125,6 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
