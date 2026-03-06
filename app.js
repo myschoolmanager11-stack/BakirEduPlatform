@@ -102,6 +102,10 @@ const newAbsModal = document.getElementById("ModalNewAbsented");
 const newAbsSelect = document.getElementById("newAbsClassFilter");
 const newAbsTableBody = document.querySelector("#newAbsTable tbody");
 
+const sendAbsModal = document.getElementById("SendAbsentedModal");
+const sendAbsSelect = document.getElementById("sendAbsClassFilter");
+const sendAbsTableBody = document.querySelector("#sendAbsTable tbody");
+  
 function showLoader() { document.getElementById("globalLoader").style.display = "flex"; }
 function hideLoader() { document.getElementById("globalLoader").style.display = "none"; }
 
@@ -484,6 +488,12 @@ if(item.label === "متابعة غيابات اليوم"){
     dropdownMenu.style.display = "none";
     return;
 }
+
+if(item.label === "إرسال غيابات اليوم"){
+    openSendAbsentedModal();
+    dropdownMenu.style.display = "none";
+    return;
+}
       
 if(FILE_ITEMS[item.label]) {
     openFilePreview(FILE_ITEMS[item.label]);
@@ -828,6 +838,121 @@ newAbsSelect.addEventListener("change", function(){
 
 });
 // ==================== نهاية مودال الغيابات اليومية ====================
+
+// ==================== فتح مودال إرسال الغيابات ====================
+window.openSendAbsentedModal = async function(){
+
+    newAbsModal.classList.add("show");
+    showLoader();
+
+    newAbsSelect.innerHTML = `<option value="">-- جاري التحميل... --</option>`;
+    newAbsTableBody.innerHTML = "";
+
+    // تحميل قائمة التلاميذ
+    const list = await fetchFile(CONFIG.ListeStudents_File_ID);
+
+    if(!list){
+        hideLoader();
+        newAbsSelect.innerHTML = `<option value="">تعذر تحميل البيانات</option>`;
+        return;
+    }
+
+    // حفظ القائمة
+    STUDENTS_LIST = list;
+
+    // تحميل الأقسام
+    const classes = await fetchFile(CONFIG.ListeClasses_File_ID);
+
+    newAbsSelect.innerHTML = `
+        <option value="">-- اختر القسم --</option>
+        <option value="all">كل الأقسام</option>
+    `;
+
+    if(classes){
+        classes.forEach(c=>{
+            newAbsSelect.innerHTML += `<option value="${c}">${c}</option>`;
+        });
+    }
+
+    hideLoader();
+};
+
+// ==================== غلق المودال ====================
+window.closeSendAbsentedModal = function(){
+    newAbsModal.classList.remove("show");
+};
+
+// ==================== فلترة حسب القسم ====================
+newAbsSelect.addEventListener("change", function(){
+
+    const selected = this.value;
+    newAbsTableBody.innerHTML = "";
+
+    if(!selected){
+        newAbsTableBody.innerHTML = `
+        <tr>
+            <td colspan="4" style="padding:15px;color:#777;">
+                اختر قسمًا لعرض التلاميذ
+            </td>
+        </tr>`;
+        return;
+    }
+
+    let filtered;
+
+    if(selected === "all"){
+        filtered = STUDENTS_LIST;
+    }else{
+        filtered = STUDENTS_LIST.filter(line=>{
+            const p = line.split(";");
+            return p[1]?.trim() === selected;
+        });
+    }
+
+    if(filtered.length === 0){
+        newAbsTableBody.innerHTML = `
+        <tr>
+            <td colspan="4" style="padding:15px;color:#777;">
+                لا توجد بيانات
+            </td>
+        </tr>`;
+        return;
+    }
+
+    // عرض التلاميذ
+    filtered.forEach((line, index)=>{
+
+        const p = line.split(";");
+
+        const name = p[0]?.trim() || "";
+        const classe = p[1]?.trim() || "";
+
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+        <td class="Count-col">${index + 1}</td>
+
+        <td class="name-col" style="font-weight:600;text-align:right;">
+            ${name}
+        </td>
+
+        <td class="Classe-col">
+            ${classe}
+        </td>
+
+        <td class="Checkbox-col">
+            <input type="checkbox" class="abs-check">
+        </td>
+        `;
+
+        newAbsTableBody.appendChild(tr);
+
+    });
+
+});
+
+// ==================== نهاية مودال إرسال الغيابات ====================
+
   
 // ==================== إغلاق مودال الحضور ====================
   document.getElementById("closeAttendanceModal").addEventListener("click", function(){
@@ -1000,3 +1125,4 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
