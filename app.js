@@ -929,21 +929,21 @@ sendAbsSelect.addEventListener("change", function(){
 
         const tr = document.createElement("tr");
 
-        tr.innerHTML = `
-        <td class="Count-col">${index + 1}</td>
+tr.innerHTML = `
+<td class="Count-col">${index + 1}</td>
 
-        <td class="name-col" style="font-weight:600;text-align:right;">
-            ${name}
-        </td>
+<td class="name-col student-name" style="font-weight:600;text-align:right;cursor:pointer;">
+    ${name}
+</td>
 
-        <td class="Classe-col">
-            ${classe}
-        </td>
+<td class="Classe-col">
+    ${classe}
+</td>
 
-        <td class="Checkbox-col">
-            <input type="checkbox" class="abs-check">
-        </td>
-        `;
+<td class="Checkbox-col">
+    <input type="checkbox" class="abs-check">
+</td>
+`;
 
         sendAbsTableBody.appendChild(tr);
 
@@ -1125,6 +1125,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
