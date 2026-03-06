@@ -349,6 +349,60 @@
   </div>
 </div>
     
+<!-- ============= مودال إرسال الغيابات ============ -->
+<div id="ModalSendAbsence" class="custom-modal">
+
+  <div class="modal-content large">
+
+    <!-- العنوان -->
+    <h3 class="modal-title">
+      إرسال الغيابات
+    </h3>
+
+    <div class="modal-body">
+
+      <!-- شريط الأدوات -->
+      <div class="newabs-toolbar">
+
+        <select id="sendAbsClassFilter" class="styled-select">
+          <option value="">-- اختر القسم --</option>
+        </select>
+
+        <button id="SendAbsenceBtn"
+                class="preview-btn"
+                onclick="SendAbsence()" title="إرسال">
+          <span class="material-icons">send</span>
+        </button>
+
+        <button id="CloseSendAbsModal"
+                class="preview-btn"
+                onclick="closeSendAbsenceModal()" title="إغلاق">
+          <span class="material-icons">close</span>
+        </button>
+
+      </div>
+
+      <!-- الجدول -->
+      <div class="table-container">
+        <table id="sendAbsTable" class="styled-table">
+
+          <thead>
+            <tr>
+              <th class="Count-col">الرقم</th>
+              <th class="name-col">اللقب والإسم</th>
+              <th class="Classe-col">القسم</th>
+              <th class="Checkbox-col">تحديد</th>
+            </tr>
+          </thead>
+
+          <tbody></tbody>
+
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
     
     <!-- محتوى إضافي مستقبلي -->
     <div id="mainContent"></div>
