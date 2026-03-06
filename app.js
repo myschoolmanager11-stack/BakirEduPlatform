@@ -958,30 +958,41 @@ filtered.forEach((line, index)=>{
     </td>
     `;
 
-    sendAbsTableBody.appendChild(tr);
+  });
 
-    // عند الضغط على أي مكان في الصف (باستثناء الشيك بوكس) يتم التبديل
-    tr.addEventListener("click", function(e){
-        if(e.target.tagName.toLowerCase() === "input") return; // تجاهل الشيك بوكس نفسه
-        const checkbox = tr.querySelector(".abs-check");
-        checkbox.checked = !checkbox.checked;
+// ==================== حفظ التحديد عند تغيير الشيك بوكس ====================
+sendAbsTableBody.addEventListener("change", function(e){
 
-        // تحديث القائمة المؤقتة
-        const name = checkbox.dataset.name;
-        const classe = checkbox.dataset.classe;
-        const record = checkbox.dataset.record;
+    if(!e.target.classList.contains("abs-check")) return;
 
-        if(checkbox.checked){
-            if(!TEMP_SELECTED_ABS.some(x => x.record === record)){
-                TEMP_SELECTED_ABS.push({name, classe, record});
-            }
-        }else{
-            TEMP_SELECTED_ABS = TEMP_SELECTED_ABS.filter(x => x.record !== record);
+    const checkbox = e.target;
+    const tr = checkbox.closest("tr");
+
+    const name = checkbox.dataset.name;
+    const classe = checkbox.dataset.classe;
+    const record = checkbox.dataset.record;
+
+    if(checkbox.checked){
+
+        const exists = TEMP_SELECTED_ABS.some(x => x.record === record);
+
+        if(!exists){
+            TEMP_SELECTED_ABS.push({
+                name: name,
+                classe: classe,
+                record: record
+            });
         }
 
-        // تحديث لون الصف
-        tr.style.backgroundColor = checkbox.checked ? "rgba(1,151,195,0.15)" : "";
-    });
+        tr.style.backgroundColor = "rgba(1,151,195,0.15)";
+
+    }else{
+
+        TEMP_SELECTED_ABS = TEMP_SELECTED_ABS.filter(x => x.record !== record);
+
+        tr.style.backgroundColor = "";
+
+    }
 
 });
 // ==================== نهاية مودال إرسال الغيابات ====================
@@ -1169,6 +1180,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
