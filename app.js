@@ -878,10 +878,12 @@ window.openSendAbsentedModal = async function(){
     hideLoader();
 };
 
+
 // ==================== غلق المودال ====================
 window.closeSendAbsentedModal = function(){
     sendAbsModal.classList.remove("show");
 };
+
 
 // ==================== فلترة حسب القسم ====================
 sendAbsSelect.addEventListener("change", function(){
@@ -920,47 +922,85 @@ sendAbsSelect.addEventListener("change", function(){
         return;
     }
 
-// ==================== عرض التلاميذ مع دعم اللون والضغط على الصف ====================
-filtered.forEach((line, index)=>{
 
-    const p = line.split(";");
+    // ==================== عرض التلاميذ ====================
+    filtered.forEach((line, index)=>{
 
-    const name = p[0]?.trim() || "";
-    const classe = p[1]?.trim() || "";
-    const record = p[2]?.trim() || "";
+        const p = line.split(";");
 
-    const tr = document.createElement("tr");
+        const name = p[0]?.trim() || "";
+        const classe = p[1]?.trim() || "";
+        const record = p[2]?.trim() || "";
 
-    // تحقق إذا كان هذا التلميذ محدد مسبقًا
-    const isChecked = TEMP_SELECTED_ABS.some(x => x.record === record);
+        const tr = document.createElement("tr");
 
-    // تلوين الصف إذا كان محدد
-    tr.style.backgroundColor = isChecked ? "rgba(1,151,195,0.15)" : "";
+        // تحقق إذا كان التلميذ محدد
+        const isChecked = TEMP_SELECTED_ABS.some(x => x.record === record);
 
-    tr.innerHTML = `
-    <td class="Count-col">${index + 1}</td>
+        if(isChecked){
+            tr.style.backgroundColor = "rgba(1,151,195,0.15)";
+        }
 
-    <td class="name-col student-name" style="font-weight:600;text-align:right;cursor:pointer;">
-        ${name}
-    </td>
+        tr.innerHTML = `
+        <td class="Count-col">${index + 1}</td>
 
-    <td class="Classe-col">
-        ${classe}
-    </td>
+        <td class="name-col student-name" style="font-weight:600;text-align:right;cursor:pointer;">
+            ${name}
+        </td>
 
-    <td class="Checkbox-col">
-        <input type="checkbox"
-           class="abs-check"
-           data-name="${name}"
-           data-classe="${classe}"
-           data-record="${record}"
-           ${isChecked ? "checked" : ""}>
-    </td>
-    `;
+        <td class="Classe-col">
+            ${classe}
+        </td>
 
-  });
+        <td class="Checkbox-col">
+            <input type="checkbox"
+               class="abs-check"
+               data-name="${name}"
+               data-classe="${classe}"
+               data-record="${record}"
+               ${isChecked ? "checked" : ""}>
+        </td>
+        `;
 
-// ==================== حفظ التحديد عند تغيير الشيك بوكس ====================
+        sendAbsTableBody.appendChild(tr);
+
+
+        // ==================== الضغط على الصف ====================
+        tr.addEventListener("click", function(e){
+
+            if(e.target.tagName.toLowerCase() === "input") return;
+
+            const checkbox = tr.querySelector(".abs-check");
+            checkbox.checked = !checkbox.checked;
+
+            const name = checkbox.dataset.name;
+            const classe = checkbox.dataset.classe;
+            const record = checkbox.dataset.record;
+
+            if(checkbox.checked){
+
+                if(!TEMP_SELECTED_ABS.some(x => x.record === record)){
+                    TEMP_SELECTED_ABS.push({name, classe, record});
+                }
+
+                tr.style.backgroundColor = "rgba(1,151,195,0.15)";
+
+            }else{
+
+                TEMP_SELECTED_ABS = TEMP_SELECTED_ABS.filter(x => x.record !== record);
+
+                tr.style.backgroundColor = "";
+
+            }
+
+        });
+
+    });
+
+});
+
+
+// ==================== حفظ التحديد عند تغيير checkbox ====================
 sendAbsTableBody.addEventListener("change", function(e){
 
     if(!e.target.classList.contains("abs-check")) return;
@@ -974,14 +1014,8 @@ sendAbsTableBody.addEventListener("change", function(e){
 
     if(checkbox.checked){
 
-        const exists = TEMP_SELECTED_ABS.some(x => x.record === record);
-
-        if(!exists){
-            TEMP_SELECTED_ABS.push({
-                name: name,
-                classe: classe,
-                record: record
-            });
+        if(!TEMP_SELECTED_ABS.some(x => x.record === record)){
+            TEMP_SELECTED_ABS.push({name, classe, record});
         }
 
         tr.style.backgroundColor = "rgba(1,151,195,0.15)";
@@ -995,6 +1029,7 @@ sendAbsTableBody.addEventListener("change", function(e){
     }
 
 });
+
 // ==================== نهاية مودال إرسال الغيابات ====================
 
   
@@ -1180,6 +1215,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
