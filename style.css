@@ -258,6 +258,7 @@ h1, h2, h3 {
   box-shadow: 0 3px 6px rgba(0,0,0,0.15);
   transition: all 0.2s ease;
   max-width: 42px;
+  max-height: 42px;
 }
 
 .preview-btn:hover {
@@ -636,8 +637,7 @@ h1, h2, h3 {
 }
 
 .Sendabs-toolbar select {
-    min-width: 220px;
-    flex: 1; 
+  flex: 1; 
 }
 
 
@@ -691,6 +691,7 @@ transition: background 0.2s;
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
 
 
 
