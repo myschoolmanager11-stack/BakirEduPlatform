@@ -1150,6 +1150,13 @@ async function SendAbsence(){
         return;
     }
 
+    const currentHour = getCurrentSchoolHour();
+
+    if(currentHour === null){
+        alert("لا يمكن إرسال الغيابات خارج أوقات الحصص");
+        return;
+    }
+
     showLoader();
 
     let fileLines = await fetchFile(CONFIG.New_Absented_File_ID);
@@ -1189,7 +1196,7 @@ async function SendAbsence(){
     hideLoader();
 
     if(ok){
-        alert("تم إرسال الغيابات بنجاح");
+        alert("تم إرسال " + newLines.length + " غياب بنجاح");
     }else{
         alert("فشل حفظ الغيابات");
     }
@@ -1401,6 +1408,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
