@@ -1193,6 +1193,36 @@ async function SendAbsence(){
 
 }
 
+ //دالة updateFile التي ترسل البيانات إلى Google Apps Script 
+ async function updateFile(fileId, content){
+
+    try{
+
+        const response = await fetch(GAS_SCRIPT_URL,{
+            method: "POST",
+            body: JSON.stringify({
+                id: fileId,
+                data: content
+            })
+        });
+
+        const result = await response.text();
+
+        if(result === "OK"){
+            return true;
+        }else{
+            console.error("خطأ في الرد:", result);
+            return false;
+        }
+
+    }catch(err){
+
+        console.error("فشل تحديث الملف:", err);
+        return false;
+
+    }
+
+}
   
 // ==================== نهاية مودال إرسال الغيابات ====================
 
@@ -1368,6 +1398,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
