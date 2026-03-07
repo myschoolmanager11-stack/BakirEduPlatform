@@ -73,6 +73,7 @@ const schoolNameElement = document.getElementById("schoolName");
 if (schoolNameElement) {
     schoolNameElement.textContent = CONFIG.SchoolName;
 }
+
   
  // عناصر الصفحة
 const userTypeSelect = document.getElementById("userTypeSelect");
@@ -139,6 +140,48 @@ function parseStudentLine(line) {
     };
 }
 
+// ==================== دالة حذف القائمة تلقائياً الساعة 23:00 (توقيت الجزائر) ====================
+function autoClearAbsList(){
+
+const now = new Date();
+
+const target = new Date();
+
+target.setHours(23,0,0,0);
+
+let delay = target - now;
+
+if(delay < 0){
+delay += 24 * 60 * 60 * 1000;
+}
+
+setTimeout(()=>{
+
+localStorage.removeItem("TEMP_SELECTED_ABS");
+
+TEMP_SELECTED_ABS = [];
+
+}, delay);
+
+}
+
+autoClearAbsList();
+  
+// ==================== دالة حفض التلاميذ المحددين للغياب في القائمة المؤقته ====================
+function saveTempAbs(){
+localStorage.setItem(
+"TEMP_SELECTED_ABS",
+JSON.stringify(TEMP_SELECTED_ABS)
+);
+}
+
+// ==================== دالة تحميل قائمة التلاميذ المحددين للغياب من القائمة المؤقته ====================
+const saved = localStorage.getItem("TEMP_SELECTED_ABS");
+
+if(saved){
+TEMP_SELECTED_ABS = JSON.parse(saved);
+}
+  
 // ==================== تغيير نوع المستخدم ====================
 userTypeSelect.addEventListener("change", async function () {
     const type = this.value;
@@ -930,7 +973,7 @@ sendAbsSelect.addEventListener("change", function(){
 
         const name = p[0]?.trim() || "";
         const classe = p[1]?.trim() || "";
-        const record = p[2]?.trim() || "";
+        const record = p[2]?.trim();
 
         const tr = document.createElement("tr");
 
@@ -981,6 +1024,7 @@ sendAbsSelect.addEventListener("change", function(){
 
                 if(!TEMP_SELECTED_ABS.some(x => x.record === record)){
                     TEMP_SELECTED_ABS.push({name, classe, record});
+                     saveTempAbs();
                 }
 
                 tr.style.backgroundColor = "rgba(1,151,195,0.15)";
@@ -988,7 +1032,7 @@ sendAbsSelect.addEventListener("change", function(){
             }else{
 
                 TEMP_SELECTED_ABS = TEMP_SELECTED_ABS.filter(x => x.record !== record);
-
+                     saveTempAbs();
                 tr.style.backgroundColor = "";
 
             }
@@ -1204,6 +1248,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
