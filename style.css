@@ -257,6 +257,7 @@ h1, h2, h3 {
   cursor: pointer;
   box-shadow: 0 3px 6px rgba(0,0,0,0.15);
   transition: all 0.2s ease;
+  max-width: 42px;
 }
 
 .preview-btn:hover {
@@ -630,19 +631,13 @@ h1, h2, h3 {
 .Sendabs-toolbar {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 15px;
+    gap: 12px; /* مسافة بين الزر والكمبوبكس */
+    margin-bottom: 15px; 
 }
 
-/* عرض الكمبوبوكس */
 .Sendabs-toolbar select {
     min-width: 220px;
-      flex: 1;
-}
-
-/* منع الأزرار من الانكماش */
-.Sendabs-toolbar button {
-    flex-shrink: 0;
+    flex: 1; 
 }
 
 
@@ -696,6 +691,7 @@ transition: background 0.2s;
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
 
 
 
