@@ -1043,7 +1043,10 @@ sendAbsSelect.addEventListener("change", function(){
 
 });
 
-
+// ==================== ربط زر الإرسال ====================
+document.getElementById("SendAbsenceBtn")
+.addEventListener("click", SendAbsence);
+  
 // ==================== حفظ التحديد عند تغيير checkbox ====================
 sendAbsTableBody.addEventListener("change", function(e){
 
@@ -1398,6 +1401,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
