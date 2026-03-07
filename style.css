@@ -630,13 +630,21 @@ h1, h2, h3 {
 .Sendabs-toolbar {
     display: flex;
     align-items: center;
-    gap: 12px; /* مسافة بين الزر والكمبوبكس */
+    gap: 12px;
     margin-bottom: 15px;
 }
 
+/* عرض الكمبوبوكس */
 .Sendabs-toolbar select {
-    flex: 1;
+    min-width: 220px;
+      flex: 1;
 }
+
+/* منع الأزرار من الانكماش */
+.Sendabs-toolbar button {
+    flex-shrink: 0;
+}
+
 
 #CloseModalNewAbsented {
     width: 42px;
@@ -688,6 +696,7 @@ transition: background 0.2s;
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
 
 
 
