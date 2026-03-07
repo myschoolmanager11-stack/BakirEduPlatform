@@ -1075,7 +1075,7 @@ sendAbsTableBody.addEventListener("change", function(e){
 });
 
 // ==================== دالة تحديد جميع التلاميذ القائمة الحالية ====================
-document.getElementById("checkAllBtn").addEventListener("click", function(){
+checkAllAbsence.addEventListener("click", function(){
 
 const rows = sendAbsTableBody.querySelectorAll("tr");
 
@@ -1277,6 +1277,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
