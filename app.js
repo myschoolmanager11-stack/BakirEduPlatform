@@ -1074,6 +1074,35 @@ sendAbsTableBody.addEventListener("change", function(e){
 
 });
 
+// ==================== دالة تحديد جميع التلاميذ القائمة الحالية ====================
+document.getElementById("checkAllBtn").addEventListener("click", function(){
+
+const rows = sendAbsTableBody.querySelectorAll("tr");
+
+rows.forEach(row=>{
+
+const checkbox = row.querySelector(".abs-check");
+
+if(!checkbox) return;
+
+checkbox.checked = true;
+
+const name = checkbox.dataset.name;
+const classe = checkbox.dataset.classe;
+const record = checkbox.dataset.record;
+
+if(!TEMP_SELECTED_ABS.some(x => x.record === record)){
+TEMP_SELECTED_ABS.push({name, classe, record});
+}
+
+row.classList.add("selected-row");
+
+});
+
+saveTempAbs();
+
+});
+  
 // ==================== نهاية مودال إرسال الغيابات ====================
 
   
@@ -1248,6 +1277,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
