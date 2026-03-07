@@ -1141,7 +1141,7 @@ function buildAbsenceLine(student){
 }
 
 //الدالة الرئيسية للإرسال
-async function SendAbsence(){
+async function SendAbsence() {
 
     console.log("Start sending absence");
 
@@ -1150,55 +1150,52 @@ async function SendAbsence(){
         return;
     }
 
-    const currentHour = getCurrentSchoolHour();
-
-    if(currentHour === null){
-        alert("لا يمكن إرسال الغيابات خارج أوقات الحصص");
-        return;
-    }
-
     showLoader();
 
-    let fileLines = await fetchFile(CONFIG.New_Absented_File_ID);
-
-    if(!fileLines){
-        fileLines = [];
-    }else if(typeof fileLines === "string"){
-        fileLines = fileLines.split("\n");
-    }
-
-    let newLines = [];
-
-    TEMP_SELECTED_ABS.forEach(student=>{
-
-        const line = buildAbsenceLine(student);
-
-        if(!line) return;
-
-        if(!fileLines.includes(line)){
-            newLines.push(line);
-        }
-
-    });
+    // بناء السطور المرسلة
+    let newLines = TEMP_SELECTED_ABS.map(student => buildAbsenceLine(student)).filter(line => line);
 
     if(newLines.length === 0){
-
         hideLoader();
         alert("هذه الغيابات مسجلة مسبقاً");
         return;
-
     }
 
-    const finalData = [...fileLines, ...newLines].join("\n");
+    // احتفظ بسطر واحد فقط للتحقق
+    const checkLine = newLines[0];
 
-    const ok = await updateFile(CONFIG.New_Absented_File_ID, finalData);
+    // إرسال البيانات عبر fetch مع no-cors
+    try {
+        await fetch(CONFIG.New_Absented_File_ID, {
+            method: "POST",
+            mode: "no-cors",  // التحايل على CORS
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: CONFIG.New_Absented_File_ID,
+                data: newLines.join("\n")
+            })
+        });
 
-    hideLoader();
+        // بعد إرسال البيانات، ننتظر 1-2 ثواني ثم نقرأ الملف للتحقق
+        setTimeout(async () => {
+            const fileContent = await fetchFile(CONFIG.New_Absented_File_ID);
 
-    if(ok){
-        alert("تم إرسال " + newLines.length + " غياب بنجاح");
-    }else{
-        alert("فشل حفظ الغيابات");
+            if(fileContent && fileContent.includes(checkLine)){
+                hideLoader();
+                alert("تم إرسال الغيابات بنجاح ✅");
+            } else {
+                hideLoader();
+                alert("فشل حفظ الغيابات ❌");
+            }
+
+        }, 1500);
+
+    } catch(err) {
+        hideLoader();
+        console.error("فشل الإرسال:", err);
+        alert("حدث خطأ أثناء الإرسال ❌");
     }
 
 }
@@ -1408,6 +1405,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
