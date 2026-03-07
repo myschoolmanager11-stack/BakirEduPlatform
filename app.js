@@ -1138,7 +1138,9 @@ function buildAbsenceLine(student){
 }
 
 //الدالة الرئيسية للإرسال
-document.getElementById("SendAbsenceBtn").addEventListener("click", function(){
+async function SendAbsence(){
+
+    console.log("Start sending absence");
 
     if(TEMP_SELECTED_ABS.length === 0){
         alert("لم يتم تحديد أي تلميذ");
@@ -1149,11 +1151,11 @@ document.getElementById("SendAbsenceBtn").addEventListener("click", function(){
 
     let fileLines = await fetchFile(CONFIG.New_Absented_File_ID);
 
-if(!fileLines){
-    fileLines = [];
-}else if(typeof fileLines === "string"){
-    fileLines = fileLines.split("\n");
-}
+    if(!fileLines){
+        fileLines = [];
+    }else if(typeof fileLines === "string"){
+        fileLines = fileLines.split("\n");
+    }
 
     let newLines = [];
 
@@ -1163,7 +1165,6 @@ if(!fileLines){
 
         if(!line) return;
 
-        // التحقق من التكرار
         if(!fileLines.includes(line)){
             newLines.push(line);
         }
@@ -1174,8 +1175,8 @@ if(!fileLines){
 
         hideLoader();
         alert("هذه الغيابات مسجلة مسبقاً");
-
         return;
+
     }
 
     const finalData = [...fileLines, ...newLines].join("\n");
@@ -1185,13 +1186,9 @@ if(!fileLines){
     hideLoader();
 
     if(ok){
-
-        alert("تم إرسال الغيابات وحفظها بنجاح ✅");
-
+        alert("تم إرسال الغيابات بنجاح");
     }else{
-
-        alert("حدث خطأ أثناء حفظ الغيابات");
-
+        alert("فشل حفظ الغيابات");
     }
 
 }
@@ -1371,6 +1368,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
