@@ -1102,6 +1102,98 @@ row.classList.add("selected-row");
 saveTempAbs();
 
 });
+
+//تحويل الساعة إلى العمود المناسب
+function getCurrentSchoolHour(){
+
+    const h = new Date().getHours();
+
+    if(h === 8) return 2;
+    if(h === 9) return 3;
+    if(h === 10) return 4;
+    if(h === 11) return 5;
+    if(h === 13) return 6;
+    if(h === 14) return 7;
+    if(h === 15) return 8;
+    if(h === 16) return 9;
+
+    return null;
+}
+
+//دالة إنشاء سطر الغياب
+function buildAbsenceLine(student){
+
+    const hourIndex = getCurrentSchoolHour();
+
+    if(hourIndex === null) return null;
+
+    let cols = new Array(10).fill("");
+
+    cols[0] = student.name;
+    cols[1] = student.classe;
+    cols[hourIndex] = new Date().getHours(); 
+    cols[9] = student.record;
+
+    return cols.join(";");
+}
+
+//الدالة الرئيسية للإرسال
+async function SendAbsence(){
+
+    if(TEMP_SELECTED_ABS.length === 0){
+        alert("لم يتم تحديد أي تلميذ");
+        return;
+    }
+
+    showLoader();
+
+    let fileLines = await fetchFile(CONFIG.New_Absented_File_ID);
+
+    if(!fileLines){
+        fileLines = [];
+    }
+
+    let newLines = [];
+
+    TEMP_SELECTED_ABS.forEach(student=>{
+
+        const line = buildAbsenceLine(student);
+
+        if(!line) return;
+
+        // التحقق من التكرار
+        if(!fileLines.includes(line)){
+            newLines.push(line);
+        }
+
+    });
+
+    if(newLines.length === 0){
+
+        hideLoader();
+        alert("هذه الغيابات مسجلة مسبقاً");
+
+        return;
+    }
+
+    const finalData = [...fileLines, ...newLines].join("\n");
+
+    const ok = await updateFile(CONFIG.New_Absented_File_ID, finalData);
+
+    hideLoader();
+
+    if(ok){
+
+        alert("تم إرسال الغيابات وحفظها بنجاح ✅");
+
+    }else{
+
+        alert("حدث خطأ أثناء حفظ الغيابات");
+
+    }
+
+}
+
   
 // ==================== نهاية مودال إرسال الغيابات ====================
 
@@ -1277,6 +1369,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
