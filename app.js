@@ -980,9 +980,9 @@ sendAbsSelect.addEventListener("change", function(){
         // تحقق إذا كان التلميذ محدد
         const isChecked = TEMP_SELECTED_ABS.some(x => x.record === record);
 
-        if(isChecked){
-            tr.style.backgroundColor = "rgba(1,151,195,0.15)";
-        }
+       if(isChecked){
+              tr.classList.add("selected-row");
+             }
 
         tr.innerHTML = `
         <td class="Count-col">${index + 1}</td>
@@ -1027,13 +1027,13 @@ sendAbsSelect.addEventListener("change", function(){
                      saveTempAbs();
                 }
 
-                tr.style.backgroundColor = "rgba(1,151,195,0.15)";
+                tr.classList.add("selected-row");
 
             }else{
 
                 TEMP_SELECTED_ABS = TEMP_SELECTED_ABS.filter(x => x.record !== record);
                      saveTempAbs();
-                tr.style.backgroundColor = "";
+                 tr.classList.remove("selected-row");
 
             }
 
@@ -1062,13 +1062,13 @@ sendAbsTableBody.addEventListener("change", function(e){
             TEMP_SELECTED_ABS.push({name, classe, record});
         }
 
-        tr.style.backgroundColor = "rgba(1,151,195,0.15)";
+        tr.classList.add("selected-row");
 
     }else{
 
         TEMP_SELECTED_ABS = TEMP_SELECTED_ABS.filter(x => x.record !== record);
 
-        tr.style.backgroundColor = "";
+         tr.classList.remove("selected-row");
 
     }
 
@@ -1248,6 +1248,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
