@@ -61,6 +61,7 @@ let STUDENTS_LIST = [];
 let parentData = null;
 let OLD_ABS_DATA = [];
 let NEW_ABS_DATA = [];
+let TEMP_SELECTED_ABS = [];
 
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
@@ -1203,6 +1204,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
