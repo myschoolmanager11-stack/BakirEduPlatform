@@ -1138,7 +1138,7 @@ function buildAbsenceLine(student){
 }
 
 //الدالة الرئيسية للإرسال
-async function SendAbsence(){
+document.getElementById("SendAbsenceBtn").addEventListener("click", function(){
 
     if(TEMP_SELECTED_ABS.length === 0){
         alert("لم يتم تحديد أي تلميذ");
@@ -1149,9 +1149,11 @@ async function SendAbsence(){
 
     let fileLines = await fetchFile(CONFIG.New_Absented_File_ID);
 
-    if(!fileLines){
-        fileLines = [];
-    }
+if(!fileLines){
+    fileLines = [];
+}else if(typeof fileLines === "string"){
+    fileLines = fileLines.split("\n");
+}
 
     let newLines = [];
 
@@ -1369,6 +1371,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
