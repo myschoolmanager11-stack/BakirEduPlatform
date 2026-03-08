@@ -1130,12 +1130,12 @@ function buildAbsenceLine(student){
 
     if(hourIndex === null) return null;
 
-    let cols = new Array(10).fill("");
+    let cols = new Array(11).fill("");
 
     cols[0] = student.name;
     cols[1] = student.classe;
     cols[hourIndex] = "1";
-    cols[9] = student.record;
+    cols[10] = student.record;
 
     return cols.join(";");
 }
@@ -1383,6 +1383,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
