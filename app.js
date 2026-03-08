@@ -52,7 +52,7 @@ const FILE_ITEMS = {
 //"قائمة التلاميذ الغائبون قبل اليوم": CONFIG.Old_Absented_File_ID,
 //"متابعة غيابات اليوم": CONFIG.New_Absented_File_ID,
 
-const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby9E9wKCxrBwungh0fYt_nSntakh2WZOj6hfw_mFY0nNmKW_ika0NUkuHPdfuJGHEsv/exec";
+const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyS9WSTigpDIagy5WNIr6Ch-mA1o3TyUppX8NUL5o9hX1ZoodJCSObg_6GuP9tzwRJ8/exec";
 
 let currentFileURL = null;
 let PASSWORDS = [];
@@ -1186,24 +1186,13 @@ async function updateFile(fileId, content){
             data: content
         });
 
-        const response = await fetch(GAS_SCRIPT_URL,{
+        await fetch(GAS_SCRIPT_URL,{
             method: "POST",
-            headers:{
-                "Content-Type":"text/plain"
-            },
-            body: payload
+            body: payload,
+            mode: "no-cors"
         });
 
-        const result = await response.text();
-
-        console.log("رد السيرفر:", result);
-
-        if(result.trim() === "OK"){
-            return true;
-        }else{
-            console.error("خطأ في الرد:", result);
-            return false;
-        }
+        return true;
 
     }catch(err){
 
@@ -1388,6 +1377,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
