@@ -1118,7 +1118,7 @@ function getCurrentSchoolHour(){
     if(h >= 13 && h < 14) return 6;
     if(h >= 14 && h < 15) return 7;
     if(h >= 15 && h < 16) return 8;
-    if(h >= 16 && h < 17) return 9;
+    if(h >= 22 && h < 23) return 9;
 
     return null;
 }
@@ -1383,6 +1383,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
