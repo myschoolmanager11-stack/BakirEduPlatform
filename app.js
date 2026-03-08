@@ -52,7 +52,7 @@ const FILE_ITEMS = {
 //"قائمة التلاميذ الغائبون قبل اليوم": CONFIG.Old_Absented_File_ID,
 //"متابعة غيابات اليوم": CONFIG.New_Absented_File_ID,
 
-const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUwA1W6eQ3_tK--3YtukXVgGN4hkjxfB4Ywramdno8zsIPAa_7UMzhEQE0sY2A2egC/exec";
+const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx6OD5-byThdZPjPbtW6II-F2cj1muuxEE4fsRduQrLpPWQXhNhA_nESzWwe2lbrlb1/exec";
 
 let currentFileURL = null;
 let PASSWORDS = [];
@@ -1152,8 +1152,9 @@ async function SendAbsence() {
 
     showLoader();
 
-    // بناء السطور المرسلة
-    let newLines = TEMP_SELECTED_ABS.map(student => buildAbsenceLine(student)).filter(line => line);
+    let newLines = TEMP_SELECTED_ABS
+        .map(student => buildAbsenceLine(student))
+        .filter(line => line);
 
     if(newLines.length === 0){
         hideLoader();
@@ -1161,41 +1162,16 @@ async function SendAbsence() {
         return;
     }
 
-    // احتفظ بسطر واحد فقط للتحقق
-    const checkLine = newLines[0];
+    const finalData = newLines.join("\n");
 
-    // إرسال البيانات عبر fetch مع no-cors
-    try {
-        await fetch(CONFIG.New_Absented_File_ID, {
-            method: "POST",
-            mode: "no-cors",  // التحايل على CORS
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                id: CONFIG.New_Absented_File_ID,
-                data: newLines.join("\n")
-            })
-        });
+    const success = await updateFile(CONFIG.New_Absented_File_ID, finalData);
 
-        // بعد إرسال البيانات، ننتظر 1-2 ثواني ثم نقرأ الملف للتحقق
-        setTimeout(async () => {
-            const fileContent = await fetchFile(CONFIG.New_Absented_File_ID);
+    hideLoader();
 
-            if(fileContent && fileContent.includes(checkLine)){
-                hideLoader();
-                alert("تم إرسال الغيابات بنجاح ✅");
-            } else {
-                hideLoader();
-                alert("فشل حفظ الغيابات ❌");
-            }
-
-        }, 1500);
-
-    } catch(err) {
-        hideLoader();
-        console.error("فشل الإرسال:", err);
-        alert("حدث خطأ أثناء الإرسال ❌");
+    if(success){
+        alert("تم إرسال الغيابات بنجاح ✅");
+    }else{
+        alert("فشل حفظ الغيابات ❌");
     }
 
 }
@@ -1405,6 +1381,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
