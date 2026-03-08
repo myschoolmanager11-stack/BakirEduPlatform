@@ -52,7 +52,7 @@ const FILE_ITEMS = {
 //"قائمة التلاميذ الغائبون قبل اليوم": CONFIG.Old_Absented_File_ID,
 //"متابعة غيابات اليوم": CONFIG.New_Absented_File_ID,
 
-const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyS9WSTigpDIagy5WNIr6Ch-mA1o3TyUppX8NUL5o9hX1ZoodJCSObg_6GuP9tzwRJ8/exec";
+const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbym3zflXnF6O5CeM_lguAvFovdMRw4W7nPuPuS7cAjksRiFEMXtx8Ff3npofFcOFaHZ/exec";
 
 let currentFileURL = null;
 let PASSWORDS = [];
@@ -1178,29 +1178,35 @@ async function SendAbsence() {
 
  //دالة updateFile التي ترسل البيانات إلى Google Apps Script 
 async function updateFile(fileId, content){
-
     try{
-
         const payload = JSON.stringify({
             id: fileId,
             data: content
         });
 
-        await fetch(GAS_SCRIPT_URL,{
+        const response = await fetch(GAS_SCRIPT_URL,{
             method: "POST",
-            body: payload,
-            mode: "no-cors"
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body: payload
         });
 
-        return true;
+        const result = await response.text();
+
+        console.log("رد السيرفر:", result);
+
+        if(result.trim() === "OK"){
+            return true;
+        }else{
+            console.error("خطأ في الرد:", result);
+            return false;
+        }
 
     }catch(err){
-
         console.error("فشل تحديث الملف:", err);
         return false;
-
     }
-
 }
   
 // ==================== نهاية مودال إرسال الغيابات ====================
@@ -1377,33 +1383,6 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
