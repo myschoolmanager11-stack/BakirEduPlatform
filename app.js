@@ -1134,7 +1134,7 @@ function buildAbsenceLine(student){
 
     cols[0] = student.name;
     cols[1] = student.classe;
-    cols[hourIndex] = new Date().getHours(); 
+    cols[hourIndex] = "1";
     cols[9] = student.record;
 
     return cols.join(";");
@@ -1177,12 +1177,15 @@ async function SendAbsence() {
 }
 
  //دالة updateFile التي ترسل البيانات إلى Google Apps Script 
- async function updateFile(fileId, content){
+async function updateFile(fileId, content){
 
     try{
 
         const response = await fetch(GAS_SCRIPT_URL,{
             method: "POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
             body: JSON.stringify({
                 id: fileId,
                 data: content
@@ -1191,7 +1194,9 @@ async function SendAbsence() {
 
         const result = await response.text();
 
-        if(result === "OK"){
+        console.log("رد السيرفر:", result);
+
+        if(result.trim() === "OK"){
             return true;
         }else{
             console.error("خطأ في الرد:", result);
@@ -1381,6 +1386,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
