@@ -1178,34 +1178,35 @@ async function SendAbsence() {
 
  //دالة updateFile التي ترسل البيانات إلى Google Apps Script 
 async function updateFile(fileId, content) {
+
   try {
-    const payload = JSON.stringify({
-      id: fileId,
-      data: content
-    });
+
+    const formData = new FormData();
+    formData.append("id", fileId);
+    formData.append("data", content);
 
     const response = await fetch(GAS_SCRIPT_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: payload,
-      mode: "cors" // تأكد من وجود هذا السطر
+      body: formData
     });
 
     const result = await response.text();
+
     console.log("رد السيرفر:", result);
 
     if (result.trim() === "OK") {
       return true;
-    } else {
-      console.error("خطأ في الرد:", result);
-      return false;
     }
+
+    return false;
+
   } catch (err) {
+
     console.error("فشل تحديث الملف:", err);
     return false;
+
   }
+
 }
   
 // ==================== نهاية مودال إرسال الغيابات ====================
@@ -1382,6 +1383,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
