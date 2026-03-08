@@ -885,7 +885,6 @@ newAbsSelect.addEventListener("change", function(){
 
 // ==================== فتح مودال إرسال الغيابات ====================
 window.openSendAbsentedModal = async function(){
-
     sendAbsModal.classList.add("show");
     showLoader();
 
@@ -894,7 +893,6 @@ window.openSendAbsentedModal = async function(){
 
     // تحميل قائمة التلاميذ
     const list = await fetchFile(CONFIG.ListeStudents_File_ID);
-
     if(!list){
         hideLoader();
         sendAbsSelect.innerHTML = `<option value="">تعذر تحميل البيانات</option>`;
@@ -921,16 +919,13 @@ window.openSendAbsentedModal = async function(){
     hideLoader();
 };
 
-
 // ==================== غلق المودال ====================
 window.closeSendAbsentedModal = function(){
     sendAbsModal.classList.remove("show");
 };
 
-
 // ==================== فلترة حسب القسم ====================
 sendAbsSelect.addEventListener("change", function(){
-
     const selected = this.value;
     sendAbsTableBody.innerHTML = "";
 
@@ -944,16 +939,9 @@ sendAbsSelect.addEventListener("change", function(){
         return;
     }
 
-    let filtered;
-
-    if(selected === "all"){
-        filtered = STUDENTS_LIST;
-    }else{
-        filtered = STUDENTS_LIST.filter(line=>{
-            const p = line.split(";");
-            return p[1]?.trim() === selected;
-        });
-    }
+    let filtered = selected === "all"
+        ? STUDENTS_LIST
+        : STUDENTS_LIST.filter(line => line.split(";")[1]?.trim() === selected);
 
     if(filtered.length === 0){
         sendAbsTableBody.innerHTML = `
@@ -965,36 +953,24 @@ sendAbsSelect.addEventListener("change", function(){
         return;
     }
 
-
-    // ==================== عرض التلاميذ ====================
     filtered.forEach((line, index)=>{
-
         const p = line.split(";");
-
         const name = p[0]?.trim() || "";
         const classe = p[1]?.trim() || "";
         const record = p[2]?.trim();
-
         const tr = document.createElement("tr");
 
-        // تحقق إذا كان التلميذ محدد
         const isChecked = TEMP_SELECTED_ABS.some(x => x.record === record);
-
-       if(isChecked){
-              tr.classList.add("selected-row");
-             }
+        if(isChecked) tr.classList.add("selected-row");
 
         tr.innerHTML = `
         <td class="Count-col">${index + 1}</td>
-
         <td class="name-col student-name" style="font-weight:600;text-align:right;cursor:pointer;">
             ${name}
         </td>
-
         <td class="Classe-col">
             ${classe}
         </td>
-
         <td class="Checkbox-col">
             <input type="checkbox"
                class="abs-check"
@@ -1007,10 +983,7 @@ sendAbsSelect.addEventListener("change", function(){
 
         sendAbsTableBody.appendChild(tr);
 
-
-        // ==================== الضغط على الصف ====================
         tr.addEventListener("click", function(e){
-
             if(e.target.tagName.toLowerCase() === "input") return;
 
             const checkbox = tr.querySelector(".abs-check");
@@ -1021,96 +994,68 @@ sendAbsSelect.addEventListener("change", function(){
             const record = checkbox.dataset.record;
 
             if(checkbox.checked){
-
                 if(!TEMP_SELECTED_ABS.some(x => x.record === record)){
                     TEMP_SELECTED_ABS.push({name, classe, record});
-                     saveTempAbs();
+                    saveTempAbs();
                 }
-
                 tr.classList.add("selected-row");
-
-            }else{
-
+            } else {
                 TEMP_SELECTED_ABS = TEMP_SELECTED_ABS.filter(x => x.record !== record);
-                     saveTempAbs();
-                 tr.classList.remove("selected-row");
-
+                saveTempAbs();
+                tr.classList.remove("selected-row");
             }
-
         });
-
     });
-
 });
 
 // ==================== ربط زر الإرسال ====================
 document.getElementById("SendAbsenceBtn")
 .addEventListener("click", SendAbsence);
-  
+
 // ==================== حفظ التحديد عند تغيير checkbox ====================
 sendAbsTableBody.addEventListener("change", function(e){
-
     if(!e.target.classList.contains("abs-check")) return;
 
     const checkbox = e.target;
     const tr = checkbox.closest("tr");
-
     const name = checkbox.dataset.name;
     const classe = checkbox.dataset.classe;
     const record = checkbox.dataset.record;
 
     if(checkbox.checked){
+        if(!TEMP_SELECTED_ABS.some(x => x.record === record)){
+            TEMP_SELECTED_ABS.push({name, classe, record});
+        }
+        tr.classList.add("selected-row");
+    } else {
+        TEMP_SELECTED_ABS = TEMP_SELECTED_ABS.filter(x => x.record !== record);
+        tr.classList.remove("selected-row");
+    }
+});
+
+// ==================== تحديد جميع التلاميذ في القائمة الحالية ====================
+document.getElementById("checkAllBtn").addEventListener("click", function(){
+    const rows = sendAbsTableBody.querySelectorAll("tr");
+    rows.forEach(row=>{
+        const checkbox = row.querySelector(".abs-check");
+        if(!checkbox) return;
+
+        checkbox.checked = true;
+        const name = checkbox.dataset.name;
+        const classe = checkbox.dataset.classe;
+        const record = checkbox.dataset.record;
 
         if(!TEMP_SELECTED_ABS.some(x => x.record === record)){
             TEMP_SELECTED_ABS.push({name, classe, record});
         }
-
-        tr.classList.add("selected-row");
-
-    }else{
-
-        TEMP_SELECTED_ABS = TEMP_SELECTED_ABS.filter(x => x.record !== record);
-
-         tr.classList.remove("selected-row");
-
-    }
-
+        row.classList.add("selected-row");
+    });
+    saveTempAbs();
 });
 
-// ==================== دالة تحديد جميع التلاميذ القائمة الحالية ====================
-document.getElementById("checkAllBtn").addEventListener("click", function(){
-
-const rows = sendAbsTableBody.querySelectorAll("tr");
-
-rows.forEach(row=>{
-
-const checkbox = row.querySelector(".abs-check");
-
-if(!checkbox) return;
-
-checkbox.checked = true;
-
-const name = checkbox.dataset.name;
-const classe = checkbox.dataset.classe;
-const record = checkbox.dataset.record;
-
-if(!TEMP_SELECTED_ABS.some(x => x.record === record)){
-TEMP_SELECTED_ABS.push({name, classe, record});
-}
-
-row.classList.add("selected-row");
-
-});
-
-saveTempAbs();
-
-});
-
-//تحويل الساعة إلى العمود المناسب
+// ==================== تحويل الساعة إلى العمود المناسب ====================
 function getCurrentSchoolHour(){
-
     const h = new Date().getHours();
-
     if(h >= 8 && h < 9) return 2;
     if(h >= 9 && h < 10) return 3;
     if(h >= 10 && h < 11) return 4;
@@ -1119,30 +1064,36 @@ function getCurrentSchoolHour(){
     if(h >= 14 && h < 15) return 7;
     if(h >= 15 && h < 16) return 8;
     if(h >= 16 && h < 17) return 9;
-
     return null;
 }
 
-//دالة إنشاء سطر الغياب
-function buildAbsenceLine(student){
-
+// ==================== إنشاء أو تحديث سطر الغياب ====================
+function buildOrUpdateAbsenceLine(student, existingLines){
     const hourIndex = getCurrentSchoolHour();
+    if(hourIndex === null) return existingLines;
 
-    if(hourIndex === null) return null;
+    let lineIndex = existingLines.findIndex(l => l.split(";")[10]?.trim() === student.record);
+    let cols;
 
-    let cols = new Array(11).fill("");
+    if(lineIndex !== -1){
+        cols = existingLines[lineIndex].split(";");
+        while(cols.length < 11) cols.push("");
+        cols[hourIndex] = "1";
+        existingLines[lineIndex] = cols.join(";");
+    } else {
+        cols = new Array(11).fill("");
+        cols[0] = student.name;
+        cols[1] = student.classe;
+        cols[hourIndex] = "1";
+        cols[10] = student.record;
+        existingLines.push(cols.join(";"));
+    }
 
-    cols[0] = student.name;
-    cols[1] = student.classe;
-    cols[hourIndex] = "1";
-    cols[10] = student.record;
-
-    return cols.join(";");
+    return existingLines;
 }
 
-//الدالة الرئيسية للإرسال
+// ==================== الدالة الرئيسية للإرسال ====================
 async function SendAbsence() {
-
     console.log("Start sending absence");
 
     if(TEMP_SELECTED_ABS.length === 0){
@@ -1152,65 +1103,55 @@ async function SendAbsence() {
 
     showLoader();
 
-    let newLines = TEMP_SELECTED_ABS
-        .map(student => buildAbsenceLine(student))
-        .filter(line => line);
+    try {
+        const fileContentResp = await fetchFile(CONFIG.New_Absented_File_ID);
+        let existingLines = fileContentResp ? fileContentResp.split("\n") : [];
 
-    if(newLines.length === 0){
+        TEMP_SELECTED_ABS.forEach(student=>{
+            existingLines = buildOrUpdateAbsenceLine(student, existingLines);
+        });
+
+        const finalData = existingLines.join("\n");
+        const success = await updateFile(CONFIG.New_Absented_File_ID, finalData);
+
         hideLoader();
-        alert("هذه الغيابات مسجلة مسبقاً");
-        return;
+
+        if(success){
+            alert("تم إرسال الغيابات بنجاح ✅");
+        } else {
+            alert("فشل حفظ الغيابات ❌");
+        }
+
+    } catch(err){
+        hideLoader();
+        console.error("خطأ أثناء إرسال الغيابات:", err);
+        alert("حدث خطأ أثناء إرسال الغيابات ❌");
     }
-
-    const finalData = newLines.join("\n");
-
-    const success = await updateFile(CONFIG.New_Absented_File_ID, finalData);
-
-    hideLoader();
-
-    if(success){
-        alert("تم إرسال الغيابات بنجاح ✅");
-    }else{
-        alert("فشل حفظ الغيابات ❌");
-    }
-
 }
 
- //دالة updateFile التي ترسل البيانات إلى Google Apps Script 
-async function updateFile(fileId, content) {
+// ==================== إرسال التحديث إلى Google Apps Script ====================
+async function updateFile(fileId, content){
+    try {
+        const formData = new FormData();
+        formData.append("id", fileId);
+        formData.append("data", content);
 
-  try {
+        const response = await fetch(GAS_SCRIPT_URL, {
+            method: "POST",
+            body: formData
+        });
 
-    const formData = new FormData();
-    formData.append("id", fileId);
-    formData.append("data", content);
+        const result = await response.text();
+        console.log("رد السيرفر:", result);
 
-    const response = await fetch(GAS_SCRIPT_URL, {
-      method: "POST",
-      body: formData
-    });
+        return result.trim() === "OK";
 
-    const result = await response.text();
-
-    console.log("رد السيرفر:", result);
-
-    if (result.trim() === "OK") {
-      return true;
+    } catch (err){
+        console.error("فشل تحديث الملف:", err);
+        return false;
     }
-
-    return false;
-
-  } catch (err) {
-
-    console.error("فشل تحديث الملف:", err);
-    return false;
-
-  }
-
 }
-  
 // ==================== نهاية مودال إرسال الغيابات ====================
-
   
 // ==================== إغلاق مودال الحضور ====================
   document.getElementById("closeAttendanceModal").addEventListener("click", function(){
@@ -1383,6 +1324,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
