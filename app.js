@@ -1111,14 +1111,14 @@ function getCurrentSchoolHour(){
 
     const h = new Date().getHours();
 
-    if(h === 8) return 2;
-    if(h === 9) return 3;
-    if(h === 10) return 4;
-    if(h === 11) return 5;
-    if(h === 13) return 6;
-    if(h === 14) return 7;
-    if(h === 15) return 8;
-    if(h === 16) return 9;
+    if(h >= 8 && h < 9) return 2;
+    if(h >= 9 && h < 10) return 3;
+    if(h >= 10 && h < 11) return 4;
+    if(h >= 11 && h < 12) return 5;
+    if(h >= 13 && h < 14) return 6;
+    if(h >= 14 && h < 15) return 7;
+    if(h >= 15 && h < 16) return 8;
+    if(h >= 16 && h < 17) return 9;
 
     return null;
 }
@@ -1386,6 +1386,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
