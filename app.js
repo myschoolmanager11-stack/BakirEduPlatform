@@ -1181,15 +1181,17 @@ async function updateFile(fileId, content){
 
     try{
 
+        const payload = JSON.stringify({
+            id: fileId,
+            data: content
+        });
+
         const response = await fetch(GAS_SCRIPT_URL,{
             method: "POST",
             headers:{
-                "Content-Type":"application/json"
+                "Content-Type":"text/plain"
             },
-            body: JSON.stringify({
-                id: fileId,
-                data: content
-            })
+            body: payload
         });
 
         const result = await response.text();
@@ -1386,6 +1388,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
