@@ -52,7 +52,7 @@ const FILE_ITEMS = {
 //"قائمة التلاميذ الغائبون قبل اليوم": CONFIG.Old_Absented_File_ID,
 //"متابعة غيابات اليوم": CONFIG.New_Absented_File_ID,
 
-const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvXiyo83WcCCHYdxXUTDAEaMohUq9ocXi9VzMpCJKjr0wDBhd2OEQH1oKV9BwfXLLW/exec";
+const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwr7Kcghg690YedKv5StWfF2SgiMV1NUZDks4N_sPQUjY6XLZvuV80cCBMS3T-TqDu_/exec";
 
 let currentFileURL = null;
 let PASSWORDS = [];
@@ -1383,6 +1383,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
