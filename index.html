@@ -53,85 +53,28 @@
                 </select>
             </div>
 
-            <div id="studentBlock" style="display:none;">
-
+<div id="racordBlock" style="display:none;">
+    
     <div class="login-field">
-        <label>
-            إختر القسم و اسم ولقب التلميذ من القائمة 
-        </label>
+        <label>معرف المستخدم (Racord)</label>
 
-        <div class="student-row">
-              <select id="ClasseSelect">
-                <option value="">-- اختر لقسم --</option>
-            </select>
-            
-            <select id="studentSelect">
-                <option value="">-- اختر الاسم واللقب --</option>
-            </select>
-            
+        <div class="racord-row">
+
+            <input type="text" id="racordInput" placeholder="أدخل المعرف أو امسح QR">
+
+            <button id="scanQRBtn" class="qr-btn">
+                <span class="material-icons">qr_code_scanner</span>
+            </button>
+
         </div>
-
-        <div id="studentLoadingSpinner" class="mini-spinner" style="
-                 display:none; 
-                  margin-top:10px; 
-                  font-size:14px; 
-                 color:#ff0036;
-                    ">
-                  ⏳ يرجى الإنتضار جاري التحميل...
-               </div>
     </div>
 
 </div>
-            
-            <div id="schoolKeyBlock" style="display:none;">
-                <div class="login-field">
-                    <label>رمز المؤسسة الموحد</label>
-                    <input type="password" id="schoolKeyInput">
-                </div>
-                <button id="schoolKeyBtn" class="schoolKey-btn">
-                    <span class="material-icons btn-icon">arrow_forward</span>
-                    متابعة
-                </button>
-            </div>
 
-             
-            <div id="loadingSpinner" align="center" style="
-                 display:none; 
-                  margin-top:10px; 
-                  font-size:14px; 
-                 color:#ff0036;
-                    ">
-                  ⏳ يرجى الإنتضار جاري التحميل...
-               </div>
-
-            
-            <div id="employeeBlock" style="display:none;">
-                <div class="login-field">
-                    <label>اختر اسم ولقب الموظف</label>
-                    <select id="employeeSelect">
-                        <option value="">-- اختر الاسم واللقب --</option>
-                    </select>
-                </div>
-            </div>
-
-            <div id="authBlock" style="display:none;">
-                <div class="login-field">
-                    <label>كلمة المرور</label>
-                    <input type="password" id="loginPassword">
-                </div>
-            </div>
-
-            <button id="continueBtn" class="continue-btn" style="display:none;">
-                <span class="material-icons btn-icon">arrow_forward</span>
-                متابعة
-            </button>
-
-            <button id="loginBtn" class="login-btn" style="display:none;">
-                <span class="material-icons btn-icon">login</span>
-                تسجيل الدخول
-            </button>
-        </div>
-    </div>
+<button id="loginBtn" class="login-btn">
+    <span class="material-icons btn-icon">login</span>
+    تسجيل الدخول
+</button>
 
 <!-- ============= لوحة معاينة الملفات العامة ============ -->
 <div id="filePreviewPanel" class="file-preview-panel" style="display:none;">
