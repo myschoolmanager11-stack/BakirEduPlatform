@@ -61,6 +61,54 @@ let CLASSES = [];
 let STUDENTS = [];
 let EMPLOYEES = [];
 
+// ==================== دالة تحميل قوائم التلاميذ والاقسام والموظفين دفعة واحدة عند فتح الموقع ====================
+async function loadAllLists(){
+
+const classes = await fetchFile(CONFIG.ListeClasses_File_ID);
+const students = await fetchFile(CONFIG.ListeStudents_File_ID);
+const employees = await fetchFile(CONFIG.ListeEmployes_File_ID);
+
+if(classes) CLASSES = classes;
+
+if(students){
+
+STUDENTS = students.map(line=>{
+const p = line.split(";");
+
+return{
+name:p[0],
+classe:p[1],
+racord:p[2],
+email:p[3],
+correspondence:p[4],
+absence:p[5]
+};
+
+});
+
+}
+
+if(employees){
+
+EMPLOYEES = employees.map(line=>{
+const p = line.split(";");
+
+return{
+name:p[0],
+racord:p[1],
+profession:p[2],
+specialite:p[3],
+email:p[4]
+};
+
+});
+
+}
+
+console.log("تم تحميل القوائم");
+
+}
+
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", async function () {
 
@@ -127,53 +175,7 @@ function parseStudentLine(line) {
     };
 }
 
-// ==================== دالة تحميل قوائم التلاميذ والاقسام والموظفين دفعة واحدة عند فتح الموقع ====================
-async function loadAllLists(){
 
-const classes = await fetchFile(CONFIG.ListeClasses_File_ID);
-const students = await fetchFile(CONFIG.ListeStudents_File_ID);
-const employees = await fetchFile(CONFIG.ListeEmployes_File_ID);
-
-if(classes) CLASSES = classes;
-
-if(students){
-
-STUDENTS = students.map(line=>{
-const p = line.split(";");
-
-return{
-name:p[0],
-classe:p[1],
-racord:p[2],
-email:p[3],
-correspondence:p[4],
-absence:p[5]
-};
-
-});
-
-}
-
-if(employees){
-
-EMPLOYEES = employees.map(line=>{
-const p = line.split(";");
-
-return{
-name:p[0],
-racord:p[1],
-profession:p[2],
-specialite:p[3],
-email:p[4]
-};
-
-});
-
-}
-
-console.log("تم تحميل القوائم");
-
-}
 
 // ==================== تشغيل دالة تحميل القوائم ==================== 
  await loadAllLists();
@@ -1262,6 +1264,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
