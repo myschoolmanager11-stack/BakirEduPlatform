@@ -62,7 +62,7 @@ let STUDENTS = [];
 let EMPLOYEES = [];
 
 // ==================== DOCUMENT READY ====================
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
 
   // ߔՠتهيئة اسم المؤسسة والعنوان
 document.title = CONFIG.SchoolName;
@@ -462,22 +462,12 @@ function logout() {
 
     // إعادة الحقول للقيم الافتراضية
     userTypeSelect.value = "";
-    schoolKeyInput.value = "";
-    loginPassword.value = "";
-    employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-    studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-    classeSelect.innerHTML = '<option value="">-- اختر القسم --</option>';
-
+   
   loadClassesList();
   
     // إخفاء البلوكات
-    schoolKeyBlock.style.display =
-    employeeBlock.style.display =
-    authBlock.style.display =
-    continueBtn.style.display =
-    loginBtn.style.display =
-    studentBlock.style.display = "none";
-
+  loginBtn.style.display =
+ 
     // إغلاق أي معاينة مفتوحة
     document.getElementById("filePreviewPanel").style.display = "none";
 }
@@ -1272,6 +1262,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
