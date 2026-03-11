@@ -76,6 +76,7 @@ if (schoolNameElement) {
  // عناصر الصفحة
 const userTypeSelect = document.getElementById("userTypeSelect");
 const loginBtn = document.getElementById("loginBtn");
+const racordInput = document.getElementById("racordInput");
 
 const menuBtn = document.getElementById("menuBtn");
 const dropdownMenu = document.getElementById("dropdownMenu");
@@ -488,7 +489,7 @@ async function logout() {
     // إغلاق المعاينة
     document.getElementById("filePreviewPanel").style.display = "none";
 
-   racordInput.value = "";
+   if(racordInput) racordInput.value = "";
 
     // 🔹 إعادة تحميل القوائم
     await loadAllLists();
@@ -1284,6 +1285,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
