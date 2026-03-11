@@ -61,6 +61,75 @@ let CLASSES = [];
 let STUDENTS = [];
 let EMPLOYEES = [];
 
+// ==================== DOCUMENT READY ====================
+document.addEventListener("DOMContentLoaded", async function () {
+
+  // ߔՠتهيئة اسم المؤسسة والعنوان
+document.title = CONFIG.SchoolName;
+
+const schoolNameElement = document.getElementById("schoolName");
+if (schoolNameElement) {
+    schoolNameElement.textContent = CONFIG.SchoolName;
+}
+
+  
+ // عناصر الصفحة
+const userTypeSelect = document.getElementById("userTypeSelect");
+const loginBtn = document.getElementById("loginBtn");
+
+const menuBtn = document.getElementById("menuBtn");
+const dropdownMenu = document.getElementById("dropdownMenu");
+const welcomeText = document.getElementById("welcomeText");
+const itemDescription = document.getElementById("itemDescription");
+const loginModal = document.getElementById("loginModal");
+
+const oldAbsModal = document.getElementById("ModalOldAbsented");
+const oldAbsSelect = document.getElementById("oldAbsClassFilter");
+const oldAbsTableBody = document.querySelector("#oldAbsTable tbody");
+  
+const newAbsModal = document.getElementById("ModalNewAbsented");
+const newAbsSelect = document.getElementById("newAbsClassFilter");
+const newAbsTableBody = document.querySelector("#newAbsTable tbody");
+
+const sendAbsModal = document.getElementById("SendAbsentedModal");
+const sendAbsSelect = document.getElementById("sendAbsClassFilter");
+const sendAbsTableBody = document.querySelector("#sendAbsTable tbody");
+  
+function showLoader() { document.getElementById("globalLoader").style.display = "flex"; }
+function hideLoader() { document.getElementById("globalLoader").style.display = "none"; }
+
+// ==================== تحميل ملف من Google Drive ====================
+    async function fetchFile(fileId){
+
+        if(!fileId){
+            console.error("لم يتم تحديد ID الملف");
+            return null;
+        }
+
+        try{
+
+            const response = await fetch(`${GAS_SCRIPT_URL}?id=${fileId}`);
+
+            if(!response.ok){
+                throw new Error("فشل تحميل الملف");
+            }
+
+            const text = await response.text();
+
+            return text
+                .replace(/\r/g,"")
+                .split("\n")
+                .map(x => x.trim())
+                .filter(x => x);
+
+        }catch(err){
+
+            console.error("خطأ تحميل الملف:", err);
+            return null;
+        }
+    }
+
+
 // ==================== دالة تحميل قوائم التلاميذ والاقسام والموظفين دفعة واحدة عند فتح الموقع ====================
 async function loadAllLists(){
 
@@ -108,60 +177,11 @@ email:p[4]
 console.log("تم تحميل القوائم");
 
 }
+ 
+// ==================== تشغيل دالة تحميل القوائم ==================== 
+ await loadAllLists();
 
-// ==================== DOCUMENT READY ====================
-document.addEventListener("DOMContentLoaded", async function () {
-
-  // ߔՠتهيئة اسم المؤسسة والعنوان
-document.title = CONFIG.SchoolName;
-
-const schoolNameElement = document.getElementById("schoolName");
-if (schoolNameElement) {
-    schoolNameElement.textContent = CONFIG.SchoolName;
-}
-
-  
- // عناصر الصفحة
-const userTypeSelect = document.getElementById("userTypeSelect");
-const loginBtn = document.getElementById("loginBtn");
-
-const menuBtn = document.getElementById("menuBtn");
-const dropdownMenu = document.getElementById("dropdownMenu");
-const welcomeText = document.getElementById("welcomeText");
-const itemDescription = document.getElementById("itemDescription");
-const loginModal = document.getElementById("loginModal");
-
-const oldAbsModal = document.getElementById("ModalOldAbsented");
-const oldAbsSelect = document.getElementById("oldAbsClassFilter");
-const oldAbsTableBody = document.querySelector("#oldAbsTable tbody");
-  
-const newAbsModal = document.getElementById("ModalNewAbsented");
-const newAbsSelect = document.getElementById("newAbsClassFilter");
-const newAbsTableBody = document.querySelector("#newAbsTable tbody");
-
-const sendAbsModal = document.getElementById("SendAbsentedModal");
-const sendAbsSelect = document.getElementById("sendAbsClassFilter");
-const sendAbsTableBody = document.querySelector("#sendAbsTable tbody");
-  
-function showLoader() { document.getElementById("globalLoader").style.display = "flex"; }
-function hideLoader() { document.getElementById("globalLoader").style.display = "none"; }
-
-async function fetchFile(fileId) {
-    if(!fileId) {
-        console.error("خطأ: لم يتم تحديد ID الملف");
-        return null;
-    }
-    try {
-        const response = await fetch(`${GAS_SCRIPT_URL}?id=${fileId}`);
-        if(!response.ok) throw new Error("فشل تحميل الملف من Google Drive");
-        const text = await response.text();
-        return text.replace(/\r/g,"").split("\n").map(x=>x.trim()).filter(x=>x);
-    } catch(err) {
-        console.error(`خطأ في تحميل الملف ${fileId}:`, err);
-        return null;
-    }
-}
-
+   
 // تعريف parseStudentLine
 function parseStudentLine(line) {
     const parts = line.split(";");
@@ -175,10 +195,6 @@ function parseStudentLine(line) {
     };
 }
 
-
-
-// ==================== تشغيل دالة تحميل القوائم ==================== 
- await loadAllLists();
 
 // ==================== دالة حذف القائمة تلقائياً الساعة 23:00 (توقيت الجزائر) ====================
 function autoClearAbsList(){
@@ -1268,6 +1284,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
