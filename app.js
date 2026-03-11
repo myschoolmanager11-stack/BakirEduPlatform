@@ -1,6 +1,6 @@
 // ==================== CONFIGURATION ====================
 const CONFIG = {
-  "SchoolName": "متوسطة الشهيد بكير تركي محمد بن حسن (المدية)",
+   "SchoolName": "متوسطة الشهيد بكير تركي محمد بن حسن (المدية)",
   "SchoolAcadimi": "مديرية التربية لولاية المدية",
   "SchoolVille": "المدية",
   "SchoolDaira": "المدية",
@@ -10,30 +10,26 @@ const CONFIG = {
   "SchoolAdresse": "حي راس قلوش المدية",
   "SchoolMail": "YourMail@Gmail.com",
   "SchoolLink": "https://myschoolmanager11-stack.github.io/BakirEduPlatform/",
-  "SchoolKey": "4PWf9-2566",
-  "School_Folder_ID": "1Ssuf_-m5YsYHF3mTzjdVtFo3Uwaqvz63",
-  "Documents_Folder_ID": "1hP-4ftbTV77dpIwaTrivc9OyTQZSMCeH",
-  "Students_Correspondence_Folder_ID": "1xx9j7Q7QFO9veZidUh7V6KcwO-8itCit",
-  "Students_SijileAbsence_Folder_ID": "1deEuPZ2wrBSxZXVsuQk0GfTJJMzF5wNF",
-  "School_Key_File_ID": "1wk1lzlw8zXgPhY7dSIPPjdHHmBuwk0ES",
-  "School_Link_File_ID": "1a9dZfrsiGserk7lLAguyKh36JdAVaqQ9",
-  "ListeTeacher_File_ID": "1VvcCZUoev1vAXdfmpz82vR3_H-lawYbW",
-  "ListeSupervisory_File_ID": "1WsBoYuSyWfnUYc0jcnXLlfAxk25PqTez",
-  "ListeStudents_File_ID": "1aUnIX_m35Ecv1E5pPCOwGHD2HFVHjfE9",
-  "ListePrinsipal_File_ID": "1UUZwekfSqvNh8AToYewCnOMxJCYK0fAE",
-  "Listepointage_File_ID": "1ySVj-qn2SynSw_5Bel_DmlfJ2eHUUL2G",
-  "New_Absented_File_ID": "1i27h10X82CoZbLzSFN-tY6XX33rBtpZB",
-  "Old_Absented_File_ID": "14EBYTvZTC3CFsbOaczHMboF4jLPznqoq",
-  "Password_File_ID": "1zeB3n_vnIsuAcrK1PeHNHVTh7fjA35-o",
-  "ListeClasses_File_ID": "15RUQ04Sun3ZLMA8XsikFchmOr_ahkZ90",
-  "Reception_Schedule_File_ID": "1bDiBp-yGv9X2oyuQAfBxgt5oH31D581c",
-  "Weekly_Students_Timetable_File_ID": "1CkQD1aI8ePaE2fJkLxE4FRZoiYOaBhxJ",
-  "Teacher_Timetable_File_ID": "1jRDk8vg2E6AQWe8uKNEnI7wzdqKKrIVU",
-  "Exams_Calendar_File_ID": "1a01PmemEAk2e3hZ7HJsEDPjdPT4EZVuB",
-  "Students_Documents_File_ID": "1RFvL7QoDtJdGsQTSlBPVF1wuxKTL_ufq",
-  "Teacher_Documents_File_ID": "1SWXyB1InicaBT1vj_p6QIl578m97v2PI",
-  "Supervisory_Documents_File_ID": "1QaoANEXPc1bZFMyPLTUDlEgZLFNkx089",
-  "Announcements_File_ID": "1FLH_qbP7pU8TfaWXaNMwD3p1EI5nMacB"
+  "School_Folder_ID": "1cuyeNLPqmHFqAplo7Mli6mD19iIKGUvn",
+  "Documents_Folder_ID": "1GMXmfhACCJJiFmS6mArsJXkGpR5_pveF",
+  "Students_Correspondence_Folder_ID": "14EY69RLPilQViK1wHMiRdPIWjfwjvyJU",
+  "Students_SijileAbsence_Folder_ID": "1fAAAUuaYM3PQVxOGryE-LNysl1i8sr2w",
+  "School_Link_File_ID": "1XyUkPwOLh5NEQMVGLA4xNpCyhTBhMZET",
+  "ListeEmployes_File_ID": "18V2-ygGa-2YU8H9Wwmz4nj405V05WzI6",
+  "ListeStudents_File_ID": "1FCkMfjCv2Zu9Ze-IYFCjsHCi0wzz_wO-",
+  "ListePrinsipal_File_ID": "1uvikKOBX0m5LWHsug2NqvXovbDxT79sJ",
+  "Listepointage_File_ID": "1sVxtEjMWz-NmcmYuseuqCwW0g5gc-3Sg",
+  "New_Absented_File_ID": "1RvBprim6XQNL0sjs1knFVLzbXUDLJ40K",
+  "Old_Absented_File_ID": "1DsChj1ALWBTFPYadFLZ5hKFChAuR8eDi",
+  "ListeClasses_File_ID": "14maVM50gShGt3jcsQMCBrI-redHRsgcM",
+  "Reception_Schedule_File_ID": "1RZOTl96nfPmArfkFO0JWCHvrnluIOOaS",
+  "Weekly_Students_Timetable_File_ID": "1dXu8BS73vRSkiTYdd2F7r8ElaYG0FnNn",
+  "Teacher_Timetable_File_ID": "1Mj_9QB75pOT9UOfynoAg5BsyBfLbuvFd",
+  "Exams_Calendar_File_ID": "1qyVjA1e6ofDD7ihYpqZzXj11uOmbxYZ0",
+  "Students_Documents_File_ID": "1X6ed2ffC9CBQv-2jJ_VswWPmEU2akSFh",
+  "Teacher_Documents_File_ID": "11oZ7Aanyg-vh7k5JhZmo_74IAlyH2KmJ",
+  "Supervisory_Documents_File_ID": "1Cm7VwHWKMTTlFzzkaIgHcchXsbZzIC6N",
+  "Announcements_File_ID": "1MMma-29Y0S8-jH8ymPoDIXFgJOdzVo7R"
 };
 
 const FILE_ITEMS = {
@@ -55,13 +51,15 @@ const FILE_ITEMS = {
 const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwr7Kcghg690YedKv5StWfF2SgiMV1NUZDks4N_sPQUjY6XLZvuV80cCBMS3T-TqDu_/exec";
 
 let currentFileURL = null;
-let PASSWORDS = [];
-let SCHOOL_KEY = "";
 let STUDENTS_LIST = [];
 let parentData = null;
 let OLD_ABS_DATA = [];
 let NEW_ABS_DATA = [];
 let TEMP_SELECTED_ABS = [];
+
+let CLASSES = [];
+let STUDENTS = [];
+let EMPLOYEES = [];
 
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
@@ -1383,6 +1381,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
