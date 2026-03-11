@@ -472,6 +472,8 @@ async function logout() {
     // إغلاق المعاينة
     document.getElementById("filePreviewPanel").style.display = "none";
 
+   racordInput.value = "";
+
     // 🔹 إعادة تحميل القوائم
     await loadAllLists();
 }
@@ -1266,6 +1268,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
