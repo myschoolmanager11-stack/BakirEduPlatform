@@ -444,7 +444,7 @@ if(FILE_ITEMS[item.label]) {
   }
 
 // ==================== logout ====================
-function logout() {
+async function logout() {
 
     // إرجاع النص الترحيبي
     welcomeText.textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
@@ -462,16 +462,18 @@ function logout() {
     loginModal.style.display = "flex";
     loginModal.classList.remove("expanded");
 
-    // إعادة الحقول للقيم الافتراضية
+    // إعادة القيم الافتراضية
     userTypeSelect.value = "";
-   
-  loadClassesList();
-  
-    // إخفاء البلوكات
-  loginBtn.style.display =
- 
-    // إغلاق أي معاينة مفتوحة
+
+    // إخفاء حقل المعرف
+    document.getElementById("racordBlock").style.display = "none";
+    loginBtn.style.display = "none";
+
+    // إغلاق المعاينة
     document.getElementById("filePreviewPanel").style.display = "none";
+
+    // 🔹 إعادة تحميل القوائم
+    await loadAllLists();
 }
 
   window.toggleMenu = function () {
@@ -1264,6 +1266,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
