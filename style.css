@@ -84,10 +84,14 @@ h1, h2, h3 {
     backdrop-filter: blur(3px);
     position: fixed;
     inset: 0;
-       display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     z-index: 5000;
+}
+
+.modal.show{
+    display:flex;
 }
 
 .modal-content{
@@ -718,6 +722,7 @@ background:#0d5bb5;
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
 
 
 
