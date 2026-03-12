@@ -1,6 +1,6 @@
 // ==================== CONFIGURATION ====================
 const CONFIG = {
-   "SchoolName": "متوسطة الشهيد بكير تركي محمد بن حسن (المدية)",
+  "SchoolName": "متوسطة الشهيد بكير تركي محمد بن حسن (المدية)",
   "SchoolAcadimi": "مديرية التربية لولاية المدية",
   "SchoolVille": "المدية",
   "SchoolDaira": "المدية",
@@ -10,26 +10,25 @@ const CONFIG = {
   "SchoolAdresse": "حي راس قلوش المدية",
   "SchoolMail": "YourMail@Gmail.com",
   "SchoolLink": "https://myschoolmanager11-stack.github.io/BakirEduPlatform/",
-  "School_Folder_ID": "1cuyeNLPqmHFqAplo7Mli6mD19iIKGUvn",
-  "Documents_Folder_ID": "1GMXmfhACCJJiFmS6mArsJXkGpR5_pveF",
-  "Students_Correspondence_Folder_ID": "14EY69RLPilQViK1wHMiRdPIWjfwjvyJU",
-  "Students_SijileAbsence_Folder_ID": "1fAAAUuaYM3PQVxOGryE-LNysl1i8sr2w",
-  "School_Link_File_ID": "1XyUkPwOLh5NEQMVGLA4xNpCyhTBhMZET",
-  "ListeEmployes_File_ID": "18V2-ygGa-2YU8H9Wwmz4nj405V05WzI6",
-  "ListeStudents_File_ID": "1FCkMfjCv2Zu9Ze-IYFCjsHCi0wzz_wO-",
-  "ListePrinsipal_File_ID": "1uvikKOBX0m5LWHsug2NqvXovbDxT79sJ",
-  "Listepointage_File_ID": "1sVxtEjMWz-NmcmYuseuqCwW0g5gc-3Sg",
-  "New_Absented_File_ID": "1RvBprim6XQNL0sjs1knFVLzbXUDLJ40K",
-  "Old_Absented_File_ID": "1DsChj1ALWBTFPYadFLZ5hKFChAuR8eDi",
-  "ListeClasses_File_ID": "14maVM50gShGt3jcsQMCBrI-redHRsgcM",
-  "Reception_Schedule_File_ID": "1RZOTl96nfPmArfkFO0JWCHvrnluIOOaS",
-  "Weekly_Students_Timetable_File_ID": "1dXu8BS73vRSkiTYdd2F7r8ElaYG0FnNn",
-  "Teacher_Timetable_File_ID": "1Mj_9QB75pOT9UOfynoAg5BsyBfLbuvFd",
-  "Exams_Calendar_File_ID": "1qyVjA1e6ofDD7ihYpqZzXj11uOmbxYZ0",
-  "Students_Documents_File_ID": "1X6ed2ffC9CBQv-2jJ_VswWPmEU2akSFh",
-  "Teacher_Documents_File_ID": "11oZ7Aanyg-vh7k5JhZmo_74IAlyH2KmJ",
-  "Supervisory_Documents_File_ID": "1Cm7VwHWKMTTlFzzkaIgHcchXsbZzIC6N",
-  "Announcements_File_ID": "1MMma-29Y0S8-jH8ymPoDIXFgJOdzVo7R"
+  "School_Folder_ID": "1iqmZchNFiJwHnn4LjJ7dOXNgXIFQ4Cj7",
+  "Documents_Folder_ID": "1TBEijbXt1i6vyqcdWj3uXCRntjy-e8KZ",
+  "StudentsRecords_Folder_ID": "1HDhBF1FzRNwB6i_7VATF56FIYryyAHLD",
+  "School_Link_File_ID": "1-TftUoTRrmC8W0jtF2_-RaV7EfYCoUho",
+  "ListeEmployes_File_ID": "1wG9ArW9fbFYPPskfp4cKU93m8GrFGk0p",
+  "ListeStudents_File_ID": "1avXjSNQeQV6ioHDUQvVNkMzwSNAq5T72",
+  "ListePrinsipal_File_ID": "1qQPkLP7amjqf4dCj8eIHaa67KWeXCTgp",
+  "Listepointage_File_ID": "1XXDTfRgkzogEZ8m9O69A_3VX7IPrpnky",
+  "New_Absented_File_ID": "1TSmONeK8rDp0CtLZTpI4FQP-flkOAmeo",
+  "Old_Absented_File_ID": "1sAcwZkM8CyR0i9Qfn9wI5J1s8SpTs9Si",
+  "ListeClasses_File_ID": "1AgdjgS12iplpb8y7fCwZBoguH4sdqxS4",
+  "Reception_Schedule_File_ID": "18BnNgsGFAUvdYbjNZ3QoHB2foINI5G_I",
+  "Weekly_Students_Timetable_File_ID": "18CE8q0x1fYRRt1L9Y4UN2vu_pC9YUA3L",
+  "Teacher_Timetable_File_ID": "1wec_pBC2Mm91UZT6rHBMF2pxhLiV0w87",
+  "Exams_Calendar_File_ID": "1Wc4pio8qHa61I186XHt8gaMU-ErRTato",
+  "Students_Documents_File_ID": "1dsBX3CFD6fAIq38v5oUi6DrTD-R_pqM0",
+  "Teacher_Documents_File_ID": "187OaruCQ1owZTWKNucIBtuDiaKx217Fd",
+  "Supervisory_Documents_File_ID": "1T8m5ReF0jK0qhqMZfX8bUoqXb5oQcj6U",
+  "Announcements_File_ID": "1e5siiowQkqc66C2gFi9LzeGqkhXlNojq"
 };
 
 const FILE_ITEMS = {
@@ -1289,6 +1288,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
