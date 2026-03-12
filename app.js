@@ -192,6 +192,8 @@ hideLoader();
 // ==================== تشغيل دالة تحميل القوائم ==================== 
  await loadAllLists();
 
+loginModal.classList.add("show");
+
    
 // تعريف parseStudentLine
 function parseStudentLine(line) {
@@ -311,7 +313,7 @@ function openSession(type) {
 
     console.log("فتح الجلسة للمستخدم:", type);
 
-    document.getElementById("loginModal").style.display = "none";
+    document.getElementById("loginModal").classList.remove("show");
 
     localStorage.setItem("userType", type);
 
@@ -475,7 +477,7 @@ async function logout() {
     parentData = null;
 
     // إرجاع نافذة الدخول
-    loginModal.style.display = "flex";
+    loginModal.classList.add("show");
     loginModal.classList.remove("expanded");
 
     // إعادة القيم الافتراضية
@@ -1284,6 +1286,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
