@@ -59,6 +59,7 @@ let TEMP_SELECTED_ABS = [];
 let CLASSES = [];
 let STUDENTS = [];
 let EMPLOYEES = [];
+let LISTS_READY = false;
 
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", async function () {
@@ -177,6 +178,7 @@ email:p[4]
 
 }
 
+LISTS_READY = true;  
 console.log("تم تحميل القوائم");
 
 }
@@ -189,10 +191,16 @@ hideLoader();
 
 }
  
-// ==================== تشغيل دالة تحميل القوائم ==================== 
- await loadAllLists();
 
+// ==================== إظهار نافذة تسجيل الدخول فورًا ====================
 loginModal.classList.add("show");
+
+// ==================== تحميل القوائم في الخلفية ====================
+loadAllLists().then(() => {
+    console.log("تم تحميل القوائم بنجاح");
+}).catch(err=>{
+    console.error("خطأ تحميل القوائم:",err);
+});
 
    
 // تعريف parseStudentLine
@@ -269,6 +277,11 @@ loginBtn.style.display = "none";
 // ==================== تسجيل الدخول ====================
 loginBtn.addEventListener("click", function(){
 
+if(!LISTS_READY){
+alert("⏳ يرجى الانتظار قليلاً... جاري تحميل البيانات");
+return;
+}
+  
 const racord = document.getElementById("racordInput").value.trim();
 const type = userTypeSelect.value;
 
@@ -1286,6 +1299,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
