@@ -151,8 +151,7 @@ name:p[0],
 classe:p[1],
 racord:p[2],
 email:p[3],
-correspondence:p[4],
-absence:p[5]
+recordFile:p[4]
 };
 
 });
@@ -270,7 +269,7 @@ return;
 
 if(type === "parent"){
 
-const student = STUDENTS.find(s => s.racord === racord);
+const student = STUDENTS.find(s => s.racord.trim() === racord.trim());
 
 if(!student){
 alert("المعرف غير صحيح");
@@ -278,15 +277,14 @@ return;
 }
 
 localStorage.setItem("userName", student.name);
-localStorage.setItem("Correspondence_Fille_ID", student.correspondence);
-localStorage.setItem("SijileAbsence_Fille_ID", student.absence);
+localStorage.setItem("StudentRecords_Fille_ID", student.recordFile);
 
 openSession("parent");
 }
 
 else{
 
-const emp = EMPLOYEES.find(e => e.racord === racord);
+const emp = EMPLOYEES.find(e => e.racord.trim() === racord.trim());
 
 if(!emp){
 alert("المعرف غير صحيح");
@@ -332,8 +330,7 @@ function openSession(type) {
     const MENUS = {
       parent: [
         {icon:"people", label:"فضاء أولياء التلاميذ", desc:"مرحبا بكم في فضاء أولياء التلاميذ"},
-        {icon:"assignment", label:"سجل الغيابات", desc:"عرض سجل الغيابات الخاص بتلميذك"},
-        {icon:"mail", label:"سجل المراسلات الإدارية", desc:"عرض المراسلات الإدارية بين الإدارة وأولياء الأمور"},
+        {icon:"assignment", label:"سجل الغيابات و المراسلات الإدارية", desc:"عرض سجل الغيابات و المراسلات الإدارية الخاص بتلميذك"},
         {icon:"event", label:"جدول استقبال الأولياء", desc:"مواعيد استقبال الأولياء من قبل الإدارة"},
         {icon:"calendar_today", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"عرض التوقيت الأسبوعي للتلاميذ"},
         {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
@@ -415,19 +412,10 @@ function openSession(type) {
 
   if(item.icon === "logout") logout();
 
-if(item.label === "سجل الغيابات" && type === "parent"){
-const id = localStorage.getItem("SijileAbsence_Fille_ID");
+if(item.label === "سجل الغيابات و المراسلات الإدارية" && type === "parent"){
+const id = localStorage.getItem("StudentRecords_Fille_ID");
 if(id) openFilePreview(id);
 else alert("لم يتم العثور على الملف");
-    dropdownMenu.style.display = "none";
-    return;
-}
-
-if(item.label === "سجل المراسلات الإدارية" && type === "parent"){
-const id = localStorage.getItem("Correspondence_Fille_ID");
-if(id) openFilePreview(id);
-else alert("لم يتم العثور على الملف");
-  
     dropdownMenu.style.display = "none";
     return;
 }
@@ -1288,6 +1276,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
