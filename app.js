@@ -133,7 +133,9 @@ function hideLoader() { document.getElementById("globalLoader").style.display = 
 // ==================== دالة تحميل قوائم التلاميذ والاقسام والموظفين دفعة واحدة عند فتح الموقع ====================
 async function loadAllLists(){
 
-showLoader();   // 🔵 بدء التحميل
+showLoader();
+
+try{
 
 const classes = await fetchFile(CONFIG.ListeClasses_File_ID);
 const students = await fetchFile(CONFIG.ListeStudents_File_ID);
@@ -177,7 +179,13 @@ email:p[4]
 
 console.log("تم تحميل القوائم");
 
-hideLoader();   // 🟢 انتهاء التحميل
+}
+catch(err){
+console.error("خطأ تحميل القوائم:",err);
+}
+finally{
+hideLoader();
+}
 
 }
  
@@ -1276,6 +1284,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
