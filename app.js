@@ -221,7 +221,7 @@ hideLoader();
 
 // إظهار عناصر تسجيل الدخول
 
-racordBlock.style.display = "flex";
+racordBlock.style.display = "none";
   
 });
 
