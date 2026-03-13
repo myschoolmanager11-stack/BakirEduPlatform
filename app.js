@@ -130,6 +130,12 @@ function hideLoader() { document.getElementById("globalLoader").style.display = 
         }
     }
 
+//اختفاء المودالات عند logout
+function closeAllModals(){
+document.querySelectorAll(".modal").forEach(m=>{
+m.classList.remove("show");
+});
+}
   
 // ==================== دالة تحميل قوائم التلاميذ والاقسام والموظفين دفعة واحدة عند فتح الموقع ====================
 async function loadAllLists(){
@@ -427,7 +433,7 @@ function openSession(type) {
 
   // مودال نظام الحضور الذكي
   if(item.label === "نظام الحضور الذكي") {
-    document.getElementById("attendanceModal").style.display = "flex";
+    document.getElementById("attendanceModal").classList.add("show");
       dropdownMenu.style.display = "none";
     return;
 }
@@ -482,35 +488,32 @@ if(FILE_ITEMS[item.label]) {
 // ==================== logout ====================
 async function logout() {
 
-    // إرجاع النص الترحيبي
     welcomeText.textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
     itemDescription.textContent = "";
 
-    // إخفاء القائمة
     dropdownMenu.style.display = "none";
     menuBtn.disabled = true;
 
-    // حذف التخزين
     localStorage.clear();
     parentData = null;
 
-    // إرجاع نافذة الدخول
+    // إغلاق جميع المودالات
+    document.querySelectorAll(".modal").forEach(m=>{
+        m.classList.remove("show");
+    });
+
+    // إظهار نافذة الدخول
+    closeAllModals();
     loginModal.classList.add("show");
-    loginModal.classList.remove("expanded");
 
-    // إعادة القيم الافتراضية
     userTypeSelect.value = "";
-
-    // إخفاء حقل المعرف
     document.getElementById("racordBlock").style.display = "none";
     loginBtn.style.display = "none";
 
-    // إغلاق المعاينة
     document.getElementById("filePreviewPanel").style.display = "none";
 
-   if(racordInput) racordInput.value = "";
+    if(racordInput) racordInput.value = "";
 
-    // 🔹 إعادة تحميل القوائم
     await loadAllLists();
 }
 
@@ -1143,7 +1146,7 @@ async function updateFile(fileId, content) {
 
 if(closeAttendanceBtn){
 closeAttendanceBtn.addEventListener("click", function(){
-document.getElementById("attendanceModal").style.display = "none";
+document.getElementById("attendanceModal").classList.remove("show");
 });
 }
 
@@ -1316,6 +1319,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
