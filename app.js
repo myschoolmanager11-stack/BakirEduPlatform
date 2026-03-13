@@ -439,7 +439,7 @@ function openSession(type) {
 }
 
   if(item.icon === "call") {
-    document.getElementById("contactModal").style.display = "flex";
+   document.getElementById("contactModal").classList.add("show");
       dropdownMenu.style.display = "none";
     return;
 }
@@ -1320,6 +1320,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
