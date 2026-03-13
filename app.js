@@ -47,22 +47,19 @@ const FILE_ITEMS = {
 //"قائمة التلاميذ الغائبون قبل اليوم": CONFIG.Old_Absented_File_ID,
 //"متابعة غيابات اليوم": CONFIG.New_Absented_File_ID,
 
-const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwr7Kcghg690YedKv5StWfF2SgiMV1NUZDks4N_sPQUjY6XLZvuV80cCBMS3T-TqDu_/exec";
+const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvXiyo83WcCCHYdxXUTDAEaMohUq9ocXi9VzMpCJKjr0wDBhd2OEQH1oKV9BwfXLLW/exec";
 
 let currentFileURL = null;
+let PASSWORDS = [];
+let SCHOOL_KEY = "";
 let STUDENTS_LIST = [];
 let parentData = null;
 let OLD_ABS_DATA = [];
 let NEW_ABS_DATA = [];
 let TEMP_SELECTED_ABS = [];
 
-let CLASSES = [];
-let STUDENTS = [];
-let EMPLOYEES = [];
-let LISTS_READY = false;
-
 // ==================== DOCUMENT READY ====================
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", function () {
 
   // ߔՠتهيئة اسم المؤسسة والعنوان
 document.title = CONFIG.SchoolName;
@@ -75,14 +72,24 @@ if (schoolNameElement) {
   
  // عناصر الصفحة
 const userTypeSelect = document.getElementById("userTypeSelect");
+const employeeBlock = document.getElementById("employeeBlock");
+const employeeSelect = document.getElementById("employeeSelect");
+const authBlock = document.getElementById("authBlock");
+const continueBtn = document.getElementById("continueBtn");
 const loginBtn = document.getElementById("loginBtn");
-const racordInput = document.getElementById("racordInput");
+const loginPassword = document.getElementById("loginPassword");
+const schoolKeyBlock = document.getElementById("schoolKeyBlock");
+const schoolKeyInput = document.getElementById("schoolKeyInput");
+const studentBlock = document.getElementById("studentBlock");
+const studentSelect = document.getElementById("studentSelect");
+const classeSelect = document.getElementById("ClasseSelect");
 
 const menuBtn = document.getElementById("menuBtn");
 const dropdownMenu = document.getElementById("dropdownMenu");
 const welcomeText = document.getElementById("welcomeText");
 const itemDescription = document.getElementById("itemDescription");
 const loginModal = document.getElementById("loginModal");
+const schoolKeyBtn = document.getElementById("schoolKeyBtn");
 
 const oldAbsModal = document.getElementById("ModalOldAbsented");
 const oldAbsSelect = document.getElementById("oldAbsClassFilter");
@@ -99,116 +106,22 @@ const sendAbsTableBody = document.querySelector("#sendAbsTable tbody");
 function showLoader() { document.getElementById("globalLoader").style.display = "flex"; }
 function hideLoader() { document.getElementById("globalLoader").style.display = "none"; }
 
-// ==================== تحميل ملف من Google Drive ====================
-    async function fetchFile(fileId){
-
-        if(!fileId){
-            console.error("لم يتم تحديد ID الملف");
-            return null;
-        }
-
-        try{
-
-            const response = await fetch(`${GAS_SCRIPT_URL}?id=${fileId}`);
-
-            if(!response.ok){
-                throw new Error("فشل تحميل الملف");
-            }
-
-            const text = await response.text();
-
-            return text
-                .replace(/\r/g,"")
-                .split("\n")
-                .map(x => x.trim())
-                .filter(x => x);
-
-        }catch(err){
-
-            console.error("خطأ تحميل الملف:", err);
-            return null;
-        }
+async function fetchFile(fileId) {
+    if(!fileId) {
+        console.error("خطأ: لم يتم تحديد ID الملف");
+        return null;
     }
-
-//اختفاء المودالات عند logout
-function closeAllModals(){
-document.querySelectorAll(".modal").forEach(m=>{
-m.classList.remove("show");
-});
-}
-  
-// ==================== دالة تحميل قوائم التلاميذ والاقسام والموظفين دفعة واحدة عند فتح الموقع ====================
-async function loadAllLists(){
-
-showLoader();
-
-try{
-
-const classes = await fetchFile(CONFIG.ListeClasses_File_ID);
-const students = await fetchFile(CONFIG.ListeStudents_File_ID);
-const employees = await fetchFile(CONFIG.ListeEmployes_File_ID);
-
-if(classes) CLASSES = classes;
-
-if(students){
-
-STUDENTS = students.map(line=>{
-const p = line.split(";");
-
-return{
-name:p[0],
-classe:p[1],
-racord:p[2],
-email:p[3],
-recordFile:p[4]
-};
-
-});
-
+    try {
+        const response = await fetch(`${GAS_SCRIPT_URL}?id=${fileId}`);
+        if(!response.ok) throw new Error("فشل تحميل الملف من Google Drive");
+        const text = await response.text();
+        return text.replace(/\r/g,"").split("\n").map(x=>x.trim()).filter(x=>x);
+    } catch(err) {
+        console.error(`خطأ في تحميل الملف ${fileId}:`, err);
+        return null;
+    }
 }
 
-if(employees){
-
-EMPLOYEES = employees.map(line=>{
-const p = line.split(";");
-
-return{
-name:p[0],
-racord:p[1],
-profession:p[2],
-specialite:p[3],
-email:p[4]
-};
-
-});
-
-}
-
-LISTS_READY = true;  
-console.log("تم تحميل القوائم");
-
-}
-catch(err){
-console.error("خطأ تحميل القوائم:",err);
-}
-finally{
-hideLoader();
-}
-
-}
- 
-
-// ==================== إظهار نافذة تسجيل الدخول فورًا ====================
-loginModal.classList.add("show");
-
-// ==================== تحميل القوائم في الخلفية ====================
-loadAllLists().then(() => {
-    console.log("تم تحميل القوائم بنجاح");
-}).catch(err=>{
-    console.error("خطأ تحميل القوائم:",err);
-});
-
-   
 // تعريف parseStudentLine
 function parseStudentLine(line) {
     const parts = line.split(";");
@@ -221,7 +134,6 @@ function parseStudentLine(line) {
         absenceID: parts[4].trim()
     };
 }
-
 
 // ==================== دالة حذف القائمة تلقائياً الساعة 23:00 (توقيت الجزائر) ====================
 function autoClearAbsList(){
@@ -266,78 +178,218 @@ TEMP_SELECTED_ABS = JSON.parse(saved);
 }
   
 // ==================== تغيير نوع المستخدم ====================
-userTypeSelect.addEventListener("change", function(){
+userTypeSelect.addEventListener("change", async function () {
+    const type = this.value;
+    console.log("نوع المستخدم المختار:", type);
 
-const type = this.value;
+    // إخفاء جميع البلوكات أولاً
+    employeeBlock.style.display =
+    authBlock.style.display =
+    continueBtn.style.display =
+    loginBtn.style.display =
+    schoolKeyBlock.style.display =
+    studentBlock.style.display = "none";
 
-if(type){
-document.getElementById("racordBlock").style.display = "block";
-loginBtn.style.display = "flex";
-}else{
-document.getElementById("racordBlock").style.display = "none";
-loginBtn.style.display = "none";
+    if(type === "parent") {
+        studentBlock.style.display = "block";
+        loginBtn.style.display = "flex";
+        await loadClassesList();
+    } else if(type === "teacher" || type === "consultation") {
+        schoolKeyBlock.style.display = "block";
+    }
+});
+
+// ==================== تحميل قائمة الأقسام ====================
+async function loadClassesList() {
+    classeSelect.disabled = true;
+    classeSelect.innerHTML = `<option value="">-- يرجى الإنتظار... --</option>`;
+    showLoader();
+
+    const classes = await fetchFile(CONFIG.ListeClasses_File_ID);
+
+    if(classes) {
+        classeSelect.innerHTML = `<option value="">-- اختر القسم --</option><option value="all">كل الأقسام</option>`;
+        classes.forEach(c => classeSelect.innerHTML += `<option value="${c}">${c}</option>`);
+    } else {
+        classeSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل الأقسام</option>`;
+    }
+
+    classeSelect.disabled = false;
+    hideLoader();
 }
 
+// ==================== تغيير القسم ====================
+classeSelect.addEventListener("change", async function () {
+    const selectedClasse = this.value;
+    if(selectedClasse) await loadStudentsList(selectedClasse);
 });
+
+// ==================== تحميل قائمة الطلاب ====================
+async function loadStudentsList(selectedClasse = "all") {
+    showLoader();
+    studentSelect.disabled = true;
+    studentSelect.innerHTML = `<option value="">يرجى الإنتظار...</option>`;
+
+    const list = await fetchFile(CONFIG.ListeStudents_File_ID);
+    if(list) {
+        STUDENTS_LIST = list;
+        let filteredList = selectedClasse === "all" ? list : list.filter(line => line.split(";")[1].trim() === selectedClasse);
+        studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+        filteredList.forEach(line => {
+            const parts = line.split(";");
+            studentSelect.innerHTML += `<option value="${line}">${parts[0]}</option>`;
+        });
+    } else {
+        studentSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل القائمة</option>`;
+    }
+
+    studentSelect.disabled = false;
+    hideLoader();
+}
+
+// ==================== زر متابعة للولي ====================
+continueBtn.addEventListener("click", function () {
+    const selectedLine = studentSelect.value;
+    if(!selectedLine) return alert("اختر التلميذ من القائمة");
+
+    const data = parseStudentLine(selectedLine);
+    if(!data) return alert("خطأ في بيانات التلميذ المختار");
+
+    parentData = data;
+    localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
+    localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
+
+    openSession("parent");
+});
+
+// ==================== إدخال رمز المؤسسة ====================
+schoolKeyBtn.addEventListener("click", async function () {
+    if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
+
+    showLoader();
+    try {
+        const list = await fetchFile(CONFIG.School_Key_File_ID);
+        if(list && list.length>0) SCHOOL_KEY = list[0];
+
+       SCHOOL_KEY = (list && list.length > 0) ? list[0].trim() : CONFIG.SchoolKey;
+
+if(schoolKeyInput.value.trim() !== SCHOOL_KEY) {
+    hideLoader();
+    return alert("رمز المؤسسة غير صحيح");
+}
+
+        schoolKeyBlock.style.display = "none";
+        employeeBlock.style.display = "block";
+        await loadEmployeeList(userTypeSelect.value);
+        await loadPasswords();
+
+    } catch(err) {
+        console.error(err);
+        alert("حدث خطأ أثناء تحميل البيانات");
+    } finally {
+        hideLoader();
+    }
+});
+
+// ==================== تحميل الموظفين ====================
+async function loadEmployeeList(type){
+    showLoader();
+    const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
+    employeeSelect.disabled = true;
+    employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... </option>`;
+    const list = await fetchFile(fileId);
+    if(list){
+        employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+        list.forEach(line => {
+
+    const parts = line.split(";");
+    const teacherName = parts[0]?.trim() || "";
+    const branche = parts[1]?.trim() || "";
+
+    employeeSelect.innerHTML += 
+        `<option value="${teacherName}" data-branche="${branche}">
+            ${teacherName}
+        </option>`;
+});
+    } else {
+        employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
+    }
+    employeeSelect.disabled = false;
+    hideLoader();
+}
+
+  employeeSelect.addEventListener("change", function(){
+
+    if(this.value){
+        authBlock.style.display = "block";
+        loginBtn.style.display = "flex";
+    } else {
+        authBlock.style.display = "none";
+        loginBtn.style.display = "none";
+    }
+
+});
+  
+// ==================== تحميل كلمات المرور ====================
+async function loadPasswords(){
+    const list = await fetchFile(CONFIG.Password_File_ID);
+    if(list) PASSWORDS = list;
+}
 
 // ==================== تسجيل الدخول ====================
-loginBtn.addEventListener("click", function(){
+loginBtn.addEventListener("click", function() {
 
-if(!LISTS_READY){
-console.warn("القوائم لم تنته بعد");
-}
-  
-const racord = document.getElementById("racordInput").value.trim();
-const type = userTypeSelect.value;
+    // ===== دخول ولي =====
+    if(userTypeSelect.value === "parent") {
 
-if(!racord){
-alert("أدخل معرف المستخدم");
-return;
-}
+        const selectedLine = studentSelect.value;
+        if(!selectedLine) return alert("اختر التلميذ من القائمة");
 
-if(type === "parent"){
+        const data = parseStudentLine(selectedLine);
+        if(!data) return alert("خطأ في بيانات التلميذ المختار");
 
-const student = STUDENTS.find(s => s.racord.trim() === racord.trim());
+        parentData = data;
 
-if(!student){
-alert("المعرف غير صحيح");
-return;
-}
+        localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
+        localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
+        localStorage.setItem("userName", data.name);
 
-localStorage.setItem("userName", student.name);
-localStorage.setItem("StudentRecords_Fille_ID", student.recordFile);
+        openSession("parent");
+        return;
+    }
 
-openSession("parent");
-}
+    // ===== دخول موظف =====
+    if(!loginPassword.value) return alert("أدخل كلمة المرور");
 
-else{
+    showLoader();
 
-const emp = EMPLOYEES.find(e => e.racord.trim() === racord.trim());
+    setTimeout(() => {
 
-if(!emp){
-alert("المعرف غير صحيح");
-return;
-}
+        if(!PASSWORDS.includes(loginPassword.value)) {
+            hideLoader();
+            return alert("كلمة المرور غير صحيحة");
+        }
 
-localStorage.setItem("userName", emp.name);
+        const selectedOption = employeeSelect.options[employeeSelect.selectedIndex];
 
-let sessionType = type;
+        const teacherName = selectedOption.value;
+        const branche = selectedOption.getAttribute("data-branche") || "";
 
-if(type === "supervisor"){
-sessionType = "consultation";
-}
+        localStorage.setItem("userName", teacherName);
+        localStorage.setItem("Branche_Id", branche);
 
-openSession(sessionType);
-}
+        openSession(userTypeSelect.value);
+        hideLoader();
 
+    }, 300);
 });
-   
+
 // ==================== فتح الجلسة ====================
 function openSession(type) {
 
     console.log("فتح الجلسة للمستخدم:", type);
 
-    document.getElementById("loginModal").classList.remove("show");
+    document.getElementById("loginModal").style.display = "none";
 
     localStorage.setItem("userType", type);
 
@@ -364,7 +416,8 @@ function openSession(type) {
     const MENUS = {
       parent: [
         {icon:"people", label:"فضاء أولياء التلاميذ", desc:"مرحبا بكم في فضاء أولياء التلاميذ"},
-        {icon:"assignment", label:"سجل الغيابات و المراسلات الإدارية", desc:"عرض سجل الغيابات و المراسلات الإدارية الخاص بتلميذك"},
+        {icon:"assignment", label:"سجل الغيابات", desc:"عرض سجل الغيابات الخاص بتلميذك"},
+        {icon:"mail", label:"سجل المراسلات الإدارية", desc:"عرض المراسلات الإدارية بين الإدارة وأولياء الأمور"},
         {icon:"event", label:"جدول استقبال الأولياء", desc:"مواعيد استقبال الأولياء من قبل الإدارة"},
         {icon:"calendar_today", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"عرض التوقيت الأسبوعي للتلاميذ"},
         {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
@@ -433,23 +486,32 @@ function openSession(type) {
 
   // مودال نظام الحضور الذكي
   if(item.label === "نظام الحضور الذكي") {
-    document.getElementById("attendanceModal").classList.add("show");
+    document.getElementById("attendanceModal").style.display = "flex";
       dropdownMenu.style.display = "none";
     return;
 }
 
   if(item.icon === "call") {
-   document.getElementById("contactModal").classList.add("show");
+    document.getElementById("contactModal").style.display = "flex";
       dropdownMenu.style.display = "none";
     return;
 }
 
   if(item.icon === "logout") logout();
 
-if(item.label === "سجل الغيابات و المراسلات الإدارية" && type === "parent"){
-const id = localStorage.getItem("StudentRecords_Fille_ID");
+if(item.label === "سجل الغيابات" && type === "parent"){
+const id = localStorage.getItem("SijileAbsence_Fille_ID");
 if(id) openFilePreview(id);
 else alert("لم يتم العثور على الملف");
+    dropdownMenu.style.display = "none";
+    return;
+}
+
+if(item.label === "سجل المراسلات الإدارية" && type === "parent"){
+const id = localStorage.getItem("Correspondence_Fille_ID");
+if(id) openFilePreview(id);
+else alert("لم يتم العثور على الملف");
+  
     dropdownMenu.style.display = "none";
     return;
 }
@@ -486,35 +548,44 @@ if(FILE_ITEMS[item.label]) {
   }
 
 // ==================== logout ====================
-async function logout() {
+function logout() {
 
+    // إرجاع النص الترحيبي
     welcomeText.textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
     itemDescription.textContent = "";
 
+    // إخفاء القائمة
     dropdownMenu.style.display = "none";
     menuBtn.disabled = true;
 
+    // حذف التخزين
     localStorage.clear();
     parentData = null;
 
-    // إغلاق جميع المودالات
-    document.querySelectorAll(".modal").forEach(m=>{
-        m.classList.remove("show");
-    });
+    // إرجاع نافذة الدخول
+    loginModal.style.display = "flex";
+    loginModal.classList.remove("expanded");
 
-    // إظهار نافذة الدخول
-    closeAllModals();
-    loginModal.classList.add("show");
-
+    // إعادة الحقول للقيم الافتراضية
     userTypeSelect.value = "";
-    document.getElementById("racordBlock").style.display = "none";
-    loginBtn.style.display = "none";
+    schoolKeyInput.value = "";
+    loginPassword.value = "";
+    employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+    studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
+    classeSelect.innerHTML = '<option value="">-- اختر القسم --</option>';
 
+  loadClassesList();
+  
+    // إخفاء البلوكات
+    schoolKeyBlock.style.display =
+    employeeBlock.style.display =
+    authBlock.style.display =
+    continueBtn.style.display =
+    loginBtn.style.display =
+    studentBlock.style.display = "none";
+
+    // إغلاق أي معاينة مفتوحة
     document.getElementById("filePreviewPanel").style.display = "none";
-
-    if(racordInput) racordInput.value = "";
-
-    await loadAllLists();
 }
 
   window.toggleMenu = function () {
@@ -810,8 +881,7 @@ newAbsSelect.addEventListener("change", function(){
 // ==================== فتح مودال إرسال الغيابات ====================
 window.openSendAbsentedModal = async function(){
 
-   sendAbsModal.classList.add("show");
-
+    sendAbsModal.classList.add("show");
     showLoader();
 
     sendAbsSelect.innerHTML = `<option value="">-- جاري التحميل... --</option>`;
@@ -849,8 +919,7 @@ window.openSendAbsentedModal = async function(){
 
 // ==================== غلق المودال ====================
 window.closeSendAbsentedModal = function(){
- sendAbsModal.classList.remove("show");
- 
+    sendAbsModal.classList.remove("show");
 };
 
 
@@ -970,11 +1039,8 @@ sendAbsSelect.addEventListener("change", function(){
 });
 
 // ==================== ربط زر الإرسال ====================
-const sendBtn = document.getElementById("SendAbsenceBtn");
-
-if(sendBtn){
-sendBtn.addEventListener("click", SendAbsence);
-}
+document.getElementById("SendAbsenceBtn")
+.addEventListener("click", SendAbsence);
   
 // ==================== حفظ التحديد عند تغيير checkbox ====================
 sendAbsTableBody.addEventListener("change", function(e){
@@ -1142,13 +1208,9 @@ async function updateFile(fileId, content) {
 
   
 // ==================== إغلاق مودال الحضور ====================
-  const closeAttendanceBtn = document.getElementById("closeAttendanceModal");
-
-if(closeAttendanceBtn){
-closeAttendanceBtn.addEventListener("click", function(){
-document.getElementById("attendanceModal").classList.remove("show");
-});
-}
+  document.getElementById("closeAttendanceModal").addEventListener("click", function(){
+      document.getElementById("attendanceModal").style.display = "none";
+  });
 
 });
 
@@ -1191,12 +1253,8 @@ function openFilePreview(fileId) {
 }
 
 // ==================== تفعيل عناصر المعاينة بعد تحميل الصفحة ====================
-const panel = document.getElementById("filePreviewPanel");
-const header = panel ? panel.querySelector(".preview-header") : null;
-
-if(header){
-    header.addEventListener("mousedown", startDrag);
-}
+  const panel = document.getElementById("filePreviewPanel");
+  const header = panel.querySelector(".preview-header");
 
   const previewClose = document.getElementById("previewClose");
   const previewDownload = document.getElementById("previewDownload");
@@ -1320,34 +1378,5 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
