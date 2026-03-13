@@ -10,25 +10,26 @@ const CONFIG = {
   "SchoolAdresse": "حي راس قلوش المدية",
   "SchoolMail": "YourMail@Gmail.com",
   "SchoolLink": "https://myschoolmanager11-stack.github.io/BakirEduPlatform/",
-  "School_Folder_ID": "1iqmZchNFiJwHnn4LjJ7dOXNgXIFQ4Cj7",
-  "Documents_Folder_ID": "1TBEijbXt1i6vyqcdWj3uXCRntjy-e8KZ",
-  "StudentsRecords_Folder_ID": "1HDhBF1FzRNwB6i_7VATF56FIYryyAHLD",
-  "School_Link_File_ID": "1-TftUoTRrmC8W0jtF2_-RaV7EfYCoUho",
-  "ListeEmployes_File_ID": "1wG9ArW9fbFYPPskfp4cKU93m8GrFGk0p",
-  "ListeStudents_File_ID": "1avXjSNQeQV6ioHDUQvVNkMzwSNAq5T72",
-  "ListePrinsipal_File_ID": "1qQPkLP7amjqf4dCj8eIHaa67KWeXCTgp",
-  "Listepointage_File_ID": "1XXDTfRgkzogEZ8m9O69A_3VX7IPrpnky",
-  "New_Absented_File_ID": "1TSmONeK8rDp0CtLZTpI4FQP-flkOAmeo",
-  "Old_Absented_File_ID": "1sAcwZkM8CyR0i9Qfn9wI5J1s8SpTs9Si",
-  "ListeClasses_File_ID": "1AgdjgS12iplpb8y7fCwZBoguH4sdqxS4",
-  "Reception_Schedule_File_ID": "18BnNgsGFAUvdYbjNZ3QoHB2foINI5G_I",
-  "Weekly_Students_Timetable_File_ID": "18CE8q0x1fYRRt1L9Y4UN2vu_pC9YUA3L",
-  "Teacher_Timetable_File_ID": "1wec_pBC2Mm91UZT6rHBMF2pxhLiV0w87",
-  "Exams_Calendar_File_ID": "1Wc4pio8qHa61I186XHt8gaMU-ErRTato",
-  "Students_Documents_File_ID": "1dsBX3CFD6fAIq38v5oUi6DrTD-R_pqM0",
-  "Teacher_Documents_File_ID": "187OaruCQ1owZTWKNucIBtuDiaKx217Fd",
-  "Supervisory_Documents_File_ID": "1T8m5ReF0jK0qhqMZfX8bUoqXb5oQcj6U",
-  "Announcements_File_ID": "1e5siiowQkqc66C2gFi9LzeGqkhXlNojq"
+  "School_Folder_ID": "1hW9f6QDQMFHTKpH8fI4wVM9subzojh-T",
+  "Documents_Folder_ID": "1Mhsx0yQJX3iooQ1s9yBCYvI7BDJ7p5x9",
+  "StudentsRecords_Folder_ID": "16JpBwOj_7iEF-CNdHwwpEW2S9p-IE0yh",
+  "School_Link_File_ID": "1DTW9n3-TggYOa0XcNdzRv8t1hSEvTcCW",
+  "ListeTeacher_File_ID": "1rjAcUud3-tgFUpJQiAN3RQuvZHSrvat5",
+  "ListeSupervisory_File_ID": "16DGPMRjpKE_55OeEXy68gve98sKhE5B4",
+  "ListeStudents_File_ID": "1uAYXlQGQOjdbY0FB2MWSR80VTCCo5fn_",
+  "ListePrinsipal_File_ID": "1Cg_lvQ-VvaT8UxS0p4obldKnYTC4yzsQ",
+  "Listepointage_File_ID": "1Oz7Ps0c-P47hz1V0lohhKaN2w4brwMyq",
+  "New_Absented_File_ID": "10ci-EC2rEKBikLOsXjE1Dr_j6OU8Pbpx",
+  "Old_Absented_File_ID": "1dNoGk6DUSlxFz8ptOY2MxgxsW0QjDgWL",
+  "ListeClasses_File_ID": "1yXIUX9rM6ILw8QnX4YtOTjyHenEpFRM-",
+  "Reception_Schedule_File_ID": "15IqM59K107ZcpoGxKOkQAHBA24-4RgAS",
+  "Weekly_Students_Timetable_File_ID": "1Lm9eHzneBtaScPTH1v0PwYsH3PKZwJBO",
+  "Teacher_Timetable_File_ID": "1h6zUDZReva03nI8uRz3Hh11eVCqzJp3y",
+  "Exams_Calendar_File_ID": "1Qb3CXV_4NnQSL04EJFi7OjCIa73F_z8z",
+  "Students_Documents_File_ID": "1fhsmmLCp2o5sG3R-5nrBaHLIDZ5IvXDa",
+  "Teacher_Documents_File_ID": "1c8igqdJAJerlqnT_Yni_C8PKd6B8WPBo",
+  "Supervisory_Documents_File_ID": "11Oe0DHFRzE-Ykptl_Q9T0peUVP3kS_s5",
+  "Announcements_File_ID": "1fdhianG-OnDNRAsa1gEzBgESHM1OStB_"
 };
 
 const FILE_ITEMS = {
@@ -49,7 +50,6 @@ const FILE_ITEMS = {
 
 const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvXiyo83WcCCHYdxXUTDAEaMohUq9ocXi9VzMpCJKjr0wDBhd2OEQH1oKV9BwfXLLW/exec";
 
-let currentFileURL = null;
 let OLD_ABS_DATA = [];
 let NEW_ABS_DATA = [];
 let TEMP_SELECTED_ABS = [];
@@ -73,18 +73,7 @@ if (schoolNameElement) {
   
  // عناصر الصفحة
 const userTypeSelect = document.getElementById("userTypeSelect");
-const employeeBlock = document.getElementById("employeeBlock");
-const employeeSelect = document.getElementById("employeeSelect");
-const authBlock = document.getElementById("authBlock");
-const continueBtn = document.getElementById("continueBtn");
 const loginBtn = document.getElementById("loginBtn");
-const loginPassword = document.getElementById("loginPassword");
-const schoolKeyBlock = document.getElementById("schoolKeyBlock");
-const schoolKeyInput = document.getElementById("schoolKeyInput");
-const studentBlock = document.getElementById("studentBlock");
-const studentSelect = document.getElementById("studentSelect");
-const classeSelect = document.getElementById("ClasseSelect");
-
 const menuBtn = document.getElementById("menuBtn");
 const dropdownMenu = document.getElementById("dropdownMenu");
 const welcomeText = document.getElementById("welcomeText");
@@ -331,30 +320,14 @@ function logout() {
 
     // حذف التخزين
     localStorage.clear();
-    parentData = null;
-
+ 
     // إرجاع نافذة الدخول
     loginModal.style.display = "flex";
     loginModal.classList.remove("expanded");
 
     // إعادة الحقول للقيم الافتراضية
     userTypeSelect.value = "";
-    schoolKeyInput.value = "";
-    loginPassword.value = "";
-    employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-    studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-    classeSelect.innerHTML = '<option value="">-- اختر القسم --</option>';
-
-  loadClassesList();
   
-    // إخفاء البلوكات
-    schoolKeyBlock.style.display =
-    employeeBlock.style.display =
-    authBlock.style.display =
-    continueBtn.style.display =
-    loginBtn.style.display =
-    studentBlock.style.display = "none";
-
     // إغلاق أي معاينة مفتوحة
     document.getElementById("filePreviewPanel").style.display = "none";
 }
@@ -666,9 +639,6 @@ window.openSendAbsentedModal = async function(){
         sendAbsSelect.innerHTML = `<option value="">تعذر تحميل البيانات</option>`;
         return;
     }
-
-    // حفظ القائمة
-    STUDENTS_LIST = list;
 
     // تحميل الأقسام
     const classes = await fetchFile(CONFIG.ListeClasses_File_ID);
