@@ -130,20 +130,6 @@ function hideLoader() { document.getElementById("globalLoader").style.display = 
         }
     }
 
-//دوال موحدة لفتح وإغلاق أي مودال
-function openModal(id){
-const modal = document.getElementById(id);
-if(modal){
-modal.classList.add("show");
-}
-}
-
-function closeModal(id){
-const modal = document.getElementById(id);
-if(modal){
-modal.classList.remove("show");
-}
-}
   
 // ==================== دالة تحميل قوائم التلاميذ والاقسام والموظفين دفعة واحدة عند فتح الموقع ====================
 async function loadAllLists(){
@@ -816,8 +802,8 @@ newAbsSelect.addEventListener("change", function(){
 // ==================== فتح مودال إرسال الغيابات ====================
 window.openSendAbsentedModal = async function(){
 
-   // sendAbsModal.classList.add("show");
-  openModal("sendAbsModal");
+   sendAbsModal.classList.add("show");
+
     showLoader();
 
     sendAbsSelect.innerHTML = `<option value="">-- جاري التحميل... --</option>`;
@@ -855,8 +841,8 @@ window.openSendAbsentedModal = async function(){
 
 // ==================== غلق المودال ====================
 window.closeSendAbsentedModal = function(){
-   // sendAbsModal.classList.remove("show");
-  closeModal("sendAbsModal");
+ sendAbsModal.classList.remove("show");
+ 
 };
 
 
@@ -1315,6 +1301,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
