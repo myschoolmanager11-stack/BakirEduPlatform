@@ -220,8 +220,6 @@ alert("تعذر تحميل قائمة المستخدمين");
 hideLoader();
 
 // إظهار عناصر تسجيل الدخول
-
-// إظهار عناصر تسجيل الدخول
 racordBlock.style.display = "flex";
 racordInput.value = "";
 racordInput.focus();
