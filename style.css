@@ -327,7 +327,7 @@ h1, h2, h3 {
 
 .scanner-panel {
     width: 100%;
-    height: 300px;
+    height: 340px;
     border: 2px dashed #0197c3;
     border-radius: 12px;
     display: flex;
