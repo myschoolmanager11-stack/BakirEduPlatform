@@ -962,8 +962,11 @@ sendAbsSelect.addEventListener("change", function(){
 });
 
 // ==================== ربط زر الإرسال ====================
-document.getElementById("SendAbsenceBtn")
-.addEventListener("click", SendAbsence);
+const sendBtn = document.getElementById("SendAbsenceBtn");
+
+if(sendBtn){
+sendBtn.addEventListener("click", SendAbsence);
+}
   
 // ==================== حفظ التحديد عند تغيير checkbox ====================
 sendAbsTableBody.addEventListener("change", function(e){
@@ -1131,9 +1134,13 @@ async function updateFile(fileId, content) {
 
   
 // ==================== إغلاق مودال الحضور ====================
-  document.getElementById("closeAttendanceModal").addEventListener("click", function(){
-      document.getElementById("attendanceModal").style.display = "none";
-  });
+  const closeAttendanceBtn = document.getElementById("closeAttendanceModal");
+
+if(closeAttendanceBtn){
+closeAttendanceBtn.addEventListener("click", function(){
+document.getElementById("attendanceModal").style.display = "none";
+});
+}
 
 });
 
@@ -1301,6 +1308,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
