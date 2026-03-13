@@ -61,21 +61,8 @@ let usersSupervisory = [];
 
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
-  
-  // ߔՠتهيئة اسم المؤسسة والعنوان
-document.title = CONFIG.SchoolName;
 
-racordInput.style.display = "none";
-scanQRBtn.style.display = "none";
-loginBtn.style.display = "none";
-  
-const schoolNameElement = document.getElementById("schoolName");
-if (schoolNameElement) {
-    schoolNameElement.textContent = CONFIG.SchoolName;
-}
-
-  
- // عناصر الصفحة
+   // عناصر الصفحة
 const userTypeSelect = document.getElementById("userTypeSelect");
 const racordInput = document.getElementById("racordInput");
 const scanQRBtn = document.getElementById("scanQRBtn");
@@ -99,6 +86,19 @@ const newAbsTableBody = document.querySelector("#newAbsTable tbody");
 const sendAbsModal = document.getElementById("SendAbsentedModal");
 const sendAbsSelect = document.getElementById("sendAbsClassFilter");
 const sendAbsTableBody = document.querySelector("#sendAbsTable tbody");
+const schoolNameElement = document.getElementById("schoolName");
+  
+  // ߔՠتهيئة اسم المؤسسة والعنوان
+document.title = CONFIG.SchoolName;
+
+racordInput.style.display = "none";
+scanQRBtn.style.display = "none";
+loginBtn.style.display = "none";
+  
+
+if (schoolNameElement) {
+    schoolNameElement.textContent = CONFIG.SchoolName;
+}
   
 function showLoader() { document.getElementById("globalLoader").style.display = "flex"; }
 function hideLoader() { document.getElementById("globalLoader").style.display = "none"; }
