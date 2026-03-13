@@ -53,28 +53,85 @@
                 </select>
             </div>
 
-<div id="racordBlock" style="display:none;">
-    
+            <div id="studentBlock" style="display:none;">
+
     <div class="login-field">
-        <label>معرف المستخدم</label>
+        <label>
+            إختر القسم و اسم ولقب التلميذ من القائمة 
+        </label>
 
-        <div class="racord-row">
-
-            <input type="text" id="racordInput" placeholder="أدخل المعرف أو امسح QR">
-
-            <button class="preview-btn" id="scanQRBtn" title="إمسح الكود بار الموجود في القصاصة">
-             <span class="material-icons">qr_code_scanner</span>
-            </button>
-
+        <div class="student-row">
+              <select id="ClasseSelect">
+                <option value="">-- اختر لقسم --</option>
+            </select>
+            
+            <select id="studentSelect">
+                <option value="">-- اختر الاسم واللقب --</option>
+            </select>
+            
         </div>
+
+        <div id="studentLoadingSpinner" class="mini-spinner" style="
+                 display:none; 
+                  margin-top:10px; 
+                  font-size:14px; 
+                 color:#ff0036;
+                    ">
+                  ⏳ يرجى الإنتضار جاري التحميل...
+               </div>
     </div>
 
 </div>
+            
+            <div id="schoolKeyBlock" style="display:none;">
+                <div class="login-field">
+                    <label>رمز المؤسسة الموحد</label>
+                    <input type="password" id="schoolKeyInput">
+                </div>
+                <button id="schoolKeyBtn" class="schoolKey-btn">
+                    <span class="material-icons btn-icon">arrow_forward</span>
+                    متابعة
+                </button>
+            </div>
 
-<button id="loginBtn" class="login-btn" style="display:none;">
-    <span class="material-icons btn-icon">login</span>
-    تسجيل الدخول
-</button>
+             
+            <div id="loadingSpinner" align="center" style="
+                 display:none; 
+                  margin-top:10px; 
+                  font-size:14px; 
+                 color:#ff0036;
+                    ">
+                  ⏳ يرجى الإنتضار جاري التحميل...
+               </div>
+
+            
+            <div id="employeeBlock" style="display:none;">
+                <div class="login-field">
+                    <label>اختر اسم ولقب الموظف</label>
+                    <select id="employeeSelect">
+                        <option value="">-- اختر الاسم واللقب --</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="authBlock" style="display:none;">
+                <div class="login-field">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="loginPassword">
+                </div>
+            </div>
+
+            <button id="continueBtn" class="continue-btn" style="display:none;">
+                <span class="material-icons btn-icon">arrow_forward</span>
+                متابعة
+            </button>
+
+            <button id="loginBtn" class="login-btn" style="display:none;">
+                <span class="material-icons btn-icon">login</span>
+                تسجيل الدخول
+            </button>
+        </div>
+    </div>
 
 <!-- ============= لوحة معاينة الملفات العامة ============ -->
 <div id="filePreviewPanel" class="file-preview-panel" style="display:none;">
@@ -179,7 +236,7 @@
     </div>
 </div>
   <div id="globalLoader" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:9999;">
-  <div style="color:white;font-size:20px;">⏳ جاري تحميل البيانات...</div>
+  <div style="color:white;font-size:20px;">يرجى الانتظار...</div>
 </div>
 
 <!-- مدال استعراض قائمة التلاميذ الغائبين قبل اليوم --> 
