@@ -1191,10 +1191,11 @@ function openFilePreview(fileId) {
 }
 
 // ==================== تفعيل عناصر المعاينة بعد تحميل الصفحة ====================
-  const panel = document.getElementById("filePreviewPanel");
+const panel = document.getElementById("filePreviewPanel");
+const header = panel ? panel.querySelector(".preview-header") : null;
 
-if(panel){
-const header = panel.querySelector(".preview-header");
+if(header){
+    header.addEventListener("mousedown", startDrag);
 }
 
   const previewClose = document.getElementById("previewClose");
@@ -1319,6 +1320,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
