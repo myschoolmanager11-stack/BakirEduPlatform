@@ -65,6 +65,10 @@ document.addEventListener("DOMContentLoaded", function () {
   // ߔՠتهيئة اسم المؤسسة والعنوان
 document.title = CONFIG.SchoolName;
 
+racordInput.style.display = "none";
+scanQRBtn.style.display = "none";
+loginBtn.style.display = "none";
+  
 const schoolNameElement = document.getElementById("schoolName");
 if (schoolNameElement) {
     schoolNameElement.textContent = CONFIG.SchoolName;
@@ -215,6 +219,11 @@ alert("تعذر تحميل قائمة المستخدمين");
 }
 
 hideLoader();
+
+// إظهار عناصر تسجيل الدخول
+racordInput.style.display = "block";
+scanQRBtn.style.display = "inline-block";
+loginBtn.style.display = "inline-block";
 
 });
 
@@ -904,11 +913,9 @@ sendAbsSelect.addEventListener("change", function(){
     // ==================== عرض التلاميذ ====================
     filtered.forEach((line, index)=>{
 
-        const p = line.split(";");
-
-        const name = p[0]?.trim() || "";
-        const classe = p[1]?.trim() || "";
-        const record = p[2]?.trim();
+const name = student.name;
+const classe = student.classe;
+const record = student.record;
 
         const tr = document.createElement("tr");
 
