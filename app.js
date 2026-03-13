@@ -92,9 +92,27 @@ const schoolNameElement = document.getElementById("schoolName");
   // ߔՠتهيئة اسم المؤسسة والعنوان
 document.title = CONFIG.SchoolName;
 
-racordBlock.style.display = "none";
-  
+/* اظهار نافذة تسجيل الدخول */
+loginModal.classList.add("show");
 
+/* عند اختيار نوع المستخدم */
+userTypeSelect.addEventListener("change", function(){
+
+    if(this.value !== ""){
+        racordBlock.style.display = "block";
+        scanQRBtn.style.display = "inline-flex";
+        loginBtn.style.display = "flex";
+    }else{
+        racordBlock.style.display = "none";
+        scanQRBtn.style.display = "none";
+        loginBtn.style.display = "none";
+    }
+
+});
+
+});
+
+  
 if (schoolNameElement) {
     schoolNameElement.textContent = CONFIG.SchoolName;
 }
