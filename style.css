@@ -118,9 +118,13 @@ z-index: 2000;
     border-radius:10px;
    }
 
-.login-btn,
-.schoolKey-btn,
-.continue-btn,
+.login-btn{
+height:38px;
+width:auto;
+padding:0 14px;
+}
+
+
 .contactSend-btn,
 .Attendance-btn {
 
@@ -145,8 +149,6 @@ z-index: 2000;
 }
 
 .login-btn:hover,
-.schoolKey-btn:hover,
-.continue-btn:hover,
 .contactSend-btn:hover,
 .Attendance-btn:hover{
 
