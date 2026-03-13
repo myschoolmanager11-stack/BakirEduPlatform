@@ -278,8 +278,7 @@ loginBtn.style.display = "none";
 loginBtn.addEventListener("click", function(){
 
 if(!LISTS_READY){
-alert("⏳ يرجى الانتظار قليلاً... جاري تحميل البيانات");
-return;
+console.warn("القوائم لم تنته بعد");
 }
   
 const racord = document.getElementById("racordInput").value.trim();
@@ -1190,7 +1189,10 @@ function openFilePreview(fileId) {
 
 // ==================== تفعيل عناصر المعاينة بعد تحميل الصفحة ====================
   const panel = document.getElementById("filePreviewPanel");
-  const header = panel.querySelector(".preview-header");
+
+if(panel){
+const header = panel.querySelector(".preview-header");
+}
 
   const previewClose = document.getElementById("previewClose");
   const previewDownload = document.getElementById("previewDownload");
@@ -1314,6 +1316,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
