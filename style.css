@@ -703,9 +703,7 @@ background:#0d5bb5;
 }
 
 #racordBlock{
-display:flex;
 gap:8px;
-align-items:center;
 }
 
 #racordInput{
