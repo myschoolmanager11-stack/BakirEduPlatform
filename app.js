@@ -220,10 +220,8 @@ alert("تعذر تحميل قائمة المستخدمين");
 hideLoader();
 
 // إظهار عناصر تسجيل الدخول
-//racordInput.style.display = "block";
-//scanQRBtn.style.display = "inline-block";
-//loginBtn.style.display = "inline-block";
-racordBlock.style.display = "block";
+
+racordBlock.style.display = "flex";
   
 });
 
@@ -478,26 +476,27 @@ if(FILE_ITEMS[item.label]) {
 // ==================== logout ====================
 function logout() {
 
-    // إرجاع النص الترحيبي
-    welcomeText.textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
-    itemDescription.textContent = "";
+welcomeText.textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
+itemDescription.textContent = "";
 
-    // إخفاء القائمة
-    dropdownMenu.style.display = "none";
-    menuBtn.disabled = true;
+dropdownMenu.style.display = "none";
+menuBtn.disabled = true;
 
-    // حذف التخزين
-    localStorage.clear();
- 
-    // إرجاع نافذة الدخول
-    loginModal.style.display = "flex";
-    loginModal.classList.remove("expanded");
+localStorage.removeItem("userType");
+localStorage.removeItem("userName");
+localStorage.removeItem("StudentRecords_Fille_ID");
 
-    // إعادة الحقول للقيم الافتراضية
-    userTypeSelect.value = "";
-  
-    // إغلاق أي معاينة مفتوحة
-    document.getElementById("filePreviewPanel").style.display = "none";
+loginModal.style.display = "flex";
+loginModal.classList.remove("expanded");
+
+userTypeSelect.value = "";
+
+racordBlock.style.display = "flex";
+racordInput.value = "";
+racordInput.focus();
+
+document.getElementById("filePreviewPanel").style.display = "none";
+
 }
 
   window.toggleMenu = function () {
