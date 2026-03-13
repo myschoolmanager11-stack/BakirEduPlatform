@@ -316,7 +316,13 @@ return;
 
 localStorage.setItem("userName", emp.name);
 
-openSession(type);
+let sessionType = type;
+
+if(type === "supervisor"){
+sessionType = "consultation";
+}
+
+openSession(sessionType);
 }
 
 });
@@ -1308,6 +1314,7 @@ function DownloadNewAbsented() {
 
     window.open(downloadUrl, "_blank");
 }
+
 
 
 
