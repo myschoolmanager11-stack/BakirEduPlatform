@@ -58,6 +58,11 @@ let OLD_ABS_DATA = [];
 let NEW_ABS_DATA = [];
 let TEMP_SELECTED_ABS = [];
 
+let currentUserType = null;
+let usersStudents = [];
+let usersTeachers = [];
+let usersSupervisory = [];
+
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
 
