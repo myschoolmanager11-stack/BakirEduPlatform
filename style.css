@@ -671,6 +671,16 @@ background: rgba(1,151,195,0.15) !important;
 transition: background 0.2s;
 }
 
+#racordBlock{
+display:flex;
+gap:8px;
+align-items:center;
+}
+
+#racordInput{
+flex:1;
+}
+
 .app-footer {
     background: rgba(255, 255, 255, 0);
     color:#007da3;
