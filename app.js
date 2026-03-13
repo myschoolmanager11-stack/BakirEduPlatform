@@ -62,6 +62,8 @@ let usersSupervisory = [];
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
 
+loginBtn.addEventListener("click", loginWithRacord);
+  
   // ߔՠتهيئة اسم المؤسسة والعنوان
 document.title = CONFIG.SchoolName;
 
@@ -73,6 +75,8 @@ if (schoolNameElement) {
   
  // عناصر الصفحة
 const userTypeSelect = document.getElementById("userTypeSelect");
+const racordInput = document.getElementById("racordInput");
+const scanQRBtn = document.getElementById("scanQRBtn");
 const loginBtn = document.getElementById("loginBtn");
 const menuBtn = document.getElementById("menuBtn");
 const dropdownMenu = document.getElementById("dropdownMenu");
@@ -112,47 +116,188 @@ async function fetchFile(fileId) {
     }
 }
 
-// ==================== دالة حذف القائمة تلقائياً الساعة 23:00 (توقيت الجزائر) ====================
-function autoClearAbsList(){
 
-const now = new Date();
+// ==================== تحميل القوائم حسب نوع المستخدم ====================
+userTypeSelect.addEventListener("change", async function(){
 
-const target = new Date();
+const type = this.value;
 
-target.setHours(23,0,0,0);
+if(!type) return;
 
-let delay = target - now;
+currentUserType = type;
 
-if(delay < 0){
-delay += 24 * 60 * 60 * 1000;
+showLoader();
+
+try{
+
+if(type === "parent" && usersStudents.length === 0){
+
+const list = await fetchFile(CONFIG.ListeStudents_File_ID);
+
+if(list){
+
+usersStudents = list.map(line=>{
+const p = line.split(";");
+
+return {
+name: p[0]?.trim(),
+classe: p[1]?.trim(),
+racord: p[2]?.trim(),
+email: p[3]?.trim(),
+record: p[4]?.trim()
+};
+
+});
+
 }
 
-setTimeout(()=>{
+}
 
-localStorage.removeItem("TEMP_SELECTED_ABS");
+if(type === "teacher" && usersTeachers.length === 0){
 
-TEMP_SELECTED_ABS = [];
+const list = await fetchFile(CONFIG.ListeTeacher_File_ID);
 
-}, delay);
+if(list){
+
+usersTeachers = list.map(line=>{
+const p = line.split(";");
+
+return {
+name: p[0]?.trim(),
+racord: p[1]?.trim(),
+specialite: p[2]?.trim(),
+email: p[3]?.trim()
+};
+
+});
 
 }
 
-autoClearAbsList();
-  
-// ==================== دالة حفض التلاميذ المحددين للغياب في القائمة المؤقته ====================
-function saveTempAbs(){
-localStorage.setItem(
-"TEMP_SELECTED_ABS",
-JSON.stringify(TEMP_SELECTED_ABS)
+}
+
+if(type === "consultation" && usersSupervisory.length === 0){
+
+const list = await fetchFile(CONFIG.ListeSupervisory_File_ID);
+
+if(list){
+
+usersSupervisory = list.map(line=>{
+const p = line.split(";");
+
+return {
+name: p[0]?.trim(),
+racord: p[1]?.trim(),
+fonction: p[2]?.trim(),
+email: p[3]?.trim()
+};
+
+});
+
+}
+
+}
+
+}catch(err){
+
+console.error(err);
+alert("تعذر تحميل قائمة المستخدمين");
+
+}
+
+hideLoader();
+
+});
+
+// ==================== تسجيل الدخول عبر Racord ====================
+function loginWithRacord(){
+
+const racord = racordInput.value.trim();
+
+if(!racord){
+alert("أدخل معرف Racord");
+return;
+}
+
+let user = null;
+
+if(currentUserType === "parent"){
+
+user = usersStudents.find(u => u.racord === racord);
+
+if(user){
+
+localStorage.setItem("userName", user.name);
+localStorage.setItem("StudentRecords_Fille_ID", user.record);
+
+openSession("parent");
+return;
+
+}
+
+}
+
+if(currentUserType === "teacher"){
+
+user = usersTeachers.find(u => u.racord === racord);
+
+if(user){
+
+localStorage.setItem("userName", user.name);
+
+openSession("teacher");
+return;
+
+}
+
+}
+
+if(currentUserType === "consultation"){
+
+user = usersSupervisory.find(u => u.racord === racord);
+
+if(user){
+
+localStorage.setItem("userName", user.name);
+
+openSession("consultation");
+return;
+
+}
+
+}
+
+alert("المعرف غير صحيح");
+
+}
+
+// ==================== تشغيل ماسح QR ====================
+scanQRBtn.addEventListener("click", function(){
+
+const modal = document.getElementById("qrScannerModal");
+modal.style.display = "flex";
+
+const scanner = new Html5Qrcode("qrReader");
+
+scanner.start(
+{ facingMode: "environment" },
+{ fps: 10, qrbox: 250 },
+
+(decodedText) => {
+
+racordInput.value = decodedText;
+
+scanner.stop();
+modal.style.display = "none";
+
+loginWithRacord();
+
+},
+
+(err)=>{}
+
 );
-}
 
-// ==================== دالة تحميل قائمة التلاميذ المحددين للغياب من القائمة المؤقته ====================
-const saved = localStorage.getItem("TEMP_SELECTED_ABS");
-
-if(saved){
-TEMP_SELECTED_ABS = JSON.parse(saved);
-}
+});
 
 // ==================== فتح الجلسة ====================
 function openSession(type) {
@@ -335,6 +480,49 @@ function logout() {
   window.toggleMenu = function () {
     dropdownMenu.style.display = (dropdownMenu.style.display==="block") ? "none" : "block";
   };
+
+  
+// ==================== دالة حذف القائمة تلقائياً الساعة 23:00 (توقيت الجزائر) ====================
+function autoClearAbsList(){
+
+const now = new Date();
+
+const target = new Date();
+
+target.setHours(23,0,0,0);
+
+let delay = target - now;
+
+if(delay < 0){
+delay += 24 * 60 * 60 * 1000;
+}
+
+setTimeout(()=>{
+
+localStorage.removeItem("TEMP_SELECTED_ABS");
+
+TEMP_SELECTED_ABS = [];
+
+}, delay);
+
+}
+
+autoClearAbsList();
+  
+// ==================== دالة حفض التلاميذ المحددين للغياب في القائمة المؤقته ====================
+function saveTempAbs(){
+localStorage.setItem(
+"TEMP_SELECTED_ABS",
+JSON.stringify(TEMP_SELECTED_ABS)
+);
+}
+
+// ==================== دالة تحميل قائمة التلاميذ المحددين للغياب من القائمة المؤقته ====================
+const saved = localStorage.getItem("TEMP_SELECTED_ABS");
+
+if(saved){
+TEMP_SELECTED_ABS = JSON.parse(saved);
+}
 
 // ==================== دالة اتصل بنا ====================
   document.getElementById("closeContactModal").addEventListener("click", function(){
