@@ -67,7 +67,8 @@ const userTypeSelect = document.getElementById("userTypeSelect");
 const racordInput = document.getElementById("racordInput");
 const scanQRBtn = document.getElementById("scanQRBtn");
 const loginBtn = document.getElementById("loginBtn");
-    
+const racordBlock = document.getElementById("racordBlock");
+  
 const menuBtn = document.getElementById("menuBtn");
 const dropdownMenu = document.getElementById("dropdownMenu");
 const welcomeText = document.getElementById("welcomeText");
@@ -91,9 +92,7 @@ const schoolNameElement = document.getElementById("schoolName");
   // ߔՠتهيئة اسم المؤسسة والعنوان
 document.title = CONFIG.SchoolName;
 
-racordInput.style.display = "none";
-scanQRBtn.style.display = "none";
-loginBtn.style.display = "none";
+racordBlock.style.display = "none";
   
 
 if (schoolNameElement) {
@@ -221,10 +220,11 @@ alert("تعذر تحميل قائمة المستخدمين");
 hideLoader();
 
 // إظهار عناصر تسجيل الدخول
-racordInput.style.display = "block";
-scanQRBtn.style.display = "inline-block";
-loginBtn.style.display = "inline-block";
-
+//racordInput.style.display = "block";
+//scanQRBtn.style.display = "inline-block";
+//loginBtn.style.display = "inline-block";
+racordBlock.style.display = "block";
+  
 });
 
 // ==================== تسجيل الدخول عبر Racord ====================
@@ -911,7 +911,7 @@ sendAbsSelect.addEventListener("change", function(){
 
 
     // ==================== عرض التلاميذ ====================
-    filtered.forEach((line, index)=>{
+    filtered.forEach((student, index)=>{
 
 const name = student.name;
 const classe = student.classe;
