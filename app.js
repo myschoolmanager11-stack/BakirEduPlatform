@@ -221,7 +221,10 @@ hideLoader();
 
 // إظهار عناصر تسجيل الدخول
 
-racordBlock.style.display = "none";
+// إظهار عناصر تسجيل الدخول
+racordBlock.style.display = "flex";
+racordInput.value = "";
+racordInput.focus();
   
 });
 
@@ -490,8 +493,7 @@ loginModal.style.display = "flex";
 loginModal.classList.remove("expanded");
 
 userTypeSelect.value = "";
-
-racordBlock.style.display = "flex";
+racordBlock.style.display = "none";
 racordInput.value = "";
 racordInput.focus();
 
