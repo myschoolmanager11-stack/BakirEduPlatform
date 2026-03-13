@@ -61,8 +61,6 @@ let usersSupervisory = [];
 
 // ==================== DOCUMENT READY ====================
 document.addEventListener("DOMContentLoaded", function () {
-
-loginBtn.addEventListener("click", loginWithRacord);
   
   // ߔՠتهيئة اسم المؤسسة والعنوان
 document.title = CONFIG.SchoolName;
@@ -78,6 +76,7 @@ const userTypeSelect = document.getElementById("userTypeSelect");
 const racordInput = document.getElementById("racordInput");
 const scanQRBtn = document.getElementById("scanQRBtn");
 const loginBtn = document.getElementById("loginBtn");
+    
 const menuBtn = document.getElementById("menuBtn");
 const dropdownMenu = document.getElementById("dropdownMenu");
 const welcomeText = document.getElementById("welcomeText");
@@ -116,7 +115,18 @@ async function fetchFile(fileId) {
     }
 }
 
+  
+loginBtn.addEventListener("click", loginWithRacord);
 
+// تسجيل الدخول بالضغط على Enter
+racordInput.addEventListener("keypress", function(e){
+
+if(e.key === "Enter"){
+loginWithRacord();
+}
+
+});
+  
 // ==================== تحميل القوائم حسب نوع المستخدم ====================
 userTypeSelect.addEventListener("change", async function(){
 
@@ -276,6 +286,10 @@ scanQRBtn.addEventListener("click", function(){
 const modal = document.getElementById("qrScannerModal");
 modal.style.display = "flex";
 
+if(typeof Html5Qrcode === "undefined"){
+alert("مكتبة QR غير محملة");
+return;
+}
 const scanner = new Html5Qrcode("qrReader");
 
 scanner.start(
@@ -871,12 +885,9 @@ sendAbsSelect.addEventListener("change", function(){
     let filtered;
 
     if(selected === "all"){
-        filtered = STUDENTS_LIST;
+        filtered = usersStudents;
     }else{
-        filtered = STUDENTS_LIST.filter(line=>{
-            const p = line.split(";");
-            return p[1]?.trim() === selected;
-        });
+        filtered = usersStudents.filter(s => s.classe === selected);
     }
 
     if(filtered.length === 0){
