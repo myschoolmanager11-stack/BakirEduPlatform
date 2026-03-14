@@ -60,6 +60,9 @@ const oldAbsTableBody = document.querySelector("#oldAbsTable tbody");
 const newAbsSelect = document.getElementById("newAbsClassFilter");
 const newAbsTableBody = document.querySelector("#newAbsTable tbody");
 
+// عناصر مودال الحضور الذكي
+const closeAttendanceModalBtn = document.getElementById("closeAttendanceModal");
+
 // ==================== LOADER دوال اللودر====================
 
 function showLoader(){
