@@ -1,3 +1,21 @@
+let filePreviewPanel;
+let filePreviewFrame;
+let previewDownload;
+let previewOpen;
+let previewLoader;
+
+window.addEventListener("DOMContentLoaded", () => {
+
+    filePreviewPanel = document.getElementById("filePreviewPanel");
+    filePreviewFrame = document.getElementById("filePreviewFrame");
+
+    previewDownload = document.getElementById("previewDownload");
+    previewOpen = document.getElementById("previewOpen");
+
+    previewLoader = document.getElementById("previewLoader");
+
+});
+
 // ==================== معاينة الملفات ====================
 function openFilePreview(fileId) {
 
