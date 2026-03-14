@@ -117,7 +117,7 @@ function openSession(type, user) {
     localStorage.setItem("userName", user.name);
 
     if(type === "parent"){
-        localStorage.setItem("StudentRecords_Fille_ID", user.studentRecordsFileId);
+        localStorage.setItem("StudentRecords_Fille_ID", user.StudentRecords_Fille_ID);
     }
 
     // تفعيل زر القائمة
