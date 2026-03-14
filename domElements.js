@@ -1,12 +1,12 @@
 // ==================== DOM ELEMENTS تعريف عناصر الصفحة ====================
 
 // المودالات
+const oldAbsModal = document.getElementById("ModalOldAbsented");
+const newAbsModal = document.getElementById("ModalNewAbsented");
+const sendAbsModal = document.getElementById("SendAbsentedModal");
+const attendanceModal = document.getElementById("attendanceModal");
 const loginModal = document.getElementById("loginModal");
 const contactModal = document.getElementById("contactModal");
-const ModalOldAbsented = document.getElementById("ModalOldAbsented");
-const ModalNewAbsented = document.getElementById("ModalNewAbsented");
-const SendAbsentedModal = document.getElementById("SendAbsentedModal");
-const attendanceModal = document.getElementById("attendanceModal");
 
 // القائمة
 const menuBtn = document.getElementById("menuBtn");
@@ -36,7 +36,6 @@ const welcomeText = document.getElementById("welcomeText");
 
 
 // عناصر مودال اتصل بنا
-const contactModal = document.getElementById("contactModal");
 const contactCloseBtn = document.getElementById("closeContactModal");
 const contactSendBtn = document.getElementById("contactSendBtn");
 const contactEmail = document.getElementById("contactEmail");
@@ -49,11 +48,14 @@ const filePreviewFrame = document.getElementById("filePreviewFrame");
 const previewDownload = document.getElementById("previewDownload");
 const previewOpen = document.getElementById("previewOpen");
 const previewLoader = document.getElementById("previewLoader");
-
-// عناصر التحكم في معاينة الملفات
 const filePreviewHeader = filePreviewPanel.querySelector(".preview-header");
 const previewCloseBtn = document.getElementById("previewClose");
 const previewToggleBtn = document.getElementById("previewToggle");
+
+//عناصر OldAbsented
+const oldAbsSelect = document.getElementById("oldAbsClassFilter");
+const oldAbsTableBody = document.querySelector("#oldAbsTable tbody");
+
 
 
 // ==================== LOADER دوال اللودر====================
