@@ -3,29 +3,30 @@
 // -------------------- استدعاء المودالات والوظائف --------------------
 document.addEventListener("DOMContentLoaded", function(){
 
-     const loginModal = document.getElementById("loginModal");
+    const loginModal = document.getElementById("loginModal");
     const menuBtn = document.getElementById("menuBtn");
-     
-console.log("loginModal:", loginModal, "CONFIG:", CONFIG);
-     
+
+    console.log("loginModal:", loginModal, "CONFIG:", CONFIG);
+
     if(loginModal){
         loginModal.classList.add("show");
     }
 
     if(menuBtn){
-        menuBtn.disabled = true; // تعطيل القائمة قبل تسجيل الدخول
+        menuBtn.disabled = true;
     }
 
     // ==================== تهيئة اسم المؤسسة والعنوان ====================
     if(typeof CONFIG !== "undefined"){
         document.title = CONFIG.SchoolName;
+
         const schoolNameElement = document.getElementById("schoolName");
         if (schoolNameElement) schoolNameElement.textContent = CONFIG.SchoolName;
-    } else {
+    } 
+    else{
         console.error("CONFIG غير معرف!");
     }
-});
-    
+
     console.log("بوابة المؤسسة جاهزة للعمل 🚀");
 
     // ==================== إغلاق المودالات عند الضغط خارجها ====================
@@ -45,19 +46,16 @@ console.log("loginModal:", loginModal, "CONFIG:", CONFIG);
         }
     });
 
-    // ==================== تهيئة القارئ الذكي (Attendance QR / Barcode) ====================
-    // عند فتح مودال الحضور
+    // ==================== تهيئة القارئ الذكي ====================
     document.getElementById("startScanBtn")?.addEventListener("click", function(){
-        scanStudentCard(); // placeholder المسح
+        scanStudentCard();
     });
-
-    // ==================== عرض ملفات BOOTSTRAP / PREVIEW ====================
-    // تم ربط كل روابط الملفات في filePreview.js
 
     // ==================== إعادة تحميل البيانات إذا لزم ====================
     if(localStorage.getItem("userType")){
         const type = localStorage.getItem("userType");
         const userName = localStorage.getItem("userName") || "المستخدم";
+
         welcomeText.textContent = (type === "parent") ? 
             `مرحبًا بك ${userName} في فضاء أولياء التلاميذ` :
             (type === "teacher") ?
@@ -73,9 +71,9 @@ console.log("loginModal:", loginModal, "CONFIG:", CONFIG);
     closeAttendanceModalBtn.addEventListener("click", () => attendanceModal.style.display = "none");
     previewCloseBtn.addEventListener("click", () => filePreviewPanel.style.display = "none");
 
-    // ==================== بدء المسح التلقائي عند فتح المودال ====================
+    // ==================== بدء المسح عند فتح المودال ====================
     attendanceModal.addEventListener("show", function(){
-        // initCameraScanner(); // مثال لتفعيل الكاميرا لاحقًا
+        // initCameraScanner();
     });
 
 });
