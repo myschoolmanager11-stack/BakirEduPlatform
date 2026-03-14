@@ -3,7 +3,21 @@
 // -------------------- استدعاء المودالات والوظائف --------------------
 document.addEventListener("DOMContentLoaded", function(){
 
-    console.log("بوابة المدرسة الرقمية7 جاهزة للعمل 🚀");
+    // ==================== تهيئة اسم المؤسسة والعنوان ====================
+    document.title = CONFIG.SchoolName;
+
+    const schoolNameElement = document.getElementById("schoolName");
+    const schoolAcadimiElement = document.getElementById("schoolAcadimi");
+    const schoolVilleElement = document.getElementById("schoolVille");
+
+    if (schoolNameElement) schoolNameElement.textContent = CONFIG.SchoolName;
+    if (schoolAcadimiElement) schoolAcadimiElement.textContent = CONFIG.SchoolAcadimi;
+    if (schoolVilleElement) schoolVilleElement.textContent = CONFIG.SchoolVille;
+
+});
+
+    
+    console.log("بوابة المؤسسة جاهزة للعمل 🚀");
 
     // ==================== تهيئة القوائم ====================
     menuBtn.disabled = true; // تعطيل القائمة قبل تسجيل الدخول
