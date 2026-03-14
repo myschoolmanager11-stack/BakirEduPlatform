@@ -1,63 +1,15 @@
 // ==================== DOM ELEMENTS تعريف عناصر الصفحة ====================
 
-// --- المودالات ---
-const oldAbsModal = document.getElementById("ModalOldAbsented");
-const newAbsModal = document.getElementById("ModalNewAbsented");
-const sendAbsModal = document.getElementById("SendAbsentedModal");
-const attendanceModal = document.getElementById("attendanceModal");
-const loginModal = document.getElementById("loginModal");
-const contactModal = document.getElementById("contactModal");
-
-// --- القائمة ---
-const menuBtn = document.getElementById("menuBtn");
-const dropdownMenu = document.getElementById("dropdownMenu");
-const itemDescription = document.getElementById("itemDescription");
-
-// --- نافذة عرض الملفات ---
-const filePreviewPanel = document.getElementById("filePreviewPanel");
-const filePreviewFrame = document.getElementById("filePreviewFrame");
-const previewDownload = document.getElementById("previewDownload");
-const previewOpen = document.getElementById("previewOpen");
-const previewLoader = document.getElementById("previewLoader");
-const filePreviewHeader = filePreviewPanel.querySelector(".preview-header");
-const previewCloseBtn = document.getElementById("previewClose");
-const previewToggleBtn = document.getElementById("previewToggle");
-
-// --- تسجيل الدخول ---
-const userTypeSelect = document.getElementById("userTypeSelect");
-const racordBlock = document.getElementById("racordBlock");
-const racordInput = document.getElementById("racordInput");
-const scanQRBtn = document.getElementById("scanQRBtn");
-const loginBtn = document.getElementById("loginBtn");
-
-// --- اللودر العام ---
-const loader = document.getElementById("globalLoader");
-
-// --- عناصر الصفحة ---
-const welcomeText = document.getElementById("welcomeText");
-
-// --- عناصر مودال اتصل بنا ---
-const contactCloseBtn = document.getElementById("closeContactModal");
-const contactSendBtn = document.getElementById("contactSendBtn");
-const contactEmail = document.getElementById("contactEmail");
-const contactMessage = document.getElementById("contactMessage");
-const contactResult = document.getElementById("contactResult");
-
-// --- عناصر OldAbsented ---
-const oldAbsSelect = document.getElementById("oldAbsClassFilter");
-const oldAbsTableBody = document.querySelector("#oldAbsTable tbody");
-
-// --- عناصر مودال متابعة الغيابات اليومية ---
-const newAbsSelect = document.getElementById("newAbsClassFilter");
-const newAbsTableBody = document.querySelector("#newAbsTable tbody");
-
-// --- عناصر مودال sendAbs ---
-const sendAbsSelect = document.getElementById("sendAbsClassFilter");
-const sendAbsTableBody = document.querySelector("#sendAbsTable tbody");
-
-// --- عناصر مودال الحضور الذكي ---
-const closeAttendanceModalBtn = document.getElementById("closeAttendanceModal");
-
+let oldAbsModal, newAbsModal, sendAbsModal, attendanceModal, loginModal, contactModal;
+let menuBtn, dropdownMenu, itemDescription;
+let filePreviewPanel, filePreviewFrame, previewDownload, previewOpen, previewLoader, filePreviewHeader, previewCloseBtn, previewToggleBtn;
+let userTypeSelect, racordBlock, racordInput, scanQRBtn, loginBtn;
+let loader, welcomeText;
+let contactCloseBtn, contactSendBtn, contactEmail, contactMessage, contactResult;
+let oldAbsSelect, oldAbsTableBody;
+let newAbsSelect, newAbsTableBody;
+let sendAbsSelect, sendAbsTableBody;
+let closeAttendanceModalBtn;
 
 // ==================== MEMORY USERS / MAP ====================
 let memoryUsers = { teacher: [], consultation: [], parent: [] };
@@ -65,14 +17,74 @@ let usersMap = new Map();
 
 // ==================== بعد تحميل الصفحة ====================
 window.addEventListener("DOMContentLoaded", () => {
+
+    // --- المودالات ---
+    oldAbsModal = document.getElementById("ModalOldAbsented");
+    newAbsModal = document.getElementById("ModalNewAbsented");
+    sendAbsModal = document.getElementById("SendAbsentedModal");
+    attendanceModal = document.getElementById("attendanceModal");
+    loginModal = document.getElementById("loginModal");
+    contactModal = document.getElementById("contactModal");
+
+    // --- القائمة ---
+    menuBtn = document.getElementById("menuBtn");
+    dropdownMenu = document.getElementById("dropdownMenu");
+    itemDescription = document.getElementById("itemDescription");
+
+    // --- نافذة عرض الملفات ---
+    filePreviewPanel = document.getElementById("filePreviewPanel");
+    filePreviewFrame = document.getElementById("filePreviewFrame");
+    previewDownload = document.getElementById("previewDownload");
+    previewOpen = document.getElementById("previewOpen");
+    previewLoader = document.getElementById("previewLoader");
+    filePreviewHeader = filePreviewPanel.querySelector(".preview-header");
+    previewCloseBtn = document.getElementById("previewClose");
+    previewToggleBtn = document.getElementById("previewToggle");
+
+    // --- تسجيل الدخول ---
+    userTypeSelect = document.getElementById("userTypeSelect");
+    racordBlock = document.getElementById("racordBlock");
+    racordInput = document.getElementById("racordInput");
+    scanQRBtn = document.getElementById("scanQRBtn");
+    loginBtn = document.getElementById("loginBtn");
+
+    // --- اللودر العام ---
+    loader = document.getElementById("globalLoader");
+
+    // --- عناصر الصفحة ---
+    welcomeText = document.getElementById("welcomeText");
+
+    // --- عناصر مودال اتصل بنا ---
+    contactCloseBtn = document.getElementById("closeContactModal");
+    contactSendBtn = document.getElementById("contactSendBtn");
+    contactEmail = document.getElementById("contactEmail");
+    contactMessage = document.getElementById("contactMessage");
+    contactResult = document.getElementById("contactResult");
+
+    // --- عناصر OldAbsented ---
+    oldAbsSelect = document.getElementById("oldAbsClassFilter");
+    oldAbsTableBody = document.querySelector("#oldAbsTable tbody");
+
+    // --- عناصر مودال متابعة الغيابات اليومية ---
+    newAbsSelect = document.getElementById("newAbsClassFilter");
+    newAbsTableBody = document.querySelector("#newAbsTable tbody");
+
+    // --- عناصر مودال sendAbs ---
+    sendAbsSelect = document.getElementById("sendAbsClassFilter");
+    sendAbsTableBody = document.querySelector("#sendAbsTable tbody");
+
+    // --- عناصر مودال الحضور الذكي ---
+    closeAttendanceModalBtn = document.getElementById("closeAttendanceModal");
+
+    // --- استرجاع آخر Racord ---
     const lastRacord = localStorage.getItem("lastRacord");
     if(lastRacord){
         racordInput.value = lastRacord;
         // إذا أحببت يمكن عمل محاولة تسجيل دخول تلقائي
         // loginWithRacord();
     }
-});
 
+});
 
 // ==================== LOADER دوال اللودر ====================
 function showLoader(){
@@ -87,7 +99,6 @@ function hideLoader(){
     }
 }
 
-
 // ==================== FETCH FILE تحميل الملفات من Google Drive ====================
 async function fetchFile(fileId){
 
@@ -97,7 +108,6 @@ async function fetchFile(fileId){
     }
 
     try{
-
         const response = await fetch(`${GAS_SCRIPT_URL}?id=${fileId}`);
 
         if(!response.ok){
@@ -112,15 +122,10 @@ async function fetchFile(fileId){
             .map(x => x.trim())
             .filter(x => x);
 
-    }
-    catch(err){
-
+    } catch(err){
         console.error(`خطأ في تحميل الملف ${fileId}:`, err);
-
         return null;
-
     }
-
 }
 
 // ==================== PARSE STUDENT / TEACHER / SUPERVISORY ====================
