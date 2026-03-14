@@ -31,7 +31,7 @@ const scanQRBtn = document.getElementById("scanQRBtn");
 const loginBtn = document.getElementById("loginBtn");
 
 // --- اللودر العام ---
-const loader = document.getElementById("loader");
+const loader = document.getElementById("globalLoader");
 
 // --- عناصر الصفحة ---
 const welcomeText = document.getElementById("welcomeText");
