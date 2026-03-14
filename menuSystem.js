@@ -70,9 +70,9 @@ div.innerHTML=`
 <span>${item.label}</span>
 `;
 
-div.onclick = function(){
+div.addEventListener("click", () => {
 handleMenuClick(item,type);
-};
+});
 
 dropdownMenu.appendChild(div);
 
