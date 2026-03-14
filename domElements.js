@@ -56,7 +56,9 @@ const previewToggleBtn = document.getElementById("previewToggle");
 const oldAbsSelect = document.getElementById("oldAbsClassFilter");
 const oldAbsTableBody = document.querySelector("#oldAbsTable tbody");
 
-
+// عناصر مودال متابعة الغيابات اليومية
+const newAbsSelect = document.getElementById("newAbsClassFilter");
+const newAbsTableBody = document.querySelector("#newAbsTable tbody");
 
 // ==================== LOADER دوال اللودر====================
 
