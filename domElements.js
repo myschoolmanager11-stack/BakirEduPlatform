@@ -115,7 +115,7 @@ function parseStudentLine(line){
         classe: parts[1] || "",
         racord: parts[2] || "",
         email: parts[3] || "",
-        studentRecordsFileId: parts[4] || ""
+        StudentRecords_Fille_ID: parts[4] || ""
     };
 }
 
