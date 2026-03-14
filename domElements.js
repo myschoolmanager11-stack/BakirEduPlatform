@@ -58,6 +58,22 @@ const sendAbsTableBody = document.querySelector("#sendAbsTable tbody");
 // --- عناصر مودال الحضور الذكي ---
 const closeAttendanceModalBtn = document.getElementById("closeAttendanceModal");
 
+
+// ==================== MEMORY USERS / MAP ====================
+let memoryUsers = { teacher: [], consultation: [], parent: [] };
+let usersMap = new Map();
+
+// ==================== بعد تحميل الصفحة ====================
+window.addEventListener("DOMContentLoaded", () => {
+    const lastRacord = localStorage.getItem("lastRacord");
+    if(lastRacord){
+        racordInput.value = lastRacord;
+        // إذا أحببت يمكن عمل محاولة تسجيل دخول تلقائي
+        // loginWithRacord();
+    }
+});
+
+
 // ==================== LOADER دوال اللودر ====================
 function showLoader(){
     if(loader){
