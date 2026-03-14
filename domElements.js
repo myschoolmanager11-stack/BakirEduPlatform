@@ -86,9 +86,46 @@ function parseStudentLine(line){
 
     return {
         name: parts[0] || "",
-        racord: parts[1] || "",
-        classe: parts[2] || "",
-        parent: parts[3] || ""
+        classe: parts[1] || "",
+        racord: parts[2] || "",
+        email: parts[3] || "",
+        studentRecordsFileId: parts[4] || ""
     };
 
 }
+
+// ==================== PARSE TEACHER تحليل سطر الأستاذ ====================
+
+function parseTeacherLine(line){
+
+    if(!line) return null;
+
+    const parts = line.split(";");
+
+    return {
+        name: parts[0] || "",
+        racord: parts[1] || "",
+        specialty: parts[2] || "",
+        email: parts[3] || "",
+        classes: parts.slice(4) // كل الأقسام بعد الحقل الرابع
+    };
+
+}
+
+// ==================== PARSE SUPERVISORY تحليل سطر الإشراف التربوي ====================
+
+function parseSupervisoryLine(line){
+
+    if(!line) return null;
+
+    const parts = line.split(";");
+
+    return {
+        name: parts[0] || "",
+        racord: parts[1] || "",
+        profession: parts[2] || "",
+        email: parts[3] || ""
+    };
+
+}
+
