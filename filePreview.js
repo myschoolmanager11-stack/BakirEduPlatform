@@ -44,7 +44,7 @@ previewToggle.addEventListener("click", () => panel.classList.toggle("fullscreen
 // ==================== السحب والتحريك ====================
 let isDragging = false, startX, startY, startLeft, startTop;
 
-header.addEventListener("mousedown", e => {
+filePreviewHeader.addEventListener("mousedown", e => {
     if(panel.classList.contains("fullscreen")) return;
     isDragging = true;
     startX = e.clientX;
@@ -71,7 +71,7 @@ document.addEventListener("mouseup", () => {
 
 
 // ==================== دعم اللمس ====================
-header.addEventListener("touchstart", e => {
+filePreviewHeader.addEventListener("touchstart", e => {
     if(panel.classList.contains("fullscreen")) return;
     isDragging = true;
     const touch = e.touches[0];
@@ -83,7 +83,7 @@ header.addEventListener("touchstart", e => {
     panel.style.transition = "none";
 });
 
-header.addEventListener("touchmove", e => {
+filePreviewHeader.addEventListener("touchmove", e => {
     if(!isDragging) return;
     const touch = e.touches[0];
     panel.style.left = startLeft + (touch.clientX - startX) + "px";
@@ -91,7 +91,7 @@ header.addEventListener("touchmove", e => {
     e.preventDefault();
 }, {passive: false});
 
-header.addEventListener("touchend", () => {
+filePreviewHeader.addEventListener("touchend", () => {
     if(!isDragging) return;
     isDragging = false;
     panel.style.transition = "all 0.3s ease";
