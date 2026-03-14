@@ -1,12 +1,6 @@
 // ==================== معاينة الملفات ====================
 function openFilePreview(fileId) {
 
-    const panel = document.getElementById("filePreviewPanel");
-    const frame = document.getElementById("filePreviewFrame");
-    const previewDownload = document.getElementById("previewDownload");
-    const previewOpen = document.getElementById("previewOpen");
-    const previewLoader = document.getElementById("previewLoader");
-
     // إظهار اللوحة
     panel.style.opacity = 0;
     panel.style.display = "flex";
@@ -35,16 +29,6 @@ function openFilePreview(fileId) {
 
     setTimeout(() => panel.style.opacity = 1, 50);
 }
-
-
-// ==================== عناصر المعاينة ====================
-const panel = document.getElementById("filePreviewPanel");
-const header = panel.querySelector(".preview-header");
-
-const previewClose = document.getElementById("previewClose");
-const previewDownload = document.getElementById("previewDownload");
-const previewOpen = document.getElementById("previewOpen");
-const previewToggle = document.getElementById("previewToggle");
 
 
 // ==================== وظائف الأزرار ====================
