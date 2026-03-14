@@ -5,28 +5,17 @@ let USERS_LIST = [];
 
 
 // ==================== عند اختيار نوع المستخدم ====================
-
 userTypeSelect.addEventListener("change", async function(){
-
     const type = this.value;
-
-    if(type === "") return;
+    if(!type) return;
 
     showLoader();
 
     try{
-
         let fileId = "";
-
-        if(type === "teacher"){
-            fileId = CONFIG.ListeTeacher_File_ID;
-        }
-        else if(type === "consultation"){
-            fileId = CONFIG.ListeSupervisory_File_ID;
-        }
-        else if(type === "parent"){
-            fileId = CONFIG.ListeStudents_File_ID;
-        }
+        if(type === "teacher") fileId = CONFIG.ListeTeacher_File_ID;
+        if(type === "consultation") fileId = CONFIG.ListeSupervisory_File_ID;
+        if(type === "parent") fileId = CONFIG.ListeStudents_File_ID;
 
         const lines = await fetchFile(fileId);
 
@@ -36,71 +25,60 @@ userTypeSelect.addEventListener("change", async function(){
             return;
         }
 
-        USERS_LIST = [];
+        // مسح البيانات القديمة في الذاكرة
+        memoryUsers[type] = [];
+        usersMap.clear();
 
         for(let line of lines){
-
+            line = line.trim();
             if(!line) continue;
 
-            let data = null;
+            let user = null;
+            if(type === "teacher") user = parseTeacherLine(line);
+            if(type === "consultation") user = parseSupervisoryLine(line);
+            if(type === "parent") user = parseStudentLine(line);
 
-            if(type === "teacher"){
-                data = parseTeacherLine(line);
+            if(user){
+                memoryUsers[type].push(user);
+                usersMap.set(user.racord, user); // لتسريع البحث
             }
-            else if(type === "consultation"){
-                data = parseSupervisoryLine(line);
-            }
-            else if(type === "parent"){
-                data = parseStudentLine(line);
-            }
-
-            if(data){
-                USERS_LIST.push(data);
-            }
-
         }
 
-        console.log("تم تحميل المستخدمين:", USERS_LIST.length);
-
-    }
-    catch(error){
-
-        console.error("خطأ تحميل القائمة:", error);
-
+    } catch(error){
+        console.error(error);
         alert("حدث خطأ أثناء تحميل القائمة");
-
     }
 
     hideLoader();
-
 });
 
 // ==================== LOGIN BUTTON زر تسجيل الدخول ====================
 
 loginBtn.addEventListener("click", function(){
-
     const type = userTypeSelect.value;
     const racord = racordInput.value.trim();
 
-    if(type === ""){
+    if(!type){
         alert("يرجى اختيار نوع المستخدم");
         return;
     }
 
-    if(racord === ""){
+    if(!racord){
         alert("يرجى إدخال المعرف");
         return;
     }
 
-    const user = USERS_LIST.find(u => u.racord === racord);
+    const user = usersMap.get(racord);
 
     if(!user){
         alert("المعرف غير صحيح");
         return;
     }
 
-    openSession(type, user);
+    // تخزين Racord صحيح في LocalStorage لتسريع الدخول لاحقًا
+    localStorage.setItem("lastRacord", racord);
 
+    openSession(type, user);
 });
 
 // ==================== OPEN SESSION فتح الجلسة ====================
