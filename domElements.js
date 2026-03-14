@@ -87,17 +87,6 @@ function hideLoader(){
     }
 }
 
-// ==================== MEMORY USERS / MAP ====================
-// القوائم في الذاكرة فقط أثناء الجلسة
-let memoryUsers = {
-    teacher: [],
-    consultation: [],
-    parent: []
-};
-
-// خريطة للبحث السريع حسب racord
-let usersMap = new Map();
-
 
 // ==================== FETCH FILE تحميل الملفات من Google Drive ====================
 async function fetchFile(fileId){
