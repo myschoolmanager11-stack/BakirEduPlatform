@@ -34,6 +34,15 @@ const loader = document.getElementById("loader");
 // عناصر الصفحة
 const welcomeText = document.getElementById("welcomeText");
 
+
+// عناصر مودال اتصل بنا
+const contactModal = document.getElementById("contactModal");
+const contactCloseBtn = document.getElementById("closeContactModal");
+const contactSendBtn = document.getElementById("contactSendBtn");
+const contactEmail = document.getElementById("contactEmail");
+const contactMessage = document.getElementById("contactMessage");
+const contactResult = document.getElementById("contactResult");
+
 // ==================== LOADER دوال اللودر====================
 
 function showLoader(){
