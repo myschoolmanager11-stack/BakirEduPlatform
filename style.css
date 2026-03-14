@@ -80,11 +80,11 @@ h1, h2, h3 {
 }
 
 .modal {
+    display:none;
     background: rgba(0,0,0,0.45);
     backdrop-filter: blur(3px);
     position: fixed;
     inset: 0;
-    display:none;
     align-items: center;
     justify-content: center;
     z-index: 5000;
