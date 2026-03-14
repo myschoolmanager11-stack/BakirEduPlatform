@@ -21,44 +21,36 @@ userTypeSelect.addEventListener("change", async function(){
         if(type === "teacher"){
             fileId = CONFIG.ListeTeacher_File_ID;
         }
-
-        if(type === "consultation"){
+        else if(type === "consultation"){
             fileId = CONFIG.ListeSupervisory_File_ID;
         }
-
-        if(type === "parent"){
+        else if(type === "parent"){
             fileId = CONFIG.ListeStudents_File_ID;
         }
 
-        const text = await fetchFile(fileId);
+        const lines = await fetchFile(fileId);
 
-        if(!text){
+        if(!lines){
             alert("تعذر تحميل قائمة المستخدمين");
             hideLoader();
             return;
         }
 
-        const lines = text.split("\n");
-
         USERS_LIST = [];
 
         for(let line of lines){
 
-            line = line.trim();
-
-            if(line === "") continue;
+            if(!line) continue;
 
             let data = null;
 
             if(type === "teacher"){
                 data = parseTeacherLine(line);
             }
-
-            if(type === "consultation"){
+            else if(type === "consultation"){
                 data = parseSupervisoryLine(line);
             }
-
-            if(type === "parent"){
+            else if(type === "parent"){
                 data = parseStudentLine(line);
             }
 
@@ -68,9 +60,12 @@ userTypeSelect.addEventListener("change", async function(){
 
         }
 
-    }catch(error){
+        console.log("تم تحميل المستخدمين:", USERS_LIST.length);
 
-        console.error(error);
+    }
+    catch(error){
+
+        console.error("خطأ تحميل القائمة:", error);
 
         alert("حدث خطأ أثناء تحميل القائمة");
 
@@ -115,7 +110,7 @@ function openSession(type, user) {
     console.log("فتح الجلسة للمستخدم:", type);
 
     // إغلاق نافذة تسجيل الدخول
-    loginModal.style.display = "none";
+    loginModal.classList.remove("show");
 
     // حفظ معلومات المستخدم
     localStorage.setItem("userType", type);
