@@ -16,6 +16,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
 });
 
+  // عرض مودال تسجيل الدخول مباشرة
+    if(loginModal){
+        loginModal.style.display = "flex"; // أو "block" حسب CSS المودال
+    }
+});
     
     console.log("بوابة المؤسسة جاهزة للعمل 🚀");
 
