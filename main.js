@@ -16,16 +16,15 @@ document.addEventListener("DOMContentLoaded", function(){
 
 });
 
-  // عرض مودال تسجيل الدخول مباشرة
+  // عرض مودال تسجيل الدخول تلقائيًا
     if(loginModal){
-        loginModal.style.display = "flex"; // أو "block" حسب CSS المودال
+        loginModal.classList.add("show");
     }
+
+    menuBtn.disabled = true; // تعطيل القائمة قبل تسجيل الدخول
 });
     
     console.log("بوابة المؤسسة جاهزة للعمل 🚀");
-
-    // ==================== تهيئة القوائم ====================
-    menuBtn.disabled = true; // تعطيل القائمة قبل تسجيل الدخول
 
     // ==================== إغلاق المودالات عند الضغط خارجها ====================
     [loginModal, contactModal, attendanceModal, oldAbsModal, newAbsModal].forEach(modal => {
