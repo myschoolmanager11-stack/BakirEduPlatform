@@ -183,3 +183,33 @@ racordInput.addEventListener("keypress", function(e){
     }
 
 });
+
+// ==================== دالة تسجيل الخروج ====================
+function logout(){
+
+    // حذف بيانات الجلسة
+    localStorage.removeItem("userType");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("StudentRecords_Fille_ID");
+
+    // إعادة تعيين الذاكرة
+    memoryUsers = { teacher: [], consultation: [], parent: [] };
+    usersMap.clear();
+
+    // إخفاء القائمة
+    dropdownMenu.style.display = "none";
+
+    // تعطيل زر القائمة
+    menuBtn.disabled = true;
+
+    // إظهار نافذة تسجيل الدخول
+    loginModal.classList.add("show");
+
+    // إعادة تعيين الحقول
+    racordInput.value = "";
+    userTypeSelect.value = "";
+
+    welcomeText.textContent = "يرجى تسجيل الدخول";
+
+    console.log("تم تسجيل الخروج");
+}
