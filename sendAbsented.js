@@ -1,3 +1,30 @@
+// ==================== تحميل القائمة المحفوظة مسبقًا ====================
+const saved = localStorage.getItem("TEMP_SELECTED_ABS");
+if(saved){
+    TEMP_SELECTED_ABS = JSON.parse(saved);
+}
+
+// ==================== مسح القائمة تلقائيًا الساعة 23:00 ====================
+function autoClearAbsList(){
+    const now = new Date();
+    const target = new Date();
+    target.setHours(23,0,0,0);
+    let delay = target - now;
+    if(delay < 0){
+        delay += 24 * 60 * 60 * 1000; // احسب للغد إذا فات الوقت
+    }
+    setTimeout(()=>{
+        localStorage.removeItem("TEMP_SELECTED_ABS");
+        TEMP_SELECTED_ABS = [];
+    }, delay);
+}
+autoClearAbsList();
+
+// ==================== دالة الحفظ ====================
+function saveTempAbs(){
+    localStorage.setItem("TEMP_SELECTED_ABS", JSON.stringify(TEMP_SELECTED_ABS));
+}
+
 // ==================== فتح مودال إرسال الغيابات ====================
 window.openSendAbsentedModal = async function() {
 
@@ -84,7 +111,6 @@ sendAbsSelect.addEventListener("change", function() {
         // الضغط على الصف لتغيير التحديد
         tr.addEventListener("click", function(e){
             if(e.target.tagName.toLowerCase() === "input") return;
-
             const checkbox = tr.querySelector(".abs-check");
             checkbox.checked = !checkbox.checked;
             handleCheckboxChange(checkbox, tr);
@@ -95,10 +121,8 @@ sendAbsSelect.addEventListener("change", function() {
 // ==================== التعامل مع تغيير checkbox ====================
 sendAbsTableBody.addEventListener("change", function(e){
     if(!e.target.classList.contains("abs-check")) return;
-
     const checkbox = e.target;
     const tr = checkbox.closest("tr");
-
     handleCheckboxChange(checkbox, tr);
 });
 
@@ -123,7 +147,6 @@ checkAllBtn.addEventListener("click", function(){
     sendAbsTableBody.querySelectorAll("tr").forEach(row => {
         const checkbox = row.querySelector(".abs-check");
         if(!checkbox) return;
-
         checkbox.checked = true;
         const {name, classe, record} = checkbox.dataset;
         if(!TEMP_SELECTED_ABS.some(x => x.record === record)){
@@ -131,7 +154,6 @@ checkAllBtn.addEventListener("click", function(){
         }
         row.classList.add("selected-row");
     });
-
     saveTempAbs();
 });
 
@@ -152,13 +174,11 @@ function getCurrentSchoolHour(){
 function buildAbsenceLine(student){
     const hourIndex = getCurrentSchoolHour();
     if(hourIndex === null) return null;
-
     let cols = new Array(11).fill("");
     cols[0] = student.name;
     cols[1] = student.classe;
     cols[hourIndex] = "1";
     cols[10] = student.record;
-
     return cols.join(";");
 }
 
