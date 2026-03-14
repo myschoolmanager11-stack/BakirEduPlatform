@@ -110,8 +110,14 @@ loginBtn.addEventListener("click", function(){
 
 // ==================== OPEN SESSION فتح الجلسة ====================
 
-function openSession(type, user){
+function openSession(type, user) {
 
+    console.log("فتح الجلسة للمستخدم:", type);
+
+    // إغلاق نافذة تسجيل الدخول
+    loginModal.style.display = "none";
+
+    // حفظ معلومات المستخدم
     localStorage.setItem("userType", type);
     localStorage.setItem("userName", user.name);
 
@@ -119,9 +125,30 @@ function openSession(type, user){
         localStorage.setItem("StudentRecords_Fille_ID", user.studentRecordsFileId);
     }
 
-    loginModal.classList.remove("show");
-
+    // تفعيل زر القائمة
     menuBtn.disabled = false;
+
+    const userName = user.name || "المستخدم";
+
+    // تحديث رسالة الترحيب
+    if(type === "parent") {
+
+        welcomeText.textContent = `مرحبًا بك ${userName} في فضاء أولياء التلاميذ`;
+
+    } 
+    else if(type === "teacher") {
+
+        welcomeText.textContent = `مرحبًا بك الأستاذ ${userName}`;
+
+    } 
+    else {
+
+        welcomeText.textContent = `مرحبًا بك ${userName} في فضاء الإشراف التربوي`;
+
+    }
+
+    // ملء القائمة
+    fillMenu(type);
 
 }
 
