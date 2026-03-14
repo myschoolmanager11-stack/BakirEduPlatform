@@ -3,19 +3,25 @@
 // -------------------- استدعاء المودالات والوظائف --------------------
 document.addEventListener("DOMContentLoaded", function(){
 
-     if(loginModal){
+     const loginModal = document.getElementById("loginModal");
+    const menuBtn = document.getElementById("menuBtn");
+
+    if(loginModal){
         loginModal.classList.add("show");
     }
 
-    menuBtn.disabled = true; // تعطيل القائمة قبل تسجيل الدخول
-});
+    if(menuBtn){
+        menuBtn.disabled = true; // تعطيل القائمة قبل تسجيل الدخول
+    }
 
     // ==================== تهيئة اسم المؤسسة والعنوان ====================
-    document.title = CONFIG.SchoolName;
-
-    const schoolNameElement = document.getElementById("schoolName");
-     if (schoolNameElement) schoolNameElement.textContent = CONFIG.SchoolName;
-   
+    if(typeof CONFIG !== "undefined"){
+        document.title = CONFIG.SchoolName;
+        const schoolNameElement = document.getElementById("schoolName");
+        if (schoolNameElement) schoolNameElement.textContent = CONFIG.SchoolName;
+    } else {
+        console.error("CONFIG غير معرف!");
+    }
 });
     
     console.log("بوابة المؤسسة جاهزة للعمل 🚀");
