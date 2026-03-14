@@ -51,6 +51,10 @@ const oldAbsTableBody = document.querySelector("#oldAbsTable tbody");
 const newAbsSelect = document.getElementById("newAbsClassFilter");
 const newAbsTableBody = document.querySelector("#newAbsTable tbody");
 
+// --- عناصر مودال sendAbs ---
+const sendAbsSelect = document.getElementById("sendAbsClassFilter");
+const sendAbsTableBody = document.querySelector("#sendAbsTable tbody");
+
 // --- عناصر مودال الحضور الذكي ---
 const closeAttendanceModalBtn = document.getElementById("closeAttendanceModal");
 
