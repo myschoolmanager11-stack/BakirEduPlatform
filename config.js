@@ -14,7 +14,7 @@ const CONFIG = {
 
   School_Folder_ID: "1hW9f6QDQMFHTKpH8fI4wVM9subzojh-T",
   Documents_Folder_ID: "1Mhsx0yQJX3iooQ1s9yBCYvI7BDJ7p5x9",
-  StudentsRecords_Folder_ID: "16JpBwOj_7iEF-CNdHwwpEW2S9p-IE0yh",
+  StudentRecords_Fille_ID: "16JpBwOj_7iEF-CNdHwwpEW2S9p-IE0yh",
 
   School_Link_File_ID: "1DTW9n3-TggYOa0XcNdzRv8t1hSEvTcCW",
   ListeTeacher_File_ID: "1rjAcUud3-tgFUpJQiAN3RQuvZHSrvat5",
