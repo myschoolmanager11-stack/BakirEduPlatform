@@ -6,10 +6,13 @@ const contactModal = document.getElementById("contactModal");
 const ModalOldAbsented = document.getElementById("ModalOldAbsented");
 const ModalNewAbsented = document.getElementById("ModalNewAbsented");
 const SendAbsentedModal = document.getElementById("SendAbsentedModal");
+const attendanceModal = document.getElementById("attendanceModal");
 
 // القائمة
 const menuBtn = document.getElementById("menuBtn");
 const dropdownMenu = document.getElementById("dropdownMenu");
+const itemDescription = document.getElementById("itemDescription");
+
 
 // نافذة عرض الملفات
 const filePreviewPanel = document.getElementById("filePreviewPanel");
