@@ -28,6 +28,8 @@ const loginBtn = document.getElementById("loginBtn");
 // اللودر العام
 const loader = document.getElementById("loader");
 
+// عناصر الصفحة
+const welcomeText = document.getElementById("welcomeText");
 
 // ==================== LOADER دوال اللودر====================
 
