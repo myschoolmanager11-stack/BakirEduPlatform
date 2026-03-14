@@ -73,17 +73,37 @@ function hideLoader(){
 
 // ==================== FETCH FILE تحميل الملفات من Google Drive ====================
 async function fetchFile(fileId){
-    try{
-        const url = "https://drive.google.com/uc?export=download&id=" + fileId;
-        const response = await fetch(url);
-        if(!response.ok){
-            throw new Error("فشل تحميل الملف");
-        }
-        return await response.text();
-    }catch(error){
-        console.error("خطأ في تحميل الملف:", error);
+
+    if(!fileId){
+        console.error("خطأ: لم يتم تحديد ID الملف");
         return null;
     }
+
+    try{
+
+        const response = await fetch(`${GAS_SCRIPT_URL}?id=${fileId}`);
+
+        if(!response.ok){
+            throw new Error("فشل تحميل الملف من Google Drive");
+        }
+
+        const text = await response.text();
+
+        return text
+            .replace(/\r/g,"")
+            .split("\n")
+            .map(x => x.trim())
+            .filter(x => x);
+
+    }
+    catch(err){
+
+        console.error(`خطأ في تحميل الملف ${fileId}:`, err);
+
+        return null;
+
+    }
+
 }
 
 // ==================== PARSE STUDENT / TEACHER / SUPERVISORY ====================
