@@ -5,7 +5,9 @@ document.addEventListener("DOMContentLoaded", function(){
 
      const loginModal = document.getElementById("loginModal");
     const menuBtn = document.getElementById("menuBtn");
-
+     
+console.log("loginModal:", loginModal, "CONFIG:", CONFIG);
+     
     if(loginModal){
         loginModal.classList.add("show");
     }
