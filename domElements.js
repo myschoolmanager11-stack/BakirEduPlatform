@@ -43,6 +43,19 @@ const contactEmail = document.getElementById("contactEmail");
 const contactMessage = document.getElementById("contactMessage");
 const contactResult = document.getElementById("contactResult");
 
+// ==================== File Preview Elements ====================
+const filePreviewPanel = document.getElementById("filePreviewPanel");
+const filePreviewFrame = document.getElementById("filePreviewFrame");
+const previewDownload = document.getElementById("previewDownload");
+const previewOpen = document.getElementById("previewOpen");
+const previewLoader = document.getElementById("previewLoader");
+
+// عناصر التحكم في معاينة الملفات
+const filePreviewHeader = filePreviewPanel.querySelector(".preview-header");
+const previewCloseBtn = document.getElementById("previewClose");
+const previewToggleBtn = document.getElementById("previewToggle");
+
+
 // ==================== LOADER دوال اللودر====================
 
 function showLoader(){
