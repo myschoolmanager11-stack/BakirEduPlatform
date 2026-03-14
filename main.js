@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function(){
     console.log("بوابة المؤسسة جاهزة للعمل 🚀");
 
     // ==================== إغلاق المودالات عند الضغط خارجها ====================
-    [contactModal, attendanceModal, oldAbsModal, newAbsModal, sendAbsModa].forEach(modal => {
+    [contactModal, attendanceModal, oldAbsModal, newAbsModal, sendAbsModal].forEach(modal => {
         window.addEventListener("click", e => {
             if(e.target === modal) modal.style.display = "none";
         });
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     document.addEventListener("keydown", e => {
         if(e.key === "Escape"){
-            [contactModal, attendanceModal, oldAbsModal, newAbsModal, sendAbsModa].forEach(modal => {
+            [contactModal, attendanceModal, oldAbsModal, newAbsModal, sendAbsModal].forEach(modal => {
                 if(modal.style.display === "flex" || modal.style.display === "block"){
                     modal.style.display = "none";
                 }
