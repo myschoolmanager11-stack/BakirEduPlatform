@@ -46,7 +46,7 @@ previewToggle.addEventListener("click", () => filePreviewPanel.classList.toggle(
 // ==================== السحب والتحريك ====================
 let isDragging = false, startX, startY, startLeft, startTop;
 
-filePreviewHeader.addEventListener("mousedown", e => {
+filePreviewHeader?.addEventListener("mousedown", e => {
     if(filePreviewPanel.classList.contains("fullscreen")) return;
     isDragging = true;
     startX = e.clientX;
@@ -73,7 +73,7 @@ document.addEventListener("mouseup", () => {
 
 
 // ==================== دعم اللمس ====================
-filePreviewHeader.addEventListener("touchstart", e => {
+filePreviewHeader?.addEventListener("touchstart", e => {
     if(filePreviewPanel.classList.contains("fullscreen")) return;
     isDragging = true;
     const touch = e.touches[0];
@@ -85,7 +85,7 @@ filePreviewHeader.addEventListener("touchstart", e => {
     filePreviewPanel.style.transition = "none";
 });
 
-filePreviewHeader.addEventListener("touchmove", e => {
+filePreviewHeader?.addEventListener("touchmove", e => {
     if(!isDragging) return;
     const touch = e.touches[0];
     filePreviewPanel.style.left = startLeft + (touch.clientX - startX) + "px";
@@ -93,7 +93,7 @@ filePreviewHeader.addEventListener("touchmove", e => {
     e.preventDefault();
 }, {passive: false});
 
-filePreviewHeader.addEventListener("touchend", () => {
+filePreviewHeader?.addEventListener("touchend", () => {
     if(!isDragging) return;
     isDragging = false;
     filePreviewPanel.style.transition = "all 0.3s ease";
