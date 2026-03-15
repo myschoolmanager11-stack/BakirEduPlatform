@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="favicon.png">
+<title>الفضاء الرقمي الموحد</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="top-bar">
+    <button class="menu-btn" id="menuBtn" onclick="toggleMenu()" disabled>
+        <span class="material-icons">menu</span>
+    </button>
+
+   <div class="app-title">
+    <h2 id="selectedTitle">
+        <span class="material-icons">school</span>
+        <span id="schoolName"></span>
+    </h2>
+
+    <p class="welcome-text" id="welcomeText">
+        مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.
+    </p>
+
+<!-- عنوان فرعي ديناميكي -->
+    <div id="itemDescription" class="item-description"></div>
+</div>
+
+    <div class="dropdown-menu" id="dropdownMenu"></div>
+</header>
+
+<main class="container">
+
+<!-- نافذة تسجيل الدخول -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content login-content">
+            <h3>
+                <span class="material-icons">login</span>
+                تسجيل الدخول
+            </h3>
+
+            <div class="login-field">
+                <label>نوع المستخدم</label>
+                <select id="userTypeSelect">
+                    <option value="">-- اختر --</option>
+                    <option value="teacher">الأساتذة</option>
+                    <option value="consultation">الإشراف التربوي</option>
+                    <option value="parent">أولياء الأمور</option>
+                </select>
+            </div>
+
+            <div id="studentBlock" style="display:none;">
+
+    <div class="login-field">
+        <label>
+            إختر القسم و اسم ولقب التلميذ من القائمة 
+        </label>
+
+        <div class="student-row">
+              <select id="ClasseSelect">
+                <option value="">-- اختر لقسم --</option>
+            </select>
+            
+            <select id="studentSelect">
+                <option value="">-- اختر الاسم واللقب --</option>
+            </select>
+            
+        </div>
+
+        <div id="studentLoadingSpinner" class="mini-spinner" style="
+                 display:none; 
+                  margin-top:10px; 
+                  font-size:14px; 
+                 color:#ff0036;
+                    ">
+                  ⏳ يرجى الإنتضار جاري التحميل...
+               </div>
+    </div>
+
+</div>
+            
+            <div id="schoolKeyBlock" style="display:none;">
+                <div class="login-field">
+                    <label>رمز المؤسسة الموحد</label>
+                    <input type="password" id="schoolKeyInput">
+                </div>
+                <button id="schoolKeyBtn" class="schoolKey-btn">
+                    <span class="material-icons btn-icon">arrow_forward</span>
+                    متابعة
+                </button>
+            </div>
+
+             
+            <div id="loadingSpinner" align="center" style="
+                 display:none; 
+                  margin-top:10px; 
+                  font-size:14px; 
+                 color:#ff0036;
+                    ">
+                  ⏳ يرجى الإنتضار جاري التحميل...
+               </div>
+
+            
+            <div id="employeeBlock" style="display:none;">
+                <div class="login-field">
+                    <label>اختر اسم ولقب الموظف</label>
+                    <select id="employeeSelect">
+                        <option value="">-- اختر الاسم واللقب --</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="authBlock" style="display:none;">
+                <div class="login-field">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="loginPassword">
+                </div>
+            </div>
+
+            <button id="continueBtn" class="continue-btn" style="display:none;">
+                <span class="material-icons btn-icon">arrow_forward</span>
+                متابعة
+            </button>
+
+            <button id="loginBtn" class="login-btn" style="display:none;">
+                <span class="material-icons btn-icon">login</span>
+                تسجيل الدخول
+            </button>
+        </div>
+    </div>
+
+<!-- ============= لوحة معاينة الملفات العامة ============ -->
+<div id="filePreviewPanel" class="file-preview-panel" style="display:none;">
+
+    <div class="preview-header">
+
+        <button class="preview-btn" id="previewClose" title="إغلاق">
+            <span class="material-icons">close</span>
+        </button>
+
+        <button class="preview-btn" id="previewDownload" title="تحميل">
+            <span class="material-icons">download</span>
+        </button>
+
+        <button class="preview-btn" id="previewOpen" title="فتح في صفحة جديدة">
+            <span class="material-icons">open_in_new</span>
+        </button>
+        
+    <!-- زر تكبير/تصغير -->
+    <button class="preview-btn" id="previewToggle" title="تكبير/تصغير">
+        <span class="material-icons">fullscreen</span>
+    </button>
+
+    </div>
+
+     <div id="previewLoader" class="preview-loader">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <div class="loader-text">
+                ⏳ جاري تحميل الملف، يرجى الإنتظار...
+            </div>
+        </div>
+    </div>
+
+    <iframe id="filePreviewFrame"></iframe>
+</div>
+
+<!-- مودال اتصل بنا -->
+<div id="contactModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <button id="closeContactModal" class="preview-btn" style="align-self:flex-end;">
+            <span class="material-icons">close</span>
+        </button>
+
+        <h2>ߓȯ؏ اتصل بنا</h2>
+        <p class="subtitle">يمكنك إرسال استفسارك مباشرة إلى إدارة البوابة.</p>
+
+        <label>البريد الإلكتروني</label>
+        <input type="email" id="contactEmail" placeholder="example@email.com">
+
+        <label>نص الرسالة</label>
+        <textarea id="contactMessage" placeholder="اكتب رسالتك هنا..."></textarea>
+
+        <button id="contactSendBtn" class="contactSend-btn">
+              <span class="material-icons">send</span>
+                إرسال</button>
+        <div id="contactResult"></div>
+    </div>
+</div>
+
+<!-- ============= مودال نظام الحضور الذكي ============ -->
+<div id="attendanceModal" class="modal" style="display:none;">
+
+  <div class="modal-content attendance-content">
+
+    <div class="attendance-header">
+      <h3>
+        <span class="material-icons">qr_code_2</span>
+        امسح بطاقة التلميذ بالكاميرا ليتم تسجيل الحضور
+      </h3>
+
+      <button id="closeAttendanceModal" class="Attendance-btn">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <div class="scanner-panel" id="scannerPanel">
+      <!-- هنا سيتم وضع ماسح الباركود لاحقاً -->
+    </div>
+
+  </div>
+</div>
+
+      
+        <!-- مودال مسح QR -->
+<div id="qrScannerModal" class="modal" style="display:none;">
+    <div class="modal-content attendance-content">
+
+        <div class="attendance-header">
+            <h3>
+                <span class="material-icons">qr_code_scanner</span>
+                وجّه الكاميرا نحو رمز QR
+            </h3>
+
+            <button id="closeQrModal" class="preview-btn">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+
+        <div id="qrReader" class="scanner-panel"></div>
+
+    </div>
+</div>
+  <div id="globalLoader" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:9999;">
+  <div style="color:white;font-size:20px;">يرجى الانتظار...</div>
+</div>
+
+<!-- مدال استعراض قائمة التلاميذ الغائبين قبل اليوم --> 
+<div id="ModalOldAbsented" class="custom-modal">
+
+  <div class="modal-content large">
+
+    <!-- العنوان فقط بدون شريط أزرق -->
+    <h3 class="modal-title">
+      ߓˠقائمة التلاميذ الغائبون قبل اليوم
+    </h3>
+
+    <div class="modal-body">
+
+      <!-- صف الفلترة + زر الإغلاق في نفس المستوى -->
+      <div class="oldabs-toolbar">
+
+          <select id="oldAbsClassFilter" class="styled-select">
+          <option value="">-- اختر القسم --</option>
+        </select>
+         
+        <button id="DownloadOldAbsented"
+                class="preview-btn"
+                onclick="DownloadOldAbsented()"  title="تحميل">
+          <span class="material-icons">download</span>
+        </button>
+          
+        <button id="CloseModalOldAbsented"
+                class="preview-btn"
+                onclick="closeOldAbsentedModal()"  title="إغلاق">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+
+<!-- حاوية سكرول للجدول -->
+      <div class="table-container">
+        <table id="oldAbsTable" class="styled-table">
+          <thead>
+            <tr>
+              <th class="Count-col">الرقم</th>
+              <th class="name-col">اللقب والإسم</th>
+              <th class="Classe-col">القسم</th>
+              <th class="Hore-col">الساعات</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============= مودال متابعة الغيابات اليومية ============ -->
+<div id="ModalNewAbsented" class="custom-modal">
+
+  <div class="modal-content large">
+
+    <!-- العنوان -->
+    <h3 class="modal-title">
+      ߓˠمتابعة الغيابات اليومية
+    </h3>
+
+    <div class="modal-body">
+
+      <!-- صف الفلترة + زر الإغلاق -->
+      <div class="newabs-toolbar">
+
+        <select id="newAbsClassFilter" class="styled-select">
+          <option value="">-- اختر القسم --</option>
+        </select>
+
+        <button id="DownloadNewAbsented"
+                class="preview-btn"
+                onclick="DownloadNewAbsented()" title="تحميل">
+          <span class="material-icons">download</span>
+        </button>
+
+        <button id="CloseModalNewAbsented"
+                class="preview-btn"
+                onclick="closeNewAbsentedModal()" title="إغلاق">
+          <span class="material-icons">close</span>
+        </button>
+
+      </div>
+
+      <!-- حاوية الجدول -->
+      <div class="table-container">
+        <table id="newAbsTable" class="styled-table">
+          <thead>
+            <tr>
+                <th class="Count-col">الرقم</th>
+                <th class="name-col">اللقب والإسم</th>
+                <th class="Classe-col">القسم</th>
+                <th class="Checkbox-col">سا8</th>
+                <th class="Checkbox-col">سا9</th>
+                <th class="Checkbox-col">سا10</th>
+                <th class="Checkbox-col">سا11</th>
+                <th class="Checkbox-col">سا13</th>
+                <th class="Checkbox-col">سا14</th>
+                <th class="Checkbox-col">سا15</th>
+                <th class="Checkbox-col">سا16</th>
+                <th class="Hore-col">الساعات</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+    
+<!-- ============= مودال إرسال الغيابات ============ -->
+<div id="SendAbsentedModal" class="custom-modal">
+
+  <div class="modal-content large">
+
+    <!-- العنوان -->
+    <h3 class="modal-title">
+      إرسال الغيابات
+    </h3>
+
+    <div class="modal-body">
+
+      <!-- شريط الأدوات -->
+      <div class="Sendabs-toolbar">
+
+        <select id="sendAbsClassFilter" class="styled-select">
+          <option value="">-- اختر القسم --</option>
+        </select>
+
+        <button id="checkAllBtn"
+            class="preview-btn" title="تحديد الكل">
+          <span class="material-icons">checklist</span>
+        </button>
+          
+        <button id="SendAbsenceBtn"
+                class="preview-btn" title="إرسال">
+          <span class="material-icons">send</span>
+        </button>
+
+
+        <button id="CloseSendAbsModal"
+                class="preview-btn"
+                onclick="closeSendAbsentedModal()" title="إغلاق">
+          <span class="material-icons">close</span>
+        </button>
+
+      </div>
+
+      <!-- الجدول -->
+      <div class="table-container">
+        <table id="sendAbsTable" class="styled-table">
+
+          <thead>
+            <tr>
+              <th class="Count-col">الرقم</th>
+              <th class="name-col">اللقب والإسم</th>
+              <th class="Classe-col">القسم</th>
+              <th class="Checkbox-col">تحديد</th>
+            </tr>
+          </thead>
+
+          <tbody></tbody>
+
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+    
+    <!-- محتوى إضافي مستقبلي -->
+    <div id="mainContent"></div>
+
+</main>
+
+<footer class="app-footer">
+    <div class="footer-marquee">
+        Myschoolmanager | © – Designed by Latreche Abdelkader
+    </div>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>

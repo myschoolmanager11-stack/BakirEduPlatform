@@ -1,0 +1,706 @@
+html, body {
+    height: 100%;
+}
+
+body{
+    margin:0;
+    font-family:"Segoe UI", Roboto, sans-serif;
+
+    background-image:url("background.png");
+    background-position:center;
+    background-repeat:no-repeat;
+    background-size:cover;
+    background-attachment:fixed;
+
+    direction:rtl;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,0.25);
+
+    z-index:-1;
+}
+
+h1, h2, h3 {
+    color: #007da3;
+}
+
+.container {
+    flex: 1;
+    padding: 20px;
+}
+
+.top-bar {
+    background: rgba(255, 255, 255, 0);
+    color: #0197c3;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    box-shadow: none;
+}
+
+.top-bar, .top-bar * {
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.menu-btn {
+    background: #ff9800;
+    border: none;
+    color: white;
+    font-size: 18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+.menu-btn:hover {
+    background: #e68900;
+}
+
+.app-title { flex: 1; text-align: center; }
+
+.welcome-text {
+    font-size: 14px;
+    font-weight: bold;
+    color: #0197c3;
+    opacity: 0.95;
+}
+
+.modal {
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(3px);
+    position: fixed;
+    inset: 0;
+       display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5000;
+}
+
+.modal-content{
+    background:rgba(255,255,255,0.75);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    padding:25px;
+    border-radius:16px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.3);
+}
+
+.login-field { margin-bottom: 14px; }
+.login-field label {
+    font-weight:600;
+    color:#3f51b5;
+    margin-bottom:4px;
+    display:block;
+}
+.login-field input, .login-field select {
+    border:1px solid #0197c3;
+    background: rgba(255,255,255,0.9);
+    width: 100%;
+    padding:9px;
+    border-radius:10px;
+   }
+
+.login-btn,
+.schoolKey-btn,
+.continue-btn,
+.contactSend-btn,
+.Attendance-btn {
+
+    height:38px;
+    width:100%;
+    border:none;
+    border-radius:12px;
+
+    background: linear-gradient(135deg,#0197c3,#007da3);
+    color:white;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    transition:0.25s;
+}
+
+.login-btn:hover,
+.schoolKey-btn:hover,
+.continue-btn:hover,
+.contactSend-btn:hover,
+.Attendance-btn:hover{
+
+    transform: translateY(-2px);
+    box-shadow:0 6px 14px rgba(0,0,0,0.25);
+
+    background: linear-gradient(135deg,#00a8d6,#006a8a);
+}
+
+
+.dropdown-menu {
+    position: absolute;
+    top: 60px;
+    right: 10px;
+     background: rgba(255,255,255,0.95);
+    border-radius: 12px;
+    min-width: 260px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    display: none;
+    z-index: 1100; /* أكبر من file-preview-panel */
+    overflow: hidden;
+    }
+
+.dropdown-menu div {
+    padding: 10px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.4s ease;
+    color: #0197c3;
+    font-weight: 600;
+}
+
+.dropdown-menu div:hover {
+    background: rgba(1, 151, 195, 0.1);
+}
+
+.dropdown-menu div.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.modal-content input, .modal-content textarea {
+    width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px;
+    border-radius: 8px; border: 1px solid #ccc; font-size: 14px; box-sizing: border-box;
+}
+.modal-content textarea { min-height: 100px; resize: vertical; }
+.modal-content button {
+    width: 100%; padding: 12px; border: none; border-radius: 8px;
+    background: #0197c3; color: white; font-size: 15px; cursor: pointer; transition: 0.3s;
+}
+.modal-content button:hover { background: #007da3; }
+.modal-content .subtitle { text-align:center; margin-bottom:15px; color:#555; }
+
+
+@keyframes fadeIn {
+    from {opacity:0; transform:scale(0.95);}
+    to {opacity:1; transform:scale(1);}
+}
+
+.file-preview-panel {
+    position: fixed;
+    top: 70px;
+    left: 50px;
+    width: calc(100% - 100px);
+    height: calc(100% - 140px);
+    background: rgba(255,255,255,0.97);
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 600px) {
+    .attendance-content, .modal-content {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .file-preview-panel {
+        top: 10px;
+        left: 10px;
+        width: calc(100% - 20px);
+        height: calc(100% - 20px);
+    }
+}
+
+/* شريط الأزرار */
+.preview-header {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.preview-btn {
+  background: #0197c3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  transition: all 0.2s ease;
+  max-width: 42px;
+  max-height: 42px;
+}
+
+.preview-btn:hover {
+  background: #007da3;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+}
+
+/* وضع ملء الشاشة */
+.file-preview-panel.fullscreen {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 10px;
+}
+
+.preview-header { cursor: grab; }
+
+.file-preview-panel, .preview-header {
+    touch-action: none; /* منع تمرير الصفحة أثناء السحب */
+}
+
+.file-preview-panel iframe {
+    width: 100%;
+    height: 100%; /* يملأ كامل اللوحة */
+    border: none;
+    border-radius: 6px;
+}
+
+/* ================= مودال الحضور الذكي ================= */
+
+.attendance-content {
+    width: 500px;
+    max-width: 95%;
+    border-radius: 18px;
+    padding: 20px;
+    animation: slideDown 0.35s ease;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.attendance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    color: #0197c3;
+}
+
+.icon-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #0197c3;
+    font-size: 20px;
+}
+
+.icon-close:hover {
+    color: #d32f2f;
+}
+
+.scanner-panel {
+    width: 100%;
+    height: 300px;
+    border: 2px dashed #0197c3;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(1,151,195,0.05);
+    font-weight: bold;
+    color: #0197c3;
+}
+
+.modal-content h2,
+.modal-content h3 {
+    color: #0197c3;
+}
+
+.login-title {
+    color: #0197c3;
+    text-align: center;
+}
+
+.login-field select {
+    background: white;
+    color: #0197c3;
+    font-weight: 600;
+    border: 1px solid #0197c3;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login-field select:focus {
+    outline: none;
+    border-color: #007da3;
+    box-shadow: 0 0 5px rgba(1,151,195,0.3);
+}
+
+.login-field option {
+    color: #0197c3;
+    font-weight: 600;
+}
+
+.student-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.small-btn{
+    width:38px;
+    height:38px;
+    padding:0;
+}
+
+.mini-spinner{
+    font-size:13px;
+    color:#ff0036;
+    margin-top:8px;
+}
+
+#globalLoader{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(3px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loader-spinner{
+    width:50px;
+    height:50px;
+    border:5px solid #eee;
+    border-top:5px solid #1976d2;
+    border-radius:50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin{
+    to{ transform: rotate(360deg); }
+}
+
+
+/* ================= Loader داخل نافذة المعاينة ================= */
+
+.preview-loader {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.95);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.loader-content {
+    text-align: center;
+    color: #3f51b5;
+    font-weight: bold;
+}
+
+.loader-text {
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+/* سبينر احترافي */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #d0d6ff;
+    border-top: 4px solid #3f51b5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.custom-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-modal.show {
+    display: flex;
+}
+
+.modal-content.large {
+    background: #fff;
+    width: 90%;
+    max-width: 900px;
+    max-height: 85vh;   /* ߔŠمهم جداً */
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+
+.modal-header {
+  background: #1e88e5;
+  color: #fff;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* جسم المودال */
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* حاوية الجدول */
+/* حاوية الجدول للتمرير الأفقي */
+.table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* الجدول */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse; /* مهم لإظهار الحدود المشتركة بين الخلايا */
+    min-width: 900px; /* تأكد من أن جميع الأعمدة تظهر على الهاتف */
+    border: 1px solid #ccc; /* حد خارجي للجدول */
+}
+
+/* رأس الأعمدة */
+.styled-table th {
+    background: #0197c3;
+    color: white;
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* خلايا الجدول */
+.styled-table td {
+    background: #ffffff;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* تحسين الهواتف */
+@media (max-width: 768px) {
+    .styled-table th,
+    .styled-table td {
+        font-size: 14px;
+        padding: 6px 8px;
+    }
+}
+
+.Count-col {
+  width: 05%;
+}
+
+.name-col {
+  width: 35%;
+}
+
+.Classe-col {
+  width: 10%;
+}
+
+.Hore-col {
+  width: 10%;
+}
+
+.Checkbox-col {
+    width: 05%;
+    text-align: center;
+}
+
+.Checkbox-col input {
+    transform: scale(1.1);
+}
+
+#oldAbsTable td:first-child {
+    font-weight: 600;
+    text-align: right;
+}
+
+#newAbsTable td:first-child {
+    font-weight: 600;
+    text-align: right;
+}
+
+
+.styled-select{
+    width:100%;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    font-size:14px;
+    background:#fff;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.styled-select:focus{
+    outline:none;
+    border-color:#1976d2;
+    box-shadow:0 0 5px rgba(25,118,210,0.4);
+}
+
+.oldabs-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* مسافة بين الزر والكمبوبكس */
+    margin-bottom: 15px;
+}
+
+.oldabs-toolbar select {
+    flex: 1;
+}
+
+#CloseModalOldAbsented {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#DownloadOldAbsented {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.newabs-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* مسافة بين الزر والكمبوبكس */
+    margin-bottom: 15px;
+}
+
+.newabs-toolbar select {
+    flex: 1;
+}
+
+.Sendabs-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* مسافة بين الزر والكمبوبكس */
+    margin-bottom: 15px; 
+}
+
+.Sendabs-toolbar select {
+  flex: 1; 
+}
+
+
+#CloseModalNewAbsented {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#DownloadNewAbsented {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#SendAbsenceBtn,
+#CloseSendAbsModal {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.selected-row{
+background: rgba(1,151,195,0.15) !important;
+transition: background 0.2s;
+}
+
+.app-footer {
+    background: rgba(255, 255, 255, 0);
+    color:#007da3;
+    padding: 10px 0;
+    overflow: hidden;
+    font-weight: 600;
+}
+
+.footer-marquee {
+    display: inline-block;
+    white-space: nowrap;
+    padding-left: 100%;
+    animation: marqueeRTL 17s linear infinite;
+    color: #0197c3;
+    font-weight: bold;
+}
+
+.app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+
+@keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
+
+
+
+
+
+
+
+
+
+
+
+
