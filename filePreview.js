@@ -1,8 +1,4 @@
-let filePreviewPanel;
-let filePreviewFrame;
-let previewDownload;
-let previewOpen;
-let previewLoader;
+// ==================== filePreview.js ====================
 
 window.addEventListener("DOMContentLoaded", () => {
 
