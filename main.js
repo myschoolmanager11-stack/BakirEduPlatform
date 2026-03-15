@@ -30,19 +30,29 @@ document.addEventListener("DOMContentLoaded", function(){
     console.log("بوابة المؤسسة جاهزة للعمل 🚀");
 
     // ==================== إغلاق المودالات عند الضغط خارجها ====================
-    [contactModal, attendanceModal, oldAbsModal, newAbsModal, sendAbsModal].forEach(modal => {
-        window.addEventListener("click", e => {
-            if(e.target === modal) modal.style.display = "none";
-        });
+   [contactModal, attendanceModal, oldAbsModal, newAbsModal, sendAbsModal].forEach(modal => {
+
+    if(!modal) return;
+
+    window.addEventListener("click", e => {
+        if(e.target === modal){
+            modal.style.display = "none";
+        }
     });
+
+});
 
     document.addEventListener("keydown", e => {
         if(e.key === "Escape"){
             [contactModal, attendanceModal, oldAbsModal, newAbsModal, sendAbsModal].forEach(modal => {
-                if(modal.style.display === "flex" || modal.style.display === "block"){
-                    modal.style.display = "none";
-                }
-            });
+
+    if(!modal) return;
+
+    if(modal.style.display === "flex" || modal.style.display === "block"){
+        modal.style.display = "none";
+    }
+
+});
         }
     });
 
