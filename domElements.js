@@ -68,8 +68,9 @@ window.addEventListener("DOMContentLoaded", () => {
     const lastRacord = localStorage.getItem("lastRacord");
     if(lastRacord){
         racordInput.value = lastRacord;
-        // loginWithRacord(); // إذا أحببت محاولة تسجيل دخول تلقائي
+        // loginWithRacord();
     }
+});
 
 
 // ==================== LOADER دوال اللودر ====================
