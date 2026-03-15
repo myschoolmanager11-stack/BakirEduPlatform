@@ -671,6 +671,103 @@ background: rgba(1,151,195,0.15) !important;
 transition: background 0.2s;
 }
 
+/* ==================== Racord Login ==================== */
+
+.racord-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.racord-row input{
+
+    flex:1;
+    padding:10px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    font-size:14px;
+
+}
+
+.racord-row input:focus{
+
+    outline:none;
+    border-color:#1976d2;
+    box-shadow:0 0 3px rgba(25,118,210,0.4);
+
+}
+
+#scanQRBtn{
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    width:42px;
+    height:42px;
+
+    background:#1976d2;
+    color:white;
+
+    border:none;
+    border-radius:6px;
+
+    cursor:pointer;
+
+}
+
+#scanQRBtn:hover{
+
+    background:#125ea5;
+
+}
+
+.login-btn{
+
+    width:100%;
+    margin-top:15px;
+
+    padding:10px;
+
+    background:#2e7d32;
+    color:white;
+
+    border:none;
+    border-radius:6px;
+
+    font-size:15px;
+    cursor:pointer;
+
+}
+
+.login-btn:hover{
+
+    background:#1b5e20;
+
+}
+
+.login-content{
+
+    width:320px;
+    padding:20px;
+
+}
+
+.login-field{
+
+    margin-bottom:15px;
+
+}
+
+.login-field label{
+
+    display:block;
+    margin-bottom:5px;
+    font-size:14px;
+    font-weight:bold;
+
+}
+
 .app-footer {
     background: rgba(255, 255, 255, 0);
     color:#007da3;
