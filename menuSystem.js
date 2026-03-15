@@ -105,7 +105,7 @@ return;
 
 // اتصل بنا
 if(item.icon==="call"){
-contactModal.style.display="flex";
+contactModal.classList.add("show");
 return;
 }
 
@@ -124,7 +124,7 @@ return;
 
 // نظام الحضور
 if(item.label==="نظام الحضور الذكي"){
-attendanceModal.style.display="flex";
+attendanceModal.classList.add("show");
 return;
 }
 
