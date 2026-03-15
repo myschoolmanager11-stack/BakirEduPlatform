@@ -71,17 +71,6 @@ window.addEventListener("DOMContentLoaded", () => {
         // loginWithRacord(); // إذا أحببت محاولة تسجيل دخول تلقائي
     }
 
-    // تفعيل زر تسجيل الدخول بعد تحميل DOM
-    loginBtn?.addEventListener("click", () => {
-        const racord = racordInput.value.trim();
-        if(!racord) {
-            alert("رجاءً أدخل المعرف!");
-            return;
-        }
-        localStorage.setItem("lastRacord", racord);
-        openSession("teacher"); // مثال
-    });
-});
 
 // ==================== LOADER دوال اللودر ====================
 function showLoader(){
