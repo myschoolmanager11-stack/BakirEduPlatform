@@ -704,10 +704,10 @@ transition: background 0.2s;
 
     direction: ltr;      /* الكتابة من اليسار */
     text-align: left;
-   
+    min-height:40px;
     resize: vertical;
 
-    line-height:1;
+    line-height:1.4;
 
 }
 
