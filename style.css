@@ -697,28 +697,11 @@ transition: background 0.2s;
 
 }
 
-#scanQRBtn{
+#racordInput{
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    width:42px;
-    height:42px;
-
-    background:#1976d2;
-    color:white;
-
-    border:none;
-    border-radius:6px;
-
-    cursor:pointer;
-
-}
-
-#scanQRBtn:hover{
-
-    background:#125ea5;
+    min-height:60px;
+    resize:vertical;
+    line-height:1.4;
 
 }
 
