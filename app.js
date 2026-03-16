@@ -403,43 +403,90 @@ loginBtn.addEventListener("click", function() {
         const selectedLine = studentSelect.value;
         if(!selectedLine) return alert("اختر التلميذ من القائمة");
 
+        const racordInputValue = document.getElementById("racordInput").value.trim();
+        if(!racordInputValue) return alert("أدخل المعرف أو امسح QR");
+
         const data = parseStudentLine(selectedLine);
-        if(!data) return alert("خطأ في بيانات التلميذ المختار");
+
+        if(!data) return alert("خطأ في بيانات التلميذ");
+
+        // التحقق من المعرف
+        if(data.racord !== racordInputValue){
+            return alert("المعرف غير صحيح");
+        }
 
         parentData = data;
 
-        localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
-        localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
         localStorage.setItem("userName", data.name);
+        localStorage.setItem("StudentRecords_Fille_ID", data.StudentRecords_Fille_ID);
 
         openSession("parent");
         return;
     }
 
     // ===== دخول موظف =====
+    const racordInputValue = document.getElementById("racordInput").value.trim();
+
+    if(!racordInputValue) return alert("أدخل المعرف أو امسح QR");
+
     if(!loginPassword.value) return alert("أدخل كلمة المرور");
+
+    const selectedOption = employeeSelect.options[employeeSelect.selectedIndex];
+
+    if(!selectedOption.value) return alert("اختر الاسم من القائمة");
+
+    const teacherName = selectedOption.value;
 
     showLoader();
 
-    setTimeout(() => {
+    setTimeout(async () => {
 
         if(!PASSWORDS.includes(loginPassword.value)) {
             hideLoader();
             return alert("كلمة المرور غير صحيحة");
         }
 
-        const selectedOption = employeeSelect.options[employeeSelect.selectedIndex];
+        // تحميل القائمة للتحقق من المعرف
+        const type = userTypeSelect.value;
 
-        const teacherName = selectedOption.value;
-        const branche = selectedOption.getAttribute("data-branche") || "";
+        let fileId = type === "teacher"
+            ? CONFIG.ListeTeacher_File_ID
+            : CONFIG.ListeSupervisory_File_ID;
+
+        const list = await fetchFile(fileId);
+
+        let found = false;
+
+        if(list){
+            for(let line of list){
+
+                const user = type === "teacher"
+                    ? parseTeacherLine(line)
+                    : parseSupervisoryLine(line);
+
+                if(user.name === teacherName){
+
+                    if(user.racord === racordInputValue){
+                        found = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(!found){
+            hideLoader();
+            return alert("المعرف غير صحيح لهذا المستخدم");
+        }
 
         localStorage.setItem("userName", teacherName);
-        localStorage.setItem("Branche_Id", branche);
 
-        openSession(userTypeSelect.value);
+        openSession(type);
+
         hideLoader();
 
-    }, 300);
+    },300);
+
 });
 
 // ==================== فتح الجلسة ====================
