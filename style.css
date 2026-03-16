@@ -703,7 +703,7 @@ transition: background 0.2s;
     direction: ltr;          /* الكتابة من اليسار إلى اليمين */
     text-align: left;        /* يبدأ النص من اليسار */
 
-    min-height:45px;
+    min-height:40px;
     resize:vertical;         /* يسمح بالتمدد للأسفل */
 
     white-space: normal;     /* يسمح بالانتقال للسطر التالي */
