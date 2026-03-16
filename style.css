@@ -114,7 +114,6 @@ h1, h2, h3 {
     border-radius:10px;
    }
 
-.login-btn,
 .schoolKey-btn,
 .continue-btn,
 .contactSend-btn,
@@ -714,7 +713,7 @@ transition: background 0.2s;
 
     width:45%;
     margin-top:15px;
-
+    flex:1;
     padding:10px;
 
     background:#2e7d32;
