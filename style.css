@@ -702,16 +702,17 @@ transition: background 0.2s;
 
 #racordInput{
 
-    direction: ltr;          /* الكتابة من اليسار إلى اليمين */
-    text-align: left;        /* يبدأ النص من اليسار */
+    direction: ltr;      /* الكتابة من اليسار */
+    text-align: left;
 
-    min-height:40px;
-    resize:vertical;         /* يسمح بالتمدد للأسفل */
+    min-height:42px;
+    resize: vertical;
 
-    white-space: normal;     /* يسمح بالانتقال للسطر التالي */
-    overflow-wrap: break-word;
+    line-height:1.4;
 
 }
+
+
 
 .login-content{
 
