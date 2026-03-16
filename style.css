@@ -697,15 +697,6 @@ transition: background 0.2s;
 
 }
 
-
-#racordInput{
-
-    min-height:60px;
-    resize:vertical;
-    line-height:1.4;
-
-}
-
 #scanQRBtn{
 
     display:flex;
@@ -777,35 +768,6 @@ transition: background 0.2s;
 
 }
 
-
-/* ===== صف الأزرار ===== */
-
-.login-buttons{
-
-    display:flex;
-    gap:10px;
-    margin-top:10px;
-
-}
-
-
-/* الأزرار */
-
-.login-buttons .login-btn{
-
-    flex:1;
-
-}
-
-
-/* زر QR */
-
-.qr-btn{
-
-    background: linear-gradient(135deg,#0197c3,#007da3);
-
-}
-
 .app-footer {
     background: rgba(255, 255, 255, 0);
     color:#007da3;
@@ -826,5 +788,6 @@ transition: background 0.2s;
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
 
 
