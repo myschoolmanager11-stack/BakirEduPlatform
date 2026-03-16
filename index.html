@@ -59,37 +59,29 @@
 
         </div>
 
+<!-- معرف المستخدم -->
+   <div id="racordBlock">
+      <div class="login-field">
+          <label>معرف المستخدم</label>
+           <div class="racord-row">
+           <input type="text" id="racordInput" placeholder="أدخل المعرف أو امسح QR">
+  </div>
+    </div>
+       
+ <!-- زر تسجيل الدخول -->
+<div class="login-buttons">
+    <button id="loginBtn" class="login-btn" title="تسجيل الدخول">
+        <span class="material-icons btn-icon">login</span>
+        تسجيل الدخول
+    </button>
 
-        <!-- معرف المستخدم -->
-        <div id="racordBlock">
-
-            <div class="login-field">
-
-                <label>معرف المستخدم</label>
-
- <div class="racord-row">
-    <input
-        type="text"
-        id="racordInput"
-        placeholder="أدخل المعرف أو امسح QR"
-    >
-
-    <button
-        id="scanQRBtn"
-        onclick="startQRScan()"
-        title="مسح QR">
+    <button onclick="startQRScan()" class="login-btn qr-btn" id="scanQRBtn"  title="وجّه الكاميرا نحو رمز QR">
         <span class="material-icons">qr_code_scanner</span>
+        مسح QR
     </button>
 </div>
-</div>
-            
- <!-- زر تسجيل الدخول -->
-<button id="loginBtn" class="login-btn">
- <span class="material-icons btn-icon">login</span>
-      تسجيل الدخول
-</button>
- </div>
- </div>
+    </div>
+    </div>
 </div>
 
 <!-- ============= لوحة معاينة الملفات العامة ============ -->
