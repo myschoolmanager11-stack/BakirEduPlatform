@@ -388,7 +388,7 @@ async function loadEmployeeList(type){
 
 });
   
-// ==================== تحميل كلمات المرور ====================
+// ==================== تحميل كلمات المرور ==================== 
 async function loadPasswords(){
     const list = await fetchFile(CONFIG.Password_File_ID);
     if(list) PASSWORDS = list;
