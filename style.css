@@ -671,56 +671,49 @@ background: rgba(1,151,195,0.15) !important;
 transition: background 0.2s;
 }
 
-/* ==================== Racord Login ==================== */
+
+/* ===== حقل المعرف مع زر QR ===== */
 
 .racord-row{
-    display:flex;
-    align-items:center;
-    gap:8px;
+    position:relative;
+    width:100%;
 }
 
-.racord-row input{
+#racordInput{
+    height:45px;
+     width:100%;
+    padding:12px 45px 12px 10px;
 
-    flex:1;
-    padding:10px;
-    border-radius:6px;
     border:1px solid #ccc;
-    font-size:14px;
+    border-radius:8px;
+
+    font-size:16px;
 
 }
 
-.racord-row input:focus{
-
-    outline:none;
-    border-color:#1976d2;
-    box-shadow:0 0 3px rgba(25,118,210,0.4);
-
-}
+/* زر QR داخل الحقل */
 
 #scanQRBtn{
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    position:absolute;
 
-    width:42px;
-    height:42px;
-
-    background:#1976d2;
-    color:white;
+    left:5px;
+    top:50%;
+    transform:translateY(-50%);
 
     border:none;
-    border-radius:6px;
+    background:none;
 
     cursor:pointer;
 
-}
-
-#scanQRBtn:hover{
-
-    background:#125ea5;
+    color:#1976d2;
 
 }
+
+#scanQRBtn .material-icons{
+    font-size:24px;
+}
+
 
 .login-btn{
 
