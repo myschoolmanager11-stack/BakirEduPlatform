@@ -258,6 +258,8 @@ h1, h2, h3 {
   transition: all 0.2s ease;
   max-width: 42px;
   max-height: 42px;
+  min-width: 40px; 
+  min-height: 40px;  
 }
 
 .preview-btn:hover {
@@ -709,41 +711,15 @@ transition: background 0.2s;
 
 }
 
-.login-btn{
-
-    width:45%;
-    margin-top:15px;
-    flex:1;
-    padding:10px;
-
-    background:#2e7d32;
-    color:white;
-
-    border:none;
-    border-radius:6px;
-
-    font-size:15px;
-    cursor:pointer;
-
-}
-
-.login-btn:hover{
-
-    background:#1b5e20;
-
-}
-
 .login-content{
 
     width:320px;
     padding:20px;
-
 }
 
 .login-field{
 
     margin-bottom:15px;
-
 }
 
 .login-field label{
