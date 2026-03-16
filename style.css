@@ -671,49 +671,65 @@ background: rgba(1,151,195,0.15) !important;
 transition: background 0.2s;
 }
 
-
-/* ===== حقل المعرف مع زر QR ===== */
+/* ==================== Racord Login ==================== */
 
 .racord-row{
-    position:relative;
-    width:100%;
+    display:flex;
+    align-items:center;
+    gap:8px;
 }
+
+.racord-row input{
+
+    flex:1;
+    padding:10px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    font-size:14px;
+
+}
+
+.racord-row input:focus{
+
+    outline:none;
+    border-color:#1976d2;
+    box-shadow:0 0 3px rgba(25,118,210,0.4);
+
+}
+
 
 #racordInput{
-    height:45px;
-     width:100%;
-    padding:12px 45px 12px 10px;
 
-    border:1px solid #ccc;
-    border-radius:8px;
-
-    font-size:16px;
+    min-height:60px;
+    resize:vertical;
+    line-height:1.4;
 
 }
-
-/* زر QR داخل الحقل */
 
 #scanQRBtn{
 
-    position:absolute;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
-    left:5px;
-    top:50%;
-    transform:translateY(-50%);
+    width:42px;
+    height:42px;
+
+    background:#1976d2;
+    color:white;
 
     border:none;
-    background:none;
+    border-radius:6px;
 
     cursor:pointer;
 
-    color:#1976d2;
-
 }
 
-#scanQRBtn .material-icons{
-    font-size:24px;
-}
+#scanQRBtn:hover{
 
+    background:#125ea5;
+
+}
 
 .login-btn{
 
@@ -761,6 +777,35 @@ transition: background 0.2s;
 
 }
 
+
+/* ===== صف الأزرار ===== */
+
+.login-buttons{
+
+    display:flex;
+    gap:10px;
+    margin-top:10px;
+
+}
+
+
+/* الأزرار */
+
+.login-buttons .login-btn{
+
+    flex:1;
+
+}
+
+
+/* زر QR */
+
+.qr-btn{
+
+    background: linear-gradient(135deg,#0197c3,#007da3);
+
+}
+
 .app-footer {
     background: rgba(255, 255, 255, 0);
     color:#007da3;
@@ -781,16 +826,5 @@ transition: background 0.2s;
 .app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
 @keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
-
-
-
-
-
-
-
-
-
-
-
 
 
