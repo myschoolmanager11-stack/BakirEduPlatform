@@ -170,6 +170,8 @@ if(scanQRBtn){
 // زر الإغلاق
   previewClose.addEventListener("click", () => {
       panel.style.display = "none";
+      itemDescription.textContent = "";
+    
   });
 
 // زر التحميل
