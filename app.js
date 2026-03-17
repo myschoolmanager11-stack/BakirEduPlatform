@@ -423,26 +423,23 @@ loginBtn.addEventListener("click", function(){
     openSession(type, user);
 });
 
-// ==================== OPEN SESSION فتح الجلسة ====================
 
 function openSession(type, user) {
-    console.log("فتح الجلسة للمستخدم:", type);
+    alert("دخلت بنجاح: " + user.name);
+   // 🔥 هذا هو المكان الصحيح
+    document.body.style.pointerEvents = "auto";
+    loginModal.style.display = "none";
 
-    loginModal.classList.remove("show");
-
-    localStorage.setItem("userType", type);
-    localStorage.setItem("userName", user.name);
-    if(type === "parent") localStorage.setItem("StudentRecords_Fille_ID", user.StudentRecords_Fille_ID);
-
-    menuBtn.disabled = false;
-    const userName = user.name || "المستخدم";
-
-    if(type === "parent") welcomeText.textContent = `مرحبًا بك ${userName} في فضاء أولياء التلاميذ`;
-    else if(type === "teacher") welcomeText.textContent = `مرحبًا بك الأستاذ ${userName}`;
-    else welcomeText.textContent = `مرحبًا بك ${userName} في فضاء الإشراف التربوي`;
-
-    fillMenu(type);
+    console.log("حالة المودال:", loginModal);
+  
+    document.body.innerHTML = `
+        <h1 style="color:white;text-align:center;margin-top:50px">
+            مرحبًا ${user.name}
+        </h1>
+    `;
 }
+
+  
 
   
 // ==================== QR SCANNER مسح QR ====================
