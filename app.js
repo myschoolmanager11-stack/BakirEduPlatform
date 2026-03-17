@@ -466,10 +466,36 @@ function openSession(type, user) {
 }
   
 
+ // ==================== TOAST MESSAGE ====================
+function showToast(message){
+
+    let toast = document.createElement("div");
+    toast.className = "toast-message";
+    toast.textContent = message;
+
+    document.body.appendChild(toast);
+
+    setTimeout(()=>{
+        toast.classList.add("show");
+    }, 100);
+
+    setTimeout(()=>{
+        toast.classList.remove("show");
+        setTimeout(()=> toast.remove(), 300);
+    }, 3000);
+}
   
 // ==================== QR SCANNER مسح QR ====================
 let qrScanner = null;
 function startQRScan() {
+
+  // ✅ تحقق من اختيار المستخدم
+    if(!userTypeSelect.value){
+        showToast("⚠️ يرجى اختيار نوع المستخدم أولاً");
+        return;
+    }
+
+  
     const modal = document.getElementById("qrScannerModal");
     const qrReader = document.getElementById("qrReader");
 
@@ -490,6 +516,7 @@ function startQRScan() {
     });
 }
 
+// ==================== stop QR SCANNER  ====================
 function stopQRScanner() {
     if(qrScanner){
         qrScanner.stop().catch(()=>{});
