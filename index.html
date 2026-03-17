@@ -12,10 +12,41 @@
 <body>
 
 <header class="top-bar">
+<!-- زر القائمة -->
     <button class="menu-btn" id="menuBtn" disabled>
         <span class="material-icons">menu</span>
     </button>
 
+<!-- زر حسابي -->
+<div id="userBtn" class="user-btn">
+    👤 حسابي
+</div>
+    
+<!-- قائمة المستخدم المنبثقة -->
+<div id="userDropdown" class="user-dropdown">
+    <div class="user-info">
+        <div id="userNameDisplay">
+            <span class="material-icons">badge</span>
+            اسم المستخدم : 
+        </div>
+        <div id="userTypeDisplay">
+            <span class="material-icons">assignment_ind</span>
+            نوع المستخدم : 
+        </div>
+    </div>
+    <hr>
+    <div class="user-item" id="userAnnouncements">
+        <span class="material-icons">campaign</span>
+        إعلانات</div>
+    <div class="user-item" id="userContact">
+        <span class="material-icons">call</span>
+        اتصل بنا</div>
+    <div class="user-item" id="userLogout">
+        <span class="material-icons">logout</span>
+        تسجيل الخروج
+    </div>
+</div>
+    
    <div class="app-title">
     <h2 id="selectedTitle">
         <span class="material-icons">school</span>
@@ -31,6 +62,7 @@
 </div>
 
     <div class="dropdown-menu" id="dropdownMenu"></div>
+    
 </header>
 
 <main class="container">
