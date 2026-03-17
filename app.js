@@ -337,11 +337,15 @@ TEMP_SELECTED_ABS = JSON.parse(saved);
 
 // ====================USERS LOADING  اختيار المستخدم وتحميل القوائمم ====================
 
-userTypeSelect.addEventListener("change", async function(){
+loginBtn.disabled = true; // تعطيل الزر حتى يتم تحميل القوائم
+
+// عند تغيير نوع المستخدم
+userTypeSelect.addEventListener("change", async function() {
     const type = this.value;
     if(!type) return;
 
     showLoader();
+    loginBtn.disabled = true; // منع الضغط أثناء التحميل
     USERS_LOADED = false;
 
     let fileId = "";
@@ -366,23 +370,25 @@ userTypeSelect.addEventListener("change", async function(){
 
             if(user){
                 memoryUsers[type].push(user);
-                usersMap.set(user.racord, user);
+                usersMap.set(user.racord.trim(), user); // تنظيف المعرف هنا
             }
         });
 
         USERS_LOADED = true;
+        loginBtn.disabled = false; // تفعيل الزر بعد التحميل
 
     } catch(err) {
         console.error(err);
         alert("حدث خطأ أثناء تحميل المستخدمين");
+        loginBtn.disabled = true;
     }
 
     hideLoader();
 });
 
-
 // ==================== LOGIN BUTTON زر تسجيل الدخول ====================
 
+// عند الضغط على زر تسجيل الدخول
 loginBtn.addEventListener("click", function(){
     const type = userTypeSelect.value;
     const racord = racordInput.value.trim();
@@ -393,8 +399,11 @@ loginBtn.addEventListener("click", function(){
     if(!USERS_LOADED) return alert("القائمة لم تُحمّل بعد، يرجى الانتظار");
 
     const user = usersMap.get(racord);
+    console.log("محاولة تسجيل الدخول:", racord, user); // <-- لتتبع المشكلة
+
     if(!user) return alert("المعرف غير صحيح");
 
+    // فتح الجلسة
     localStorage.setItem("lastRacord", racord);
     openSession(type, user);
 });
