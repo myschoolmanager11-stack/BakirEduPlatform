@@ -118,8 +118,11 @@ document.addEventListener("click", function(e){
 });
   
   
-// --- نافذة عرض الملفات ---
-
+// --- تعريف عناصر قائمة المستخدم ---
+const userBtn = document.getElementById("userBtn");
+const userDropdown = document.getElementById("userDropdown");
+const userNameDisplay = document.getElementById("userNameDisplay");
+const userTypeDisplay = document.getElementById("userTypeDisplay");
 
 // --- تسجيل الدخول ---
 const userTypeSelect = document.getElementById("userTypeSelect");
@@ -474,6 +477,8 @@ function openSession(type, user) {
     else welcomeText.textContent = `مرحبًا بك ${userName} في فضاء الإشراف التربوي`;
 
     fillMenu(type);
+  
+  updateUserDropdown(type, user.name);
 }
   
 
@@ -580,7 +585,46 @@ function logout() {
     console.log("تم تسجيل الخروج");
 }
   
+// ==================== التحكم بالقائمة المنبثقة الخاصة بالمستخدم ====================
+  
+// عرض / إخفاء القائمة عند الضغط على الزر
+userBtn.addEventListener("click", () => {
+    if(userDropdown.style.display === "block") userDropdown.style.display = "none";
+    else userDropdown.style.display = "block";
+});
 
+// إغلاق القائمة عند الضغط خارجها
+document.addEventListener("click", (e) => {
+    if(userDropdown.style.display !== "block") return;
+    if(userDropdown.contains(e.target) || userBtn.contains(e.target)) return;
+    userDropdown.style.display = "none";
+});
+
+// تعبئة معلومات المستخدم عند تسجيل الدخول
+function updateUserDropdown(userType, userName) {
+    userNameDisplay.textContent = userName || "المستخدم";
+    userTypeDisplay.textContent = (userType === "parent") ? "ولي تلميذ" :
+                                   (userType === "teacher") ? "أستاذ" :
+                                   "إشراف تربوي";
+}
+
+// ربط العناصر بالأحداث
+document.getElementById("userAnnouncements").addEventListener("click", () => {
+    openFilePreview(CONFIG.Announcements_File_ID);
+    userDropdown.style.display = "none";
+});
+
+document.getElementById("userContact").addEventListener("click", () => {
+    document.getElementById("contactModal").style.display = "flex";
+    userDropdown.style.display = "none";
+});
+
+document.getElementById("userLogout").addEventListener("click", () => {
+    logout();
+    userDropdown.style.display = "none";
+});
+
+  
 // ==================== تحميل عناصر القائمة fillMenu حسب المستخدم وربطها بالأحداث ====================
   function fillMenu(type) {
     dropdownMenu.innerHTML = "";
