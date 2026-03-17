@@ -153,6 +153,13 @@ h1, h2, h3 {
     background: linear-gradient(135deg,#00a8d6,#006a8a);
 }
 
+#dropdownMenu {
+    display: none;
+}
+
+#dropdownMenu.show {
+    display: block;
+}
 
 .dropdown-menu {
     position: absolute;
