@@ -515,6 +515,10 @@ racordInput.addEventListener("keydown", function(e){
 
 // ==================== logout دالة تسجيل الخروج ====================
 function logout() {
+      // إرجاع النص الترحيبي
+    welcomeText.textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
+    itemDescription.textContent = "";
+  
     localStorage.removeItem("userType");
     localStorage.removeItem("userName");
     localStorage.removeItem("StudentRecords_Fille_ID");
@@ -525,15 +529,18 @@ function logout() {
 
     dropdownMenu.style.display = "none";
     menuBtn.disabled = true;
-
+  
+    loginModal.style.display = "flex"; // أو "block" حسب CSS
     loginModal.classList.add("show");
+
     racordInput.value = "";
     userTypeSelect.value = "";
-    welcomeText.textContent = "يرجى تسجيل الدخول";
-
+  
+     // إغلاق أي معاينة مفتوحة
+    document.getElementById("filePreviewPanel").style.display = "none";
+  
     console.log("تم تسجيل الخروج");
 }
-
   
 
 // ==================== تحميل عناصر القائمة fillMenu حسب المستخدم وربطها بالأحداث ====================
