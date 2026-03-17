@@ -745,6 +745,7 @@ if(FILE_ITEMS[item.label]) {
 // ==================== دالة اتصل بنا ====================
   document.getElementById("closeContactModal").addEventListener("click", function(){
     document.getElementById("contactModal").style.display="none";
+    itemDescription.textContent = "";
   });
 
   document.getElementById("contactSendBtn").addEventListener("click", function(){
@@ -811,6 +812,7 @@ oldAbsModal.classList.add("show");
   // OldAbsentedModal غلق المودال
   window.closeOldAbsentedModal = function(){
      oldAbsModal.classList.remove("show");
+    itemDescription.textContent = "";
   };
 
   // فلترة حسب القسم 
@@ -967,6 +969,7 @@ window.openNewAbsentedModal = async function(){
 // غلق المودال
 window.closeNewAbsentedModal = function(){
     newAbsModal.classList.remove("show");
+  itemDescription.textContent = "";
 };
 
 // فلترة حسب القسم
@@ -1109,6 +1112,7 @@ window.openSendAbsentedModal = async function(){
 // غلق المودال
 window.closeSendAbsentedModal = function(){
     sendAbsModal.classList.remove("show");
+  itemDescription.textContent = "";
 };
 
 
