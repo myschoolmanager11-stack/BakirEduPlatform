@@ -360,19 +360,20 @@ userTypeSelect.addEventListener("change", async function() {
         memoryUsers[type] = [];
         usersMap.clear();
 
-        lines.forEach(line => {
-            line = line.trim();
-            if(!line) return;
-            let user = null;
-            if(type === "teacher") user = parseTeacherLine(line);
-            if(type === "consultation") user = parseSupervisoryLine(line);
-            if(type === "parent") user = parseStudentLine(line);
+lines.forEach(line => {
+    line = line.trim();
+    if(!line) return;
+    let user = null;
+    if(type === "teacher") user = parseTeacherLine(line);
+    if(type === "consultation") user = parseSupervisoryLine(line);
+    if(type === "parent") user = parseStudentLine(line);
 
-            if(user){
-                memoryUsers[type].push(user);
-                usersMap.set(user.racord.trim(), user); // تنظيف المعرف هنا
-            }
-        });
+    if(user){
+        memoryUsers[type].push(user);
+        const key = user.racord.trim().replace(/\s/g, "");
+        usersMap.set(key, user); // <-- تنظيف صارم
+    }
+});
 
         USERS_LOADED = true;
         loginBtn.disabled = false; // تفعيل الزر بعد التحميل
@@ -386,25 +387,24 @@ userTypeSelect.addEventListener("change", async function() {
     hideLoader();
 });
 
-// ==================== LOGIN BUTTON زر تسجيل الدخول ====================
-
-// عند الضغط على زر تسجيل الدخول
 loginBtn.addEventListener("click", function(){
     const type = userTypeSelect.value;
-    const racord = racordInput.value.trim();
-
+    let racordInputValue = racordInput.value; // القيمة الخام من الحقل
     if(!type) return alert("يرجى اختيار نوع المستخدم");
-    if(!racord) return alert("يرجى إدخال المعرف");
+    if(!racordInputValue) return alert("يرجى إدخال المعرف");
 
     if(!USERS_LOADED) return alert("القائمة لم تُحمّل بعد، يرجى الانتظار");
 
-    const user = usersMap.get(racord);
-    console.log("محاولة تسجيل الدخول:", racord, user); // <-- لتتبع المشكلة
+    // 🔹 التعديل هنا: تنظيف المعرف من الفراغات قبل البحث
+    const racordClean = racordInputValue.trim().replace(/\s/g, "");
+    const user = usersMap.get(racordClean);
+
+    console.log("محاولة تسجيل الدخول:", racordClean, user); // <-- تتبع المشكلة
 
     if(!user) return alert("المعرف غير صحيح");
 
     // فتح الجلسة
-    localStorage.setItem("lastRacord", racord);
+    localStorage.setItem("lastRacord", racordClean);
     openSession(type, user);
 });
 
