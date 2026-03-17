@@ -377,8 +377,7 @@ lines.forEach(line => {
     .replace(/\r/g, "")
     .replace(/\n/g, "");
 
-     usersMap.set(key, user); // <-- 
-      تنظيف صارم
+     usersMap.set(key, user); // <-- تنظيف صارم
     }
 });
 
