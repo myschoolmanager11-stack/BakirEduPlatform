@@ -1309,3 +1309,4 @@ function openFilePreview(fileId) {
 
   setTimeout(() => panel.style.opacity = 1, 50);
 }
+});
