@@ -94,6 +94,19 @@ const menuBtn = document.getElementById("menuBtn");
 const dropdownMenu = document.getElementById("dropdownMenu");
 const itemDescription = document.getElementById("itemDescription");
 
+// 🔥 فتح/غلق القائمة
+menuBtn.addEventListener("click", function () {
+    if (dropdownMenu.style.display === "block") {
+        dropdownMenu.style.display = "none";
+    } else {
+        dropdownMenu.style.display = "block";
+    }
+});
+
+// menuBtn.addEventListener("click", function () {
+  //  dropdownMenu.classList.toggle("show");
+//}); 
+  
 // --- نافذة عرض الملفات ---
 
 
@@ -427,10 +440,9 @@ loginBtn.addEventListener("click", function(){
 // ==================== OPEN SESSION فتح الجلسة ====================
 
 function openSession(type, user) {
-    alert("تم تسجيل الدخول بنجاح");
+   // alert("تم تسجيل الدخول بنجاح");
     console.log("فتح الجلسة للمستخدم:", type);
 
-   // 🔥 هذا هو المكان الصحيح
     document.body.style.pointerEvents = "auto";
     
     loginModal.classList.remove("show");
