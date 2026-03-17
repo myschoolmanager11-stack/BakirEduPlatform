@@ -103,9 +103,20 @@ menuBtn.addEventListener("click", function () {
     }
 });
 
-// menuBtn.addEventListener("click", function () {
-  //  dropdownMenu.classList.toggle("show");
-//}); 
+
+// ==================== إخفاء القائمة عند الضغط خارجها ====================
+document.addEventListener("click", function(e){
+
+    // إذا كانت القائمة غير مفتوحة → لا تفعل شيء
+    if(dropdownMenu.style.display !== "block") return;
+
+    // إذا ضغط داخل القائمة أو على زر القائمة → لا تغلق
+    if(dropdownMenu.contains(e.target) || menuBtn.contains(e.target)) return;
+
+    // 🔥 غير ذلك → أغلق القائمة
+    dropdownMenu.style.display = "none";
+});
+  
   
 // --- نافذة عرض الملفات ---
 
