@@ -116,9 +116,15 @@ const newAbsTableBody = document.querySelector("#newAbsTable tbody");
 const sendAbsSelect = document.getElementById("sendAbsClassFilter");
 const sendAbsTableBody = document.querySelector("#sendAbsTable tbody");
   
-// --- اللودر العام ---
-function showLoader() { document.getElementById("globalLoader").style.display = "flex"; }
-function hideLoader() { document.getElementById("globalLoader").style.display = "none"; }
+// --- اللودر العام  Loader ---
+function showLoader() {
+    const loader = document.getElementById("globalLoader");
+    if(loader) loader.style.display = "flex";
+}
+function hideLoader() {
+    const loader = document.getElementById("globalLoader");
+    if(loader) loader.style.display = "none";
+}
 
 // ربط زر QR
 if(scanQRBtn){
@@ -214,17 +220,14 @@ if(scanQRBtn){
   });
   
 // ==================== MEMORY USERS / MAP ====================
-let memoryUsers = {
-    teacher: [],
-    consultation: [],
-    parent: []
-};
+let memoryUsers = { teacher: [], consultation: [], parent: [] };
 
 let usersMap = new Map();  
 
   // تخزين القوائم في الذاكرة
 let USERS_LIST = [];
-
+let USERS_LOADED = false;
+  
 // ====================AttendanceModal إغلاق مودال الحضور ====================
 const closeAttendanceModal = document.getElementById("closeAttendanceModal");
 const attendanceModal = document.getElementById("attendanceModal");
@@ -332,35 +335,30 @@ TEMP_SELECTED_ABS = JSON.parse(saved);
 }
   
 
-// ==================== عند اختيار نوع المستخدم ====================
+// ====================USERS LOADING  اختيار المستخدم وتحميل القوائمم ====================
+
 userTypeSelect.addEventListener("change", async function(){
     const type = this.value;
     if(!type) return;
 
     showLoader();
+    USERS_LOADED = false;
 
-    try{
-        let fileId = "";
-        if(type === "teacher") fileId = CONFIG.ListeTeacher_File_ID;
-        if(type === "consultation") fileId = CONFIG.ListeSupervisory_File_ID;
-        if(type === "parent") fileId = CONFIG.ListeStudents_File_ID;
+    let fileId = "";
+    if(type === "teacher") fileId = CONFIG.ListeTeacher_File_ID;
+    if(type === "consultation") fileId = CONFIG.ListeSupervisory_File_ID;
+    if(type === "parent") fileId = CONFIG.ListeStudents_File_ID;
 
+    try {
         const lines = await fetchFile(fileId);
+        if(!lines) throw new Error("تعذر تحميل الملف");
 
-        if(!lines){
-            alert("تعذر تحميل قائمة المستخدمين");
-            hideLoader();
-            return;
-        }
-
-        // مسح البيانات القديمة في الذاكرة
         memoryUsers[type] = [];
         usersMap.clear();
 
-        for(let line of lines){
+        lines.forEach(line => {
             line = line.trim();
-            if(!line) continue;
-
+            if(!line) return;
             let user = null;
             if(type === "teacher") user = parseTeacherLine(line);
             if(type === "consultation") user = parseSupervisoryLine(line);
@@ -368,17 +366,20 @@ userTypeSelect.addEventListener("change", async function(){
 
             if(user){
                 memoryUsers[type].push(user);
-                usersMap.set(user.racord, user); // لتسريع البحث
+                usersMap.set(user.racord, user);
             }
-        }
+        });
 
-    } catch(error){
-        console.error(error);
-        alert("حدث خطأ أثناء تحميل القائمة");
+        USERS_LOADED = true;
+
+    } catch(err) {
+        console.error(err);
+        alert("حدث خطأ أثناء تحميل المستخدمين");
     }
 
     hideLoader();
 });
+
 
 // ==================== LOGIN BUTTON زر تسجيل الدخول ====================
 
@@ -386,121 +387,74 @@ loginBtn.addEventListener("click", function(){
     const type = userTypeSelect.value;
     const racord = racordInput.value.trim();
 
-    if(!type){
-        alert("يرجى اختيار نوع المستخدم");
-        return;
-    }
+    if(!type) return alert("يرجى اختيار نوع المستخدم");
+    if(!racord) return alert("يرجى إدخال المعرف");
 
-    if(!racord){
-        alert("يرجى إدخال المعرف");
-        return;
-    }
+    if(!USERS_LOADED) return alert("القائمة لم تُحمّل بعد، يرجى الانتظار");
 
     const user = usersMap.get(racord);
+    if(!user) return alert("المعرف غير صحيح");
 
-    if(!user){
-        alert("المعرف غير صحيح");
-        return;
-    }
-
-    // تخزين Racord صحيح في LocalStorage لتسريع الدخول لاحقًا
     localStorage.setItem("lastRacord", racord);
-
     openSession(type, user);
 });
 
 // ==================== OPEN SESSION فتح الجلسة ====================
 
 function openSession(type, user) {
-
     console.log("فتح الجلسة للمستخدم:", type);
 
-    // إغلاق نافذة تسجيل الدخول
     loginModal.classList.remove("show");
 
-    // حفظ معلومات المستخدم
     localStorage.setItem("userType", type);
     localStorage.setItem("userName", user.name);
+    if(type === "parent") localStorage.setItem("StudentRecords_Fille_ID", user.StudentRecords_Fille_ID);
 
-    if(type === "parent"){
-        localStorage.setItem("StudentRecords_Fille_ID", user.StudentRecords_Fille_ID);
-    }
-
-    // تفعيل زر القائمة
     menuBtn.disabled = false;
-
     const userName = user.name || "المستخدم";
 
-    // تحديث رسالة الترحيب
-    if(type === "parent") {
+    if(type === "parent") welcomeText.textContent = `مرحبًا بك ${userName} في فضاء أولياء التلاميذ`;
+    else if(type === "teacher") welcomeText.textContent = `مرحبًا بك الأستاذ ${userName}`;
+    else welcomeText.textContent = `مرحبًا بك ${userName} في فضاء الإشراف التربوي`;
 
-        welcomeText.textContent = `مرحبًا بك ${userName} في فضاء أولياء التلاميذ`;
-
-    } 
-    else if(type === "teacher") {
-
-        welcomeText.textContent = `مرحبًا بك الأستاذ ${userName}`;
-
-    } 
-    else {
-
-        welcomeText.textContent = `مرحبًا بك ${userName} في فضاء الإشراف التربوي`;
-
-    }
-
-    // ملء القائمة
     fillMenu(type);
-
 }
 
+  
 // ==================== QR SCANNER مسح QR ====================
-
 let qrScanner = null;
+function startQRScan() {
+    const modal = document.getElementById("qrScannerModal");
+    const qrReader = document.getElementById("qrReader");
 
-function startQRScan(){
-    
-const modal = document.getElementById("qrScannerModal");
-
+    if(!qrReader) return alert("عنصر QR Reader غير موجود!");
     modal.style.display = "flex";
 
     qrScanner = new Html5Qrcode("qrReader");
-
     qrScanner.start(
         { facingMode: "environment" },
-        {
-            fps: 10,
-            qrbox: 250
-        },
+        { fps: 10, qrbox: 250 },
         qrCodeMessage => {
-
             racordInput.value = qrCodeMessage;
-
             stopQRScanner();
-
         }
-    );
-
+    ).catch(err => {
+        console.error("خطأ في QR Scanner:", err);
+        alert("تعذر فتح الكاميرا");
+    });
 }
 
-
-function stopQRScanner(){
-
+function stopQRScanner() {
     if(qrScanner){
-        qrScanner.stop();
+        qrScanner.stop().catch(()=>{});
         qrScanner = null;
     }
-
-    document.getElementById("qrScannerModal").style.display = "none";
-
+    const modal = document.getElementById("qrScannerModal");
+    if(modal) modal.style.display = "none";
 }
 
-// ==================== CLOSE QR MODAL ====================
-
-document.getElementById("closeQrModal").addEventListener("click", function(){
-
-    stopQRScanner();
-
-});
+document.getElementById("closeQrModal")?.addEventListener("click", stopQRScanner);
+  
 
 // ==================== LOGIN WITH ENTER تسجيل الدخول بالضغط على Enter ====================
 
@@ -513,36 +467,26 @@ racordInput.addEventListener("keydown", function(e){
 
 });
 
-// ==================== دالة تسجيل الخروج ====================
-function logout(){
-
-    // حذف بيانات الجلسة
+// ==================== logout دالة تسجيل الخروج ====================
+function logout() {
     localStorage.removeItem("userType");
     localStorage.removeItem("userName");
     localStorage.removeItem("StudentRecords_Fille_ID");
 
-    // إعادة تعيين الذاكرة
     memoryUsers = { teacher: [], consultation: [], parent: [] };
     usersMap.clear();
+    USERS_LOADED = false;
 
-    // إخفاء القائمة
     dropdownMenu.style.display = "none";
-
-    // تعطيل زر القائمة
     menuBtn.disabled = true;
 
-    // إظهار نافذة تسجيل الدخول
     loginModal.classList.add("show");
-
-    // إعادة تعيين الحقول
     racordInput.value = "";
     userTypeSelect.value = "";
-
     welcomeText.textContent = "يرجى تسجيل الدخول";
 
     console.log("تم تسجيل الخروج");
 }
-  
 
   
 
