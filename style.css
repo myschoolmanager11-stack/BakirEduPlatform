@@ -115,13 +115,11 @@ h1, h2, h3 {
    }
 
 .login-btn,
-.schoolKey-btn,
-.continue-btn,
 .contactSend-btn,
 .Attendance-btn {
-
-    height:38px;
-    width:100%;
+        
+    height:40px;
+    width:50%;
     border:none;
     border-radius:12px;
 
@@ -142,8 +140,6 @@ h1, h2, h3 {
 
 
 .login-btn:hover,
-.schoolKey-btn:hover,
-.continue-btn:hover,
 .contactSend-btn:hover,
 .Attendance-btn:hover{
 
@@ -265,8 +261,8 @@ h1, h2, h3 {
   cursor: pointer;
   box-shadow: 0 3px 6px rgba(0,0,0,0.15);
   transition: all 0.2s ease;
-  max-width: 42px;
-  max-height: 42px;
+  max-width: 40px;
+  max-height: 40px;
   min-width: 40px; 
   min-height: 40px;  
 }
