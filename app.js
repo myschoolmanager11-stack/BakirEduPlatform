@@ -87,7 +87,7 @@ const loginModal = document.getElementById("loginModal");
 const oldAbsModal = document.getElementById("ModalOldAbsented");
 const newAbsModal = document.getElementById("ModalNewAbsented");
 const sendAbsModal = document.getElementById("SendAbsentedModal");
-//const contactModal = document.getElementById("contactModal");
+const contactModal = document.getElementById("contactModal");
 
 // --- القائمة ---
 const menuBtn = document.getElementById("menuBtn");
@@ -99,12 +99,9 @@ const itemDescription = document.getElementById("itemDescription");
 
 // --- تسجيل الدخول ---
 const userTypeSelect = document.getElementById("userTypeSelect");
-//const racordBlock = document.getElementById("racordBlock");
-//const racordInput = document.getElementById("racordInput");
-//const scanQRBtn = document.getElementById("scanQRBtn");
-
-const employeeBlock = document.getElementById("employeeBlock");
-const employeeSelect = document.getElementById("employeeSelect");
+const racordBlock = document.getElementById("racordBlock");
+const racordInput = document.getElementById("racordInput");
+const scanQRBtn = document.getElementById("scanQRBtn");
 const loginBtn = document.getElementById("loginBtn");
 
 // --- عناصر OldAbsented ---
@@ -132,6 +129,9 @@ let memoryUsers = {
 
 let usersMap = new Map();  
 
+  // تخزين القوائم في الذاكرة
+let USERS_LIST = [];
+  
 // ==================== FETCH FILE تحميل الملفات من Google Drive ====================
 async function fetchFile(fileId) {
     if(!fileId) {
@@ -186,7 +186,6 @@ function parseSupervisoryLine(line){
     };
 }
 
-
 // ==================== دالة حذف القائمة تلقائياً الساعة 23:00 (توقيت الجزائر) ====================
 function autoClearAbsList(){
 
@@ -229,236 +228,218 @@ if(saved){
 TEMP_SELECTED_ABS = JSON.parse(saved);
 }
   
-// ==================== تغيير نوع المستخدم ====================
-userTypeSelect.addEventListener("change", async function () {
+
+// ==================== عند اختيار نوع المستخدم ====================
+userTypeSelect.addEventListener("change", async function(){
     const type = this.value;
-    console.log("نوع المستخدم المختار:", type);
-
-    // إخفاء جميع البلوكات أولاً
-    employeeBlock.style.display =
-    authBlock.style.display =
-    continueBtn.style.display =
-    loginBtn.style.display =
-    schoolKeyBlock.style.display =
-    studentBlock.style.display = "none";
-
-    if(type === "parent") {
-        studentBlock.style.display = "block";
-        loginBtn.style.display = "flex";
-        await loadClassesList();
-    } else if(type === "teacher" || type === "consultation") {
-        schoolKeyBlock.style.display = "block";
-    }
-});
-
-// ==================== تحميل قائمة الأقسام ====================
-async function loadClassesList() {
-    classeSelect.disabled = true;
-    classeSelect.innerHTML = `<option value="">-- يرجى الإنتظار... --</option>`;
-    showLoader();
-
-    const classes = await fetchFile(CONFIG.ListeClasses_File_ID);
-
-    if(classes) {
-        classeSelect.innerHTML = `<option value="">-- اختر القسم --</option><option value="all">كل الأقسام</option>`;
-        classes.forEach(c => classeSelect.innerHTML += `<option value="${c}">${c}</option>`);
-    } else {
-        classeSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل الأقسام</option>`;
-    }
-
-    classeSelect.disabled = false;
-    hideLoader();
-}
-
-// ==================== تغيير القسم ====================
-classeSelect.addEventListener("change", async function () {
-    const selectedClasse = this.value;
-    if(selectedClasse) await loadStudentsList(selectedClasse);
-});
-
-// ==================== تحميل قائمة الطلاب ====================
-async function loadStudentsList(selectedClasse = "all") {
-    showLoader();
-    studentSelect.disabled = true;
-    studentSelect.innerHTML = `<option value="">يرجى الإنتظار...</option>`;
-
-    const list = await fetchFile(CONFIG.ListeStudents_File_ID);
-    if(list) {
-        STUDENTS_LIST = list;
-        let filteredList = selectedClasse === "all" ? list : list.filter(line => line.split(";")[1].trim() === selectedClasse);
-        studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-        filteredList.forEach(line => {
-            const parts = line.split(";");
-            studentSelect.innerHTML += `<option value="${line}">${parts[0]}</option>`;
-        });
-    } else {
-        studentSelect.innerHTML = `<option value="">حدث خطأ أثناء تحميل القائمة</option>`;
-    }
-
-    studentSelect.disabled = false;
-    hideLoader();
-}
-
-// ==================== تحميل الموظفين ====================
-async function loadEmployeeList(type){
-    showLoader();
-    const fileId = type === "teacher" ? CONFIG.ListeTeacher_File_ID : CONFIG.ListeSupervisory_File_ID;
-    employeeSelect.disabled = true;
-    employeeSelect.innerHTML = `<option value="">يرجى الإنتظار... </option>`;
-    const list = await fetchFile(fileId);
-    if(list){
-        employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-        list.forEach(line => {
-
-    const parts = line.split(";");
-    const teacherName = parts[0]?.trim() || "";
-    const branche = parts[1]?.trim() || "";
-
-    employeeSelect.innerHTML += 
-        `<option value="${teacherName}" data-branche="${branche}">
-            ${teacherName}
-        </option>`;
-});
-    } else {
-        employeeSelect.innerHTML = '<option value="">حدث خطأ أثناء تحميل القائمة</option>';
-    }
-    employeeSelect.disabled = false;
-    hideLoader();
-}
-
-  employeeSelect.addEventListener("change", function(){
-
-    if(this.value){
-        authBlock.style.display = "block";
-        loginBtn.style.display = "flex";
-    } else {
-        authBlock.style.display = "none";
-        loginBtn.style.display = "none";
-    }
-
-});
- 
-
-// ==================== تسجيل الدخول ====================
-loginBtn.addEventListener("click", function() {
-
-    // ===== دخول ولي =====
-    if(userTypeSelect.value === "parent") {
-
-        const selectedLine = studentSelect.value;
-        if(!selectedLine) return alert("اختر التلميذ من القائمة");
-
-        const racordInputValue = document.getElementById("racordInput").value.trim();
-        if(!racordInputValue) return alert("أدخل المعرف أو امسح QR");
-
-        const data = parseStudentLine(selectedLine);
-
-        if(!data) return alert("خطأ في بيانات التلميذ");
-
-        // التحقق من المعرف
-        if(data.racord !== racordInputValue){
-            return alert("المعرف غير صحيح");
-        }
-
-        parentData = data;
-
-        localStorage.setItem("userName", data.name);
-        localStorage.setItem("StudentRecords_Fille_ID", data.StudentRecords_Fille_ID);
-
-        openSession("parent");
-        return;
-    }
-
-    // ===== دخول موظف =====
-    const racordInputValue = document.getElementById("racordInput").value.trim();
-
-    if(!racordInputValue) return alert("أدخل المعرف أو امسح QR");
-
-    if(!loginPassword.value) return alert("أدخل كلمة المرور");
-
-    const selectedOption = employeeSelect.options[employeeSelect.selectedIndex];
-
-    if(!selectedOption.value) return alert("اختر الاسم من القائمة");
-
-    const teacherName = selectedOption.value;
+    if(!type) return;
 
     showLoader();
 
-    setTimeout(async () => {
+    try{
+        let fileId = "";
+        if(type === "teacher") fileId = CONFIG.ListeTeacher_File_ID;
+        if(type === "consultation") fileId = CONFIG.ListeSupervisory_File_ID;
+        if(type === "parent") fileId = CONFIG.ListeStudents_File_ID;
 
-        if(!PASSWORDS.includes(loginPassword.value)) {
+        const lines = await fetchFile(fileId);
+
+        if(!lines){
+            alert("تعذر تحميل قائمة المستخدمين");
             hideLoader();
-            return alert("كلمة المرور غير صحيحة");
+            return;
         }
 
-        // تحميل القائمة للتحقق من المعرف
-        const type = userTypeSelect.value;
+        // مسح البيانات القديمة في الذاكرة
+        memoryUsers[type] = [];
+        usersMap.clear();
 
-        let fileId = type === "teacher"
-            ? CONFIG.ListeTeacher_File_ID
-            : CONFIG.ListeSupervisory_File_ID;
+        for(let line of lines){
+            line = line.trim();
+            if(!line) continue;
 
-        const list = await fetchFile(fileId);
+            let user = null;
+            if(type === "teacher") user = parseTeacherLine(line);
+            if(type === "consultation") user = parseSupervisoryLine(line);
+            if(type === "parent") user = parseStudentLine(line);
 
-        let found = false;
-
-        if(list){
-            for(let line of list){
-
-                const user = type === "teacher"
-                    ? parseTeacherLine(line)
-                    : parseSupervisoryLine(line);
-
-                if(user.name === teacherName){
-
-                    if(user.racord === racordInputValue){
-                        found = true;
-                        break;
-                    }
-                }
+            if(user){
+                memoryUsers[type].push(user);
+                usersMap.set(user.racord, user); // لتسريع البحث
             }
         }
 
-        if(!found){
-            hideLoader();
-            return alert("المعرف غير صحيح لهذا المستخدم");
-        }
+    } catch(error){
+        console.error(error);
+        alert("حدث خطأ أثناء تحميل القائمة");
+    }
 
-        localStorage.setItem("userName", teacherName);
-
-        openSession(type);
-
-        hideLoader();
-
-    },300);
-
+    hideLoader();
 });
 
-// ==================== فتح الجلسة ====================
-function openSession(type) {
+// ==================== LOGIN BUTTON زر تسجيل الدخول ====================
+
+loginBtn.addEventListener("click", function(){
+    const type = userTypeSelect.value;
+    const racord = racordInput.value.trim();
+
+    if(!type){
+        alert("يرجى اختيار نوع المستخدم");
+        return;
+    }
+
+    if(!racord){
+        alert("يرجى إدخال المعرف");
+        return;
+    }
+
+    const user = usersMap.get(racord);
+
+    if(!user){
+        alert("المعرف غير صحيح");
+        return;
+    }
+
+    // تخزين Racord صحيح في LocalStorage لتسريع الدخول لاحقًا
+    localStorage.setItem("lastRacord", racord);
+
+    openSession(type, user);
+});
+
+// ==================== OPEN SESSION فتح الجلسة ====================
+
+function openSession(type, user) {
 
     console.log("فتح الجلسة للمستخدم:", type);
 
-    document.getElementById("loginModal").style.display = "none";
+    // إغلاق نافذة تسجيل الدخول
+    loginModal.classList.remove("show");
 
+    // حفظ معلومات المستخدم
     localStorage.setItem("userType", type);
+    localStorage.setItem("userName", user.name);
 
-    menuBtn.disabled = false;
-
-    const userName = localStorage.getItem("userName") || "المستخدم";
-
-    if(type === "parent") {
-        welcomeText.textContent = `مرحبًا بك ${userName} في فضاء أولياء التلاميذ`;
-    } 
-    else if(type === "teacher") {
-        welcomeText.textContent = `مرحبًا بك الأستاذ ${userName}`;
-    } 
-    else {
-        welcomeText.textContent = `مرحبًا بك ${userName} في فضاء الإشراف التربوي`;
+    if(type === "parent"){
+        localStorage.setItem("StudentRecords_Fille_ID", user.StudentRecords_Fille_ID);
     }
 
+    // تفعيل زر القائمة
+    menuBtn.disabled = false;
+
+    const userName = user.name || "المستخدم";
+
+    // تحديث رسالة الترحيب
+    if(type === "parent") {
+
+        welcomeText.textContent = `مرحبًا بك ${userName} في فضاء أولياء التلاميذ`;
+
+    } 
+    else if(type === "teacher") {
+
+        welcomeText.textContent = `مرحبًا بك الأستاذ ${userName}`;
+
+    } 
+    else {
+
+        welcomeText.textContent = `مرحبًا بك ${userName} في فضاء الإشراف التربوي`;
+
+    }
+
+    // ملء القائمة
     fillMenu(type);
+
 }
+
+// ==================== QR SCANNER مسح QR ====================
+
+let qrScanner = null;
+
+function startQRScan(){
+
+    const modal = document.getElementById("qrScannerModal");
+
+    modal.style.display = "flex";
+
+    qrScanner = new Html5Qrcode("qrReader");
+
+    qrScanner.start(
+        { facingMode: "environment" },
+        {
+            fps: 10,
+            qrbox: 250
+        },
+        qrCodeMessage => {
+
+            racordInput.value = qrCodeMessage;
+
+            stopQRScanner();
+
+        }
+    );
+
+}
+
+
+function stopQRScanner(){
+
+    if(qrScanner){
+        qrScanner.stop();
+        qrScanner = null;
+    }
+
+    document.getElementById("qrScannerModal").style.display = "none";
+
+}
+
+// ==================== CLOSE QR MODAL ====================
+
+document.getElementById("closeQrModal").addEventListener("click", function(){
+
+    stopQRScanner();
+
+});
+
+// ==================== LOGIN WITH ENTER تسجيل الدخول بالضغط على Enter ====================
+
+racordInput.addEventListener("keypress", function(e){
+
+    if(e.key === "Enter"){
+        loginBtn.click();
+    }
+
+});
+
+// ==================== دالة تسجيل الخروج ====================
+function logout(){
+
+    // حذف بيانات الجلسة
+    localStorage.removeItem("userType");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("StudentRecords_Fille_ID");
+
+    // إعادة تعيين الذاكرة
+    memoryUsers = { teacher: [], consultation: [], parent: [] };
+    usersMap.clear();
+
+    // إخفاء القائمة
+    dropdownMenu.style.display = "none";
+
+    // تعطيل زر القائمة
+    menuBtn.disabled = true;
+
+    // إظهار نافذة تسجيل الدخول
+    loginModal.classList.add("show");
+
+    // إعادة تعيين الحقول
+    racordInput.value = "";
+    userTypeSelect.value = "";
+
+    welcomeText.textContent = "يرجى تسجيل الدخول";
+
+    console.log("تم تسجيل الخروج");
+}
+  
+
   
 
 // ==================== تحميل عناصر القائمة fillMenu حسب المستخدم وربطها بالأحداث ====================
