@@ -424,21 +424,34 @@ loginBtn.addEventListener("click", function(){
 });
 
 
+// ==================== OPEN SESSION فتح الجلسة ====================
+
 function openSession(type, user) {
-    alert("دخلت بنجاح: " + user.name);
+    alert("تم تسجيل الدخول بنجاح");
+    console.log("فتح الجلسة للمستخدم:", type);
+
    // 🔥 هذا هو المكان الصحيح
     document.body.style.pointerEvents = "auto";
-    loginModal.style.display = "none";
+    
+    loginModal.classList.remove("show");
+    loginModal.style.display = "none"; // 🔥 إجبار الإخفاء
 
     console.log("حالة المودال:", loginModal);
-  
-    document.body.innerHTML = `
-        <h1 style="color:white;text-align:center;margin-top:50px">
-            مرحبًا ${user.name}
-        </h1>
-    `;
-}
 
+    localStorage.setItem("userType", type);
+    localStorage.setItem("userName", user.name);
+    if(type === "parent") localStorage.setItem("StudentRecords_Fille_ID", user.StudentRecords_Fille_ID);
+
+    menuBtn.disabled = false;
+    menuBtn.style.display = "block";
+    const userName = user.name || "المستخدم";
+
+    if(type === "parent") welcomeText.textContent = `مرحبًا بك ${userName} في فضاء أولياء التلاميذ`;
+    else if(type === "teacher") welcomeText.textContent = `مرحبًا بك الأستاذ ${userName}`;
+    else welcomeText.textContent = `مرحبًا بك ${userName} في فضاء الإشراف التربوي`;
+
+    fillMenu(type);
+}
   
 
   
