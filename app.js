@@ -636,9 +636,6 @@ document.getElementById("userLogout").addEventListener("click", () => {
         {icon:"calendar_today", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"عرض التوقيت الأسبوعي للتلاميذ"},
         {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
         {icon:"folder", label:"استمارات ووثائق مختلفة للتلاميذ", desc:"تحميل الاستمارات والوثائق المخصصة للتلاميذ"},
-        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
-        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
-        {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
       ],
       teacher: [
         {icon:"person", label:"فضاء الأساتذة", desc:"مرحبا بكم في الأرضية الرقمية - فضاء الأساتذة"},
@@ -650,9 +647,6 @@ document.getElementById("userLogout").addEventListener("click", () => {
         {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
         {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
         {icon:"folder", label:"استمارات ووثائق مختلفة للأساتذة", desc:"تحميل استمارات ووثائق مختلفة للأساتذة"},
-        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
-        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
-        {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
       ],
       consultation: [
         {icon:"qr_code_2", label:"نظام الحضور الذكي", desc:"تسجيل حضور التلاميذ بالباركود"},
@@ -663,9 +657,6 @@ document.getElementById("userLogout").addEventListener("click", () => {
         {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
         {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات"},
         {icon:"folder", label:"استمارات ووثائق مختلفة للإشراف التربوي", desc:"تحميل استمارات ووثائق مختلفة للإشراف التربوي"},
-        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات"},
-        {icon:"call", label:"اتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
-        {icon:"logout", label:"تسجيل الخروج", desc:"الخروج من البوابة"}
       ]
     };
 
@@ -680,7 +671,7 @@ document.getElementById("userLogout").addEventListener("click", () => {
       label.textContent=item.label; 
       div.appendChild(label);
 
-      // حدث الضغط الواحد لكل div
+// حدث الضغط الواحد لكل div
     div.addEventListener('click', function(){
 
   itemDescription.textContent = item.desc || "";
@@ -705,16 +696,6 @@ document.getElementById("userLogout").addEventListener("click", () => {
       dropdownMenu.style.display = "none";
     return;
 }
-
-//اتصل بنا
-  if(item.icon === "call") {
-    document.getElementById("contactModal").style.display = "flex";
-      dropdownMenu.style.display = "none";
-    return;
-}
-
-// تسجيل الخروج
-  if(item.icon === "logout") logout();
 
 // سجل الغيابات و المراسلات الإدارية
   if(item.label==="سجل الغيابات و المراسلات الإدارية" && type==="parent"){
