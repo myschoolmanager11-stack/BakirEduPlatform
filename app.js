@@ -57,8 +57,6 @@ const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwr7Kcghg690YedK
 // ==================== متغيرات عامة ====================
 
 let currentFileURL = null;
-let PASSWORDS = [];
-let SCHOOL_KEY = "";
 let STUDENTS_LIST = [];
 let parentData = null;
 let OLD_ABS_DATA = [];
@@ -107,16 +105,7 @@ const userTypeSelect = document.getElementById("userTypeSelect");
 
 const employeeBlock = document.getElementById("employeeBlock");
 const employeeSelect = document.getElementById("employeeSelect");
-const authBlock = document.getElementById("authBlock");
-const continueBtn = document.getElementById("continueBtn");
 const loginBtn = document.getElementById("loginBtn");
-const loginPassword = document.getElementById("loginPassword");
-const schoolKeyBlock = document.getElementById("schoolKeyBlock");
-const schoolKeyInput = document.getElementById("schoolKeyInput");
-const schoolKeyBtn = document.getElementById("schoolKeyBtn");
-const studentBlock = document.getElementById("studentBlock");
-const studentSelect = document.getElementById("studentSelect");
-const classeSelect = document.getElementById("ClasseSelect");
 
 // --- عناصر OldAbsented ---
 const oldAbsSelect = document.getElementById("oldAbsClassFilter");
@@ -305,50 +294,6 @@ async function loadStudentsList(selectedClasse = "all") {
     hideLoader();
 }
 
-// ==================== زر متابعة للولي ====================
-continueBtn.addEventListener("click", function () {
-    const selectedLine = studentSelect.value;
-    if(!selectedLine) return alert("اختر التلميذ من القائمة");
-
-    const data = parseStudentLine(selectedLine);
-    if(!data) return alert("خطأ في بيانات التلميذ المختار");
-
-    parentData = data;
-    localStorage.setItem("Correspondence_Fille_ID", data.correspondenceID);
-    localStorage.setItem("SijileAbsence_Fille_ID", data.absenceID);
-
-    openSession("parent");
-});
-
-// ==================== إدخال رمز المؤسسة ====================
-schoolKeyBtn.addEventListener("click", async function () {
-    if(!schoolKeyInput.value) return alert("أدخل رمز المؤسسة");
-
-    showLoader();
-    try {
-        const list = await fetchFile(CONFIG.School_Key_File_ID);
-        if(list && list.length>0) SCHOOL_KEY = list[0];
-
-       SCHOOL_KEY = (list && list.length > 0) ? list[0].trim() : CONFIG.SchoolKey;
-
-if(schoolKeyInput.value.trim() !== SCHOOL_KEY) {
-    hideLoader();
-    return alert("رمز المؤسسة غير صحيح");
-}
-
-        schoolKeyBlock.style.display = "none";
-        employeeBlock.style.display = "block";
-        await loadEmployeeList(userTypeSelect.value);
-        await loadPasswords();
-
-    } catch(err) {
-        console.error(err);
-        alert("حدث خطأ أثناء تحميل البيانات");
-    } finally {
-        hideLoader();
-    }
-});
-
 // ==================== تحميل الموظفين ====================
 async function loadEmployeeList(type){
     showLoader();
@@ -387,12 +332,7 @@ async function loadEmployeeList(type){
     }
 
 });
-  
-// ==================== تحميل كلمات المرور ==================== 
-async function loadPasswords(){
-    const list = await fetchFile(CONFIG.Password_File_ID);
-    if(list) PASSWORDS = list;
-}
+ 
 
 // ==================== تسجيل الدخول ====================
 loginBtn.addEventListener("click", function() {
