@@ -124,8 +124,13 @@ function showLoader() { document.getElementById("globalLoader").style.display = 
 function hideLoader() { document.getElementById("globalLoader").style.display = "none"; }
 
 // ==================== MEMORY USERS / MAP ====================
-let memoryUsers = { teacher: [], consultation: [], parent: [] };
-let usersMap = new Map();
+let memoryUsers = {
+    teacher: [],
+    consultation: [],
+    parent: []
+};
+
+let usersMap = new Map();  
 
 // ==================== FETCH FILE تحميل الملفات من Google Drive ====================
 async function fetchFile(fileId) {
