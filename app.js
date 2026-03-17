@@ -120,6 +120,99 @@ const sendAbsTableBody = document.querySelector("#sendAbsTable tbody");
 function showLoader() { document.getElementById("globalLoader").style.display = "flex"; }
 function hideLoader() { document.getElementById("globalLoader").style.display = "none"; }
 
+// ربط زر QR
+if(scanQRBtn){
+    scanQRBtn.addEventListener("click", startQRScan);
+}
+
+// تفعيل عناصر المعاينة PreviewPanel بعد تحميل الصفحة 
+  const panel = document.getElementById("filePreviewPanel");
+  const header = panel.querySelector(".preview-header");
+
+  const previewClose = document.getElementById("previewClose");
+  const previewDownload = document.getElementById("previewDownload");
+  const previewOpen = document.getElementById("previewOpen");
+  const previewToggle = document.getElementById("previewToggle");
+
+// زر الإغلاق
+  previewClose.addEventListener("click", () => {
+      panel.style.display = "none";
+  });
+
+// زر التحميل
+  previewDownload.addEventListener("click", () => {
+      window.open(previewDownload.href, "_blank");
+  });
+
+// زر فتح في تبويب جديد
+  previewOpen.addEventListener("click", () => {
+      window.open(previewOpen.href, "_blank");
+  });
+
+// السحب والتحريك
+  let isDragging = false, startX, startY, startLeft, startTop;
+
+  header.addEventListener("mousedown", e => {
+      if(panel.classList.contains("fullscreen")) return;
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      const rect = panel.getBoundingClientRect();
+      startLeft = rect.left;
+      startTop = rect.top;
+      panel.style.transition = "none";
+      document.body.style.userSelect = "none";
+  });
+
+  document.addEventListener("mousemove", e => {
+      if(!isDragging) return;
+      let dx = e.clientX - startX;
+      let dy = e.clientY - startY;
+      panel.style.left = startLeft + dx + "px";
+      panel.style.top = startTop + dy + "px";
+  });
+
+  document.addEventListener("mouseup", () => {
+      if(!isDragging) return;
+      isDragging = false;
+      panel.style.transition = "all 0.3s ease";
+      document.body.style.userSelect = "";
+  });
+
+// دعم اللمس 
+  header.addEventListener("touchstart", e => {
+      if(panel.classList.contains("fullscreen")) return;
+      isDragging = true;
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      const rect = panel.getBoundingClientRect();
+      startLeft = rect.left;
+      startTop = rect.top;
+      panel.style.transition = "none";
+  });
+
+  header.addEventListener("touchmove", e => {
+      if(!isDragging) return;
+      const touch = e.touches[0];
+      let dx = touch.clientX - startX;
+      let dy = touch.clientY - startY;
+      panel.style.left = startLeft + dx + "px";
+      panel.style.top = startTop + dy + "px";
+      e.preventDefault();
+  }, {passive: false});
+
+  header.addEventListener("touchend", () => {
+      if(!isDragging) return;
+      isDragging = false;
+      panel.style.transition = "all 0.3s ease";
+  });
+
+// تكبير / تصغير 
+  previewToggle.addEventListener("click", () => {
+      panel.classList.toggle("fullscreen");
+  });
+  
 // ==================== MEMORY USERS / MAP ====================
 let memoryUsers = {
     teacher: [],
@@ -355,8 +448,8 @@ function openSession(type, user) {
 let qrScanner = null;
 
 function startQRScan(){
-
-    const modal = document.getElementById("qrScannerModal");
+    
+const modal = document.getElementById("qrScannerModal");
 
     modal.style.display = "flex";
 
@@ -401,9 +494,10 @@ document.getElementById("closeQrModal").addEventListener("click", function(){
 
 // ==================== LOGIN WITH ENTER تسجيل الدخول بالضغط على Enter ====================
 
-racordInput.addEventListener("keypress", function(e){
+racordInput.addEventListener("keydown", function(e){
 
     if(e.key === "Enter"){
+        e.preventDefault(); // يمنع النزول للسطر
         loginBtn.click();
     }
 
@@ -575,52 +669,6 @@ if(FILE_ITEMS[item.label]) {
       setTimeout(()=> div.classList.add("show"), idx*80);
     });
   }
-
-
-// ==================== logout ====================
-function logout() {
-
-    // إرجاع النص الترحيبي
-    welcomeText.textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
-    itemDescription.textContent = "";
-
-    // إخفاء القائمة
-    dropdownMenu.style.display = "none";
-    menuBtn.disabled = true;
-
-    // حذف التخزين
-    localStorage.clear();
-    parentData = null;
-
-    // إرجاع نافذة الدخول
-    loginModal.style.display = "flex";
-    loginModal.classList.remove("expanded");
-
-    // إعادة الحقول للقيم الافتراضية
-    userTypeSelect.value = "";
-    schoolKeyInput.value = "";
-    loginPassword.value = "";
-    employeeSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-    studentSelect.innerHTML = '<option value="">-- اختر الاسم واللقب --</option>';
-    classeSelect.innerHTML = '<option value="">-- اختر القسم --</option>';
-
-  loadClassesList();
-  
-    // إخفاء البلوكات
-    schoolKeyBlock.style.display =
-    employeeBlock.style.display =
-    authBlock.style.display =
-    continueBtn.style.display =
-    loginBtn.style.display =
-    studentBlock.style.display = "none";
-
-    // إغلاق أي معاينة مفتوحة
-    document.getElementById("filePreviewPanel").style.display = "none";
-}
-
-  window.toggleMenu = function () {
-    dropdownMenu.style.display = (dropdownMenu.style.display==="block") ? "none" : "block";
-  };
 
 // ==================== دالة اتصل بنا ====================
   document.getElementById("closeContactModal").addEventListener("click", function(){
@@ -1316,93 +1364,7 @@ function openFilePreview(fileId) {
   setTimeout(() => panel.style.opacity = 1, 50);
 }
 
-// تفعيل عناصر المعاينة بعد تحميل الصفحة 
-  const panel = document.getElementById("filePreviewPanel");
-  const header = panel.querySelector(".preview-header");
 
-  const previewClose = document.getElementById("previewClose");
-  const previewDownload = document.getElementById("previewDownload");
-  const previewOpen = document.getElementById("previewOpen");
-  const previewToggle = document.getElementById("previewToggle");
-
-// زر الإغلاق
-  previewClose.addEventListener("click", () => {
-      panel.style.display = "none";
-  });
-
-// زر التحميل
-  previewDownload.addEventListener("click", () => {
-      window.open(previewDownload.href, "_blank");
-  });
-
-// زر فتح في تبويب جديد
-  previewOpen.addEventListener("click", () => {
-      window.open(previewOpen.href, "_blank");
-  });
-
-// السحب والتحريك
-  let isDragging = false, startX, startY, startLeft, startTop;
-
-  header.addEventListener("mousedown", e => {
-      if(panel.classList.contains("fullscreen")) return;
-      isDragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      const rect = panel.getBoundingClientRect();
-      startLeft = rect.left;
-      startTop = rect.top;
-      panel.style.transition = "none";
-      document.body.style.userSelect = "none";
-  });
-
-  document.addEventListener("mousemove", e => {
-      if(!isDragging) return;
-      let dx = e.clientX - startX;
-      let dy = e.clientY - startY;
-      panel.style.left = startLeft + dx + "px";
-      panel.style.top = startTop + dy + "px";
-  });
-
-  document.addEventListener("mouseup", () => {
-      if(!isDragging) return;
-      isDragging = false;
-      panel.style.transition = "all 0.3s ease";
-      document.body.style.userSelect = "";
-  });
-
-// دعم اللمس 
-  header.addEventListener("touchstart", e => {
-      if(panel.classList.contains("fullscreen")) return;
-      isDragging = true;
-      const touch = e.touches[0];
-      startX = touch.clientX;
-      startY = touch.clientY;
-      const rect = panel.getBoundingClientRect();
-      startLeft = rect.left;
-      startTop = rect.top;
-      panel.style.transition = "none";
-  });
-
-  header.addEventListener("touchmove", e => {
-      if(!isDragging) return;
-      const touch = e.touches[0];
-      let dx = touch.clientX - startX;
-      let dy = touch.clientY - startY;
-      panel.style.left = startLeft + dx + "px";
-      panel.style.top = startTop + dy + "px";
-      e.preventDefault();
-  }, {passive: false});
-
-  header.addEventListener("touchend", () => {
-      if(!isDragging) return;
-      isDragging = false;
-      panel.style.transition = "all 0.3s ease";
-  });
-
-// كبير / تصغير 
-  previewToggle.addEventListener("click", () => {
-      panel.classList.toggle("fullscreen");
-  });
 
 // إغلاق مودال الحضور
 document.getElementById("closeAttendanceModal").addEventListener("click", function(){
