@@ -612,11 +612,13 @@ function updateUserDropdown(userType, userName) {
 document.getElementById("userAnnouncements").addEventListener("click", () => {
     openFilePreview(CONFIG.Announcements_File_ID);
     userDropdown.style.display = "none";
+   itemDescription.textContent = "عرض آخر الإعلانات الصادرة عن الإدارة"
 });
 
 document.getElementById("userContact").addEventListener("click", () => {
     document.getElementById("contactModal").style.display = "flex";
     userDropdown.style.display = "none";
+  itemDescription.textContent = "إرسال رسالة مباشرة لإدارة البوابة"
 });
 
 document.getElementById("userLogout").addEventListener("click", () => {
