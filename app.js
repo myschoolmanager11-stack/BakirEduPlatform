@@ -370,8 +370,15 @@ lines.forEach(line => {
 
     if(user){
         memoryUsers[type].push(user);
-        const key = user.racord.trim().replace(/\s/g, "");
-        usersMap.set(key, user); // <-- تنظيف صارم
+   const key = user.racord
+    .toString()
+    .trim()
+    .replace(/\s/g, "")
+    .replace(/\r/g, "")
+    .replace(/\n/g, "");
+
+     usersMap.set(key, user); // <-- 
+      تنظيف صارم
     }
 });
 
@@ -396,7 +403,16 @@ loginBtn.addEventListener("click", function(){
     if(!USERS_LOADED) return alert("القائمة لم تُحمّل بعد، يرجى الانتظار");
 
     // 🔹 التعديل هنا: تنظيف المعرف من الفراغات قبل البحث
-    const racordClean = racordInputValue.trim().replace(/\s/g, "");
+    const racordClean = racordInputValue
+    .toString()
+    .trim()
+    .replace(/\s/g, "")
+    .replace(/\r/g, "")
+    .replace(/\n/g, "");
+
+    console.log("المفاتيح الموجودة:", [...usersMap.keys()]);
+    console.log("القيمة المدخلة:", racordClean);
+  
     const user = usersMap.get(racordClean);
 
     console.log("محاولة تسجيل الدخول:", racordClean, user); // <-- تتبع المشكلة
