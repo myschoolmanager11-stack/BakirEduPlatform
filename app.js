@@ -124,7 +124,7 @@ function hideLoader() { document.getElementById("globalLoader").style.display = 
 if(scanQRBtn){
     scanQRBtn.addEventListener("click", startQRScan);
 }
-
+  
 // تفعيل عناصر المعاينة PreviewPanel بعد تحميل الصفحة 
   const panel = document.getElementById("filePreviewPanel");
   const header = panel.querySelector(".preview-header");
@@ -224,6 +224,16 @@ let usersMap = new Map();
 
   // تخزين القوائم في الذاكرة
 let USERS_LIST = [];
+
+// ====================AttendanceModal إغلاق مودال الحضور ====================
+const closeAttendanceModal = document.getElementById("closeAttendanceModal");
+const attendanceModal = document.getElementById("attendanceModal");
+
+if(closeAttendanceModal && attendanceModal){
+    closeAttendanceModal.addEventListener("click", function(){
+        attendanceModal.style.display = "none";
+    });
+}
   
 // ==================== FETCH FILE تحميل الملفات من Google Drive ====================
 async function fetchFile(fileId) {
@@ -1319,14 +1329,6 @@ async function updateFile(fileId, content) {
 // ====================SendAbsentedModal نهاية مودال إرسال الغيابات ====================
 
   
-// ====================AttendanceModal إغلاق مودال الحضور ====================
-  document.getElementById("closeAttendanceModal").addEventListener("click", function(){
-      document.getElementById("attendanceModal").style.display = "none";
-  });
-
-});
-
-  
 // ====================PreviewPanel معاينة الملفات ====================
 function openFilePreview(fileId) {
 
@@ -1363,12 +1365,3 @@ function openFilePreview(fileId) {
 
   setTimeout(() => panel.style.opacity = 1, 50);
 }
-
-
-
-// إغلاق مودال الحضور
-document.getElementById("closeAttendanceModal").addEventListener("click", function(){
-  document.getElementById("attendanceModal").style.display = "none";
-});
-
-
