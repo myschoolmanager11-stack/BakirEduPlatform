@@ -427,18 +427,18 @@ lines.forEach(line => {
 loginBtn.addEventListener("click", function(){
     const type = userTypeSelect.value;
     let racordInputValue = racordInput.value; // القيمة الخام من الحقل
-    if(!type) return
+    if(!type)
+            showToast("يرجى اختيار نوع المستخدم", "warning");   
+     return
   
-   showToast("يرجى اختيار نوع المستخدم", "warning");   
+    if(!racordInputValue)
+      showToast("يرجى إدخال المعرف", "warning");  
+      return 
+  
+    if(!USERS_LOADED)
+      showToast("يرجى الإنتضار جاري تحميل قائمة المستخدمين", "warning"); 
+      return 
    
-    if(!racordInputValue) return 
-  
-   showToast("يرجى إدخال المعرف", "warning");   
- 
-    if(!USERS_LOADED) return 
-  
-   showToast("القائمة لم تُحمّل بعد، يرجى الانتظار", "warning");   
- 
     // 🔹 التعديل هنا: تنظيف المعرف من الفراغات قبل البحث
     const racordClean = racordInputValue
     .toString()
@@ -454,10 +454,10 @@ loginBtn.addEventListener("click", function(){
 
     console.log("محاولة تسجيل الدخول:", racordClean, user); // <-- تتبع المشكلة
 
-    if(!user) return
+    if(!user)
+      showToast("المعرف غير صحيح", "warning"); 
+      return
   
-   showToast("المعرف غير صحيح", "warning");   
- 
     // فتح الجلسة
     localStorage.setItem("lastRacord", racordClean);
     openSession(type, user);
@@ -528,19 +528,18 @@ function startQRScan() {
 
   // ✅ تحقق من اختيار المستخدم
     if(!userTypeSelect.value){
-      
-        showToast("يرجى اختيار نوع المستخدم", "warning");
-      
-        return;
+      showToast("يرجى اختيار نوع المستخدم", "warning");
+    return;
     }
 
   
     const modal = document.getElementById("qrScannerModal");
     const qrReader = document.getElementById("qrReader");
 
-    if(!qrReader) return 
-  
-   showToast("عنصر QR Reader غير موجود!", "warning");   
+    if(!qrReader)
+      showToast("عنصر QR Reader غير موجود!", "warning");   
+      return 
+    
   
     modal.style.display = "flex";
 
@@ -609,7 +608,8 @@ function logout() {
   
      // إغلاق أي معاينة مفتوحة
     document.getElementById("filePreviewPanel").style.display = "none";
-  
+
+    showToast("تم تسجيل الخروج بنجاح", "success");
     console.log("تم تسجيل الخروج");
 }
   
@@ -1090,10 +1090,8 @@ function DownloadNewAbsented() {
     const fileId = CONFIG.New_Absented_File_ID;
 
     if(!fileId){
-      
        showToast("معرف ملف الغيابات الجديدة غير موجود", "warning"); 
-          
-        return;
+     return;
     }
 
     const downloadUrl =
