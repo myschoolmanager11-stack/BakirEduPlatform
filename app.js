@@ -76,6 +76,10 @@ if (schoolNameElement) {
     schoolNameElement.textContent = CONFIG.SchoolName;
 }
 
+ // 🔥 تفعيل مراقبة النشاط
+    ["click", "mousemove", "keydown", "touchstart", "mouseover"].forEach(event => {
+        document.addEventListener(event, resetSessionTimer);
+    });
   
 // ==================== DOM ELEMENTS تعريف عناصر الصفحة ====================
 
@@ -247,6 +251,30 @@ if(scanQRBtn){
   previewToggle.addEventListener("click", () => {
       panel.classList.toggle("fullscreen");
   });
+
+// ==================== SESSION TIMEOUT ====================
+let timeout;
+let warningTimeout;
+
+const SESSION_TIME = 10 * 60 * 1000; // 10 دقائق
+const WARNING_TIME = 9 * 60 * 1000; // بعد 9 دقائق يظهر تنبيه
+
+function resetSessionTimer(){
+
+    clearTimeout(timeout);
+    clearTimeout(warningTimeout);
+
+    // ⏳ تنبيه قبل الخروج
+    warningTimeout = setTimeout(()=>{
+        showToast("⚠️ سيتم تسجيل الخروج بعد دقيقة بسبب عدم النشاط", "warning");
+    }, WARNING_TIME);
+
+    // ❌ تسجيل خروج
+    timeout = setTimeout(()=>{
+        logout();
+    }, SESSION_TIME);
+}
+
   
 // ==================== MEMORY USERS / MAP ====================
 let memoryUsers = { teacher: [], consultation: [], parent: [] };
@@ -470,7 +498,9 @@ loginBtn.addEventListener("click", function(){
       
     // فتح الجلسة
     localStorage.setItem("lastRacord", racordClean);
+  
     openSession(type, user);
+    resetSessionTimer();
 });
 
 
@@ -509,8 +539,10 @@ function openSession(type, user) {
 
 // ==================== SMART TOAST ====================
 function showToast(message, type = "info"){
-
-    let icons = {
+    
+  resetSessionTimer(); // ← كل مرة تظهر رسالة يتم تحديث المؤقت
+   
+  let icons = {
         success: "✅",
         error: "❌",
         warning: "⚠️",
@@ -1176,7 +1208,7 @@ window.openSendAbsentedModal = async function(){
 window.closeSendAbsentedModal = function(){
     sendAbsModal.classList.remove("show");
   itemDescription.textContent = "";
-};
+  };
 
 
 // فلترة حسب القسم 
