@@ -430,11 +430,13 @@ loginBtn.addEventListener("click", function(){
 
    if(!type){
     showToast("يرجى اختيار نوع المستخدم", "warning");
+    showFieldError(userTypeSelect);
     return;
-}
+    }
      
      if(!racordInputValue){
         showToast("يرجى إدخال المعرف", "warning");
+        showFieldError(racordInput);
         return;
     }
             
@@ -461,6 +463,7 @@ loginBtn.addEventListener("click", function(){
     
     if(!user){
         showToast("المعرف غير صحيح", "error");
+        showFieldError(racordInput);
         return;
     }
 
@@ -528,6 +531,24 @@ function showToast(message, type = "info"){
         setTimeout(()=> toast.remove(), 300);
     }, 3000);
 }
+
+  
+// ==================== SHOW ERROR ====================
+function showFieldError(element){
+
+    element.classList.add("input-error", "shake");
+
+    // إزالة الاهتزاز بعد انتهاءه
+    setTimeout(()=>{
+        element.classList.remove("shake");
+    }, 300);
+
+    // إزالة اللون الأحمر عند التفاعل
+    element.addEventListener("change", ()=>{
+        element.classList.remove("input-error");
+    }, { once: true });
+}
+
   
 // ==================== QR SCANNER مسح QR ====================
 let qrScanner = null;
@@ -536,6 +557,7 @@ function startQRScan() {
   // ✅ تحقق من اختيار المستخدم
     if(!userTypeSelect.value){
       showToast("يرجى اختيار نوع المستخدم", "warning");
+      showFieldError(userTypeSelect);
     return;
     }
 
