@@ -428,11 +428,10 @@ loginBtn.addEventListener("click", function(){
     const type = userTypeSelect.value;
     let racordInputValue = racordInput.value; // القيمة الخام من الحقل
 
-   // ✅ تحقق من اختيار المستخدم
-    if(!userTypeSelect.value){
-      showToast("يرجى اختيار نوع المستخدم", "warning");
+   if(!type || type === "-- اختر --"){
+    showToast("يرجى اختيار نوع المستخدم", "warning");
     return;
-    }
+}
      
      if(!racordInputValue){
         showToast("يرجى إدخال المعرف", "warning");
