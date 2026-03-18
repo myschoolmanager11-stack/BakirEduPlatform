@@ -76,25 +76,22 @@ if (schoolNameElement) {
     schoolNameElement.textContent = CONFIG.SchoolName;
 }
 
- //عند تحميل الصفحة، استرجاع القيم المحفوظة 
- const savedRacord = localStorage.getItem("rememberRacord");
- const savedUserType = localStorage.getItem("rememberUserType");
-
-    if(savedRacord && savedUserType){
-        racordInput.value = savedRacord;
-        userTypeSelect.value = savedUserType;
-        document.getElementById("rememberMeCheckbox").checked = true;
-
-        // 🔹 يمكن تسجيل الدخول مباشرة إذا أحببت
-        const user = usersMap.get(savedRacord);
-        if(user) openSession(savedUserType, user);
-    }
-
   
- // 🔥 تفعيل مراقبة النشاط
-    ["click", "mousemove", "keydown", "touchstart", "mouseover"].forEach(event => {
-        document.addEventListener(event, resetSessionTimer);
-    });
+// ==================== استرجاع المعرف ونوع المستخدم المحفوظ ====================
+const savedRacord = localStorage.getItem("lastRacord");
+const savedType = localStorage.getItem("lastUserType");
+
+  if(savedRacord){
+    racordInput.value = savedRacord;
+}
+  
+if(savedType){
+    userTypeSelect.value = savedType;
+
+    // 🔥 تشغيل تحميل المستخدمين تلقائياً
+    userTypeSelect.dispatchEvent(new Event("change"));
+}
+
   
 // ==================== DOM ELEMENTS تعريف عناصر الصفحة ====================
 
@@ -471,8 +468,7 @@ lines.forEach(line => {
 loginBtn.addEventListener("click", function(){
     const type = userTypeSelect.value;
     let racordInputValue = racordInput.value; // القيمة الخام من الحقل
-    const rememberMe = document.getElementById("rememberMeCheckbox").checked;
-  
+     
    if(!type || type === "-- اختر --"){
     showToast("يرجى اختيار نوع المستخدم", "warning");
     showFieldError(userTypeSelect);
@@ -511,21 +507,13 @@ loginBtn.addEventListener("click", function(){
         showFieldError(racordInput);
         return;
     }
-
-     // 🔹 حفظ المعرف ونوع المستخدم إذا اختار Remember Me
-    if(rememberMe){
-        localStorage.setItem("rememberRacord", racordClean);
-        localStorage.setItem("rememberUserType", type);
-    } else {
-        localStorage.removeItem("rememberRacord");
-        localStorage.removeItem("rememberUserType");
-    }
   
-    // فتح الجلسة
-    //localStorage.setItem("lastRacord", racordClean);
+  // فتح الجلسة
+  localStorage.setItem("lastUserType", type); 
+  localStorage.setItem("lastRacord", racordClean);
   
     openSession(type, user);
-    resetSessionTimer();
+    
 });
 
 
@@ -564,9 +552,7 @@ function openSession(type, user) {
 
 // ==================== SMART TOAST ====================
 function showToast(message, type = "info"){
-    
-  resetSessionTimer(); // ← كل مرة تظهر رسالة يتم تحديث المؤقت
-   
+      
   let icons = {
         success: "✅",
         error: "❌",
