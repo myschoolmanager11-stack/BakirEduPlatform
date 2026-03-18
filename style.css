@@ -825,6 +825,24 @@ transition: background 0.2s;
     background-color: #f0f0f0;
 }
 
+/* ==================== ERROR STYLE ==================== */
+.input-error {
+    border: 2px solid #e74c3c !important;
+    background-color: #fdecea;
+}
+
+/* ==================== SHAKE ANIMATION ==================== */
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+
+.shake {
+    animation: shake 0.3s;
+}
 
 .app-footer {
     background: rgba(255, 255, 255, 0);
