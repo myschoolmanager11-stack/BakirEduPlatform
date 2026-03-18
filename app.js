@@ -427,15 +427,22 @@ lines.forEach(line => {
 loginBtn.addEventListener("click", function(){
     const type = userTypeSelect.value;
     let racordInputValue = racordInput.value; // القيمة الخام من الحقل
-    if(!type) return
-    showToast("يرجى اختيار نوع المستخدم", "warning");   
+    
+   if(!type){
+        showToast("يرجى اختيار نوع المستخدم", "warning");
+        return;
+    }
   
-    if(!racordInputValue)  return 
-      showToast("يرجى إدخال المعرف", "warning");  
-      
-    if(!USERS_LOADED)  return 
+     if(!racordInputValue){
+        showToast("يرجى إدخال المعرف", "warning");
+        return;
+    }
+            
+    if(!USERS_LOADED){
       showToast("يرجى الإنتضار جاري تحميل قائمة المستخدمين", "warning"); 
-       
+         return;
+    } 
+             
     // 🔹 التعديل هنا: تنظيف المعرف من الفراغات قبل البحث
     const racordClean = racordInputValue
     .toString()
@@ -451,8 +458,12 @@ loginBtn.addEventListener("click", function(){
 
     console.log("محاولة تسجيل الدخول:", racordClean, user); // <-- تتبع المشكلة
 
-    if(!user)  return
-      showToast("المعرف غير صحيح", "warning"); 
+    
+    if(!user){
+        showToast("المعرف غير صحيح", "error");
+        return;
+    }
+
       
     // فتح الجلسة
     localStorage.setItem("lastRacord", racordClean);
@@ -464,7 +475,7 @@ loginBtn.addEventListener("click", function(){
 
 function openSession(type, user) {
   
-  showToast("تم تسجيل الدخول بنجاح", "success"); 
+    showToast("تم تسجيل الدخول بنجاح", "success"); 
    
     console.log("فتح الجلسة للمستخدم:", type);
 
@@ -532,9 +543,10 @@ function startQRScan() {
     const modal = document.getElementById("qrScannerModal");
     const qrReader = document.getElementById("qrReader");
 
-    if(!qrReader)
+    if(!qrReader){
       showToast("عنصر QR Reader غير موجود!", "warning");   
-      return 
+      return;
+    }
     
   
     modal.style.display = "flex";
