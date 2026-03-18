@@ -427,18 +427,15 @@ lines.forEach(line => {
 loginBtn.addEventListener("click", function(){
     const type = userTypeSelect.value;
     let racordInputValue = racordInput.value; // القيمة الخام من الحقل
-    if(!type)
-            showToast("يرجى اختيار نوع المستخدم", "warning");   
-     return
+    if(!type) return
+    showToast("يرجى اختيار نوع المستخدم", "warning");   
   
-    if(!racordInputValue)
+    if(!racordInputValue)  return 
       showToast("يرجى إدخال المعرف", "warning");  
-      return 
-  
-    if(!USERS_LOADED)
+      
+    if(!USERS_LOADED)  return 
       showToast("يرجى الإنتضار جاري تحميل قائمة المستخدمين", "warning"); 
-      return 
-   
+       
     // 🔹 التعديل هنا: تنظيف المعرف من الفراغات قبل البحث
     const racordClean = racordInputValue
     .toString()
@@ -454,10 +451,9 @@ loginBtn.addEventListener("click", function(){
 
     console.log("محاولة تسجيل الدخول:", racordClean, user); // <-- تتبع المشكلة
 
-    if(!user)
+    if(!user)  return
       showToast("المعرف غير صحيح", "warning"); 
-      return
-  
+      
     // فتح الجلسة
     localStorage.setItem("lastRacord", racordClean);
     openSession(type, user);
