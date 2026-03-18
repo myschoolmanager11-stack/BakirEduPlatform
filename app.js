@@ -487,18 +487,21 @@ function openSession(type, user) {
 // ==================== SMART TOAST ====================
 function showToast(message, type = "info"){
 
-    let toast = document.createElement("div");
+    let icons = {
+        success: "✅",
+        error: "❌",
+        warning: "⚠️",
+        info: "ℹ️"
+    };
 
-    // 🎯 إضافة النوع
+    let toast = document.createElement("div");
     toast.className = "toast-message toast-" + type;
 
-    toast.innerHTML = message;
+    toast.innerHTML = `${icons[type] || ""} ${message}`;
 
     document.body.appendChild(toast);
 
-    setTimeout(()=>{
-        toast.classList.add("show");
-    }, 100);
+    setTimeout(()=> toast.classList.add("show"), 100);
 
     setTimeout(()=>{
         toast.classList.remove("show");
