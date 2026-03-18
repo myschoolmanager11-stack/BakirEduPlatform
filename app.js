@@ -417,8 +417,7 @@ lines.forEach(line => {
         console.error(err);
       
         showToast("حدث خطأ أثناء تحميل المستخدمين", "error");
-        //alert("حدث خطأ أثناء تحميل المستخدمين");
-      
+            
         loginBtn.disabled = true;
     }
 
@@ -429,17 +428,17 @@ loginBtn.addEventListener("click", function(){
     const type = userTypeSelect.value;
     let racordInputValue = racordInput.value; // القيمة الخام من الحقل
     if(!type) return
-   showToast("يرجى اختيار نوع المستخدم", "warning");   
-  //alert("يرجى اختيار نوع المستخدم");
   
+   showToast("يرجى اختيار نوع المستخدم", "warning");   
+   
     if(!racordInputValue) return 
+  
    showToast("يرجى إدخال المعرف", "warning");   
-  //alert("يرجى إدخال المعرف");
-
+ 
     if(!USERS_LOADED) return 
+  
    showToast("القائمة لم تُحمّل بعد، يرجى الانتظار", "warning");   
- // alert("القائمة لم تُحمّل بعد، يرجى الانتظار");
-
+ 
     // 🔹 التعديل هنا: تنظيف المعرف من الفراغات قبل البحث
     const racordClean = racordInputValue
     .toString()
@@ -457,9 +456,8 @@ loginBtn.addEventListener("click", function(){
 
     if(!user) return
   
-  showToast("المعرف غير صحيح", "warning");   
-  //alert("المعرف غير صحيح");
-
+   showToast("المعرف غير صحيح", "warning");   
+ 
     // فتح الجلسة
     localStorage.setItem("lastRacord", racordClean);
     openSession(type, user);
@@ -469,8 +467,9 @@ loginBtn.addEventListener("click", function(){
 // ==================== OPEN SESSION فتح الجلسة ====================
 
 function openSession(type, user) {
+  
   showToast("تم تسجيل الدخول بنجاح", "success"); 
-   // alert("تم تسجيل الدخول بنجاح");
+   
     console.log("فتح الجلسة للمستخدم:", type);
 
     document.body.style.pointerEvents = "auto";
@@ -529,7 +528,9 @@ function startQRScan() {
 
   // ✅ تحقق من اختيار المستخدم
     if(!userTypeSelect.value){
-        showToast("⚠️ يرجى اختيار نوع المستخدم أولاً");
+      
+        showToast("يرجى اختيار نوع المستخدم", "warning");
+      
         return;
     }
 
@@ -537,7 +538,10 @@ function startQRScan() {
     const modal = document.getElementById("qrScannerModal");
     const qrReader = document.getElementById("qrReader");
 
-    if(!qrReader) return alert("عنصر QR Reader غير موجود!");
+    if(!qrReader) return 
+  
+   showToast("عنصر QR Reader غير موجود!", "warning");   
+  
     modal.style.display = "flex";
 
     qrScanner = new Html5Qrcode("qrReader");
@@ -549,8 +553,10 @@ function startQRScan() {
             stopQRScanner();
         }
     ).catch(err => {
-        console.error("خطأ في QR Scanner:", err);
-        alert("تعذر فتح الكاميرا");
+      console.error("خطأ في QR Scanner:", err);
+      
+      showToast("تعذر فتح الكاميرا", "warning");
+      
     });
 }
 
@@ -725,7 +731,10 @@ document.getElementById("userLogout").addEventListener("click", () => {
   if(item.label==="سجل الغيابات و المراسلات الإدارية" && type==="parent"){
     const id = localStorage.getItem("SijileAbsence_Fille_ID");
     if(id) openFilePreview(id);
-    else alert("لم يتم العثور على الملف");
+    else 
+      
+       showToast("لم يتم العثور على ملف سجل الغيابات و المراسلات الإدارية", "warning"); 
+          
     dropdownMenu.style.display = "none";
     return;
 }
@@ -901,7 +910,9 @@ function DownloadOldAbsented() {
     const fileId = CONFIG.Old_Absented_File_ID;
 
     if(!fileId){
-        alert("معرف الملف غير موجود");
+      
+       showToast("معرف ملف الغيابات القديمة غير موجود", "warning"); 
+          
         return;
     }
 
@@ -1073,13 +1084,15 @@ newAbsSelect.addEventListener("change", function(){
 });
 
 
-// زر تحميل OldAbsented.txt 
+// زر تحميل NewAbsented.txt 
 function DownloadNewAbsented() {
 
     const fileId = CONFIG.New_Absented_File_ID;
 
     if(!fileId){
-        alert("معرف الملف غير موجود");
+      
+       showToast("معرف ملف الغيابات الجديدة غير موجود", "warning"); 
+          
         return;
     }
 
@@ -1350,7 +1363,9 @@ async function SendAbsence() {
     console.log("Start sending absence");
 
     if(TEMP_SELECTED_ABS.length === 0){
-        alert("لم يتم تحديد أي تلميذ");
+      
+       showToast("لم يتم تحديد أي تلميذ", "warning"); 
+          
         return;
     }
 
@@ -1362,7 +1377,9 @@ async function SendAbsence() {
 
     if(newLines.length === 0){
         hideLoader();
-        alert("هذه الغيابات مسجلة مسبقاً");
+      
+       showToast("هذه الغيابات مسجلة مسبقا او تحقق من ساعة ارسال الغياب", "warning"); 
+        
         return;
     }
 
@@ -1373,9 +1390,13 @@ async function SendAbsence() {
     hideLoader();
 
     if(success){
-        alert("تم إرسال الغيابات بنجاح ✅");
+      
+       showToast("تم إرسال الغيابات بنجاح", "success"); 
+        
     }else{
-        alert("فشل حفظ الغيابات ❌");
+      
+       showToast("فشلت عملية ارسال الغيابات", "error"); 
+        
     }
 
 }
