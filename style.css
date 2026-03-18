@@ -84,7 +84,7 @@ h1, h2, h3 {
     backdrop-filter: blur(3px);
     position: fixed;
     inset: 0;
-       display: flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     z-index: 9999;
