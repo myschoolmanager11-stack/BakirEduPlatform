@@ -77,21 +77,12 @@ if (schoolNameElement) {
 }
 
   
-// ==================== استرجاع المعرف ونوع المستخدم المحفوظ ====================
+// ==================== استرجاع المعرفالمحفوظ ====================
 const savedRacord = localStorage.getItem("lastRacord");
-const savedType = localStorage.getItem("lastUserType");
 
   if(savedRacord){
     racordInput.value = savedRacord;
 }
-  
-if(savedType){
-    userTypeSelect.value = savedType;
-
-    // 🔥 تشغيل تحميل المستخدمين تلقائياً
-    userTypeSelect.dispatchEvent(new Event("change"));
-}
-
   
 // ==================== DOM ELEMENTS تعريف عناصر الصفحة ====================
 
@@ -509,8 +500,7 @@ loginBtn.addEventListener("click", function(){
     }
   
   // فتح الجلسة
-  localStorage.setItem("lastUserType", type); 
-  localStorage.setItem("lastRacord", racordClean);
+   localStorage.setItem("lastRacord", racordClean);
   
     openSession(type, user);
     
