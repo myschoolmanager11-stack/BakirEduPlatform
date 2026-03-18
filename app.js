@@ -428,7 +428,7 @@ loginBtn.addEventListener("click", function(){
     const type = userTypeSelect.value;
     let racordInputValue = racordInput.value; // القيمة الخام من الحقل
 
-   if(!type){
+   if(!type || type === "-- اختر --"){
     showToast("يرجى اختيار نوع المستخدم", "warning");
     showFieldError(userTypeSelect);
     return;
