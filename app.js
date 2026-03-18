@@ -427,12 +427,13 @@ lines.forEach(line => {
 loginBtn.addEventListener("click", function(){
     const type = userTypeSelect.value;
     let racordInputValue = racordInput.value; // القيمة الخام من الحقل
-    
-   if(!type){
-        showToast("يرجى اختيار نوع المستخدم", "warning");
-        return;
+
+   // ✅ تحقق من اختيار المستخدم
+    if(!userTypeSelect.value){
+      showToast("يرجى اختيار نوع المستخدم", "warning");
+    return;
     }
-  
+     
      if(!racordInputValue){
         showToast("يرجى إدخال المعرف", "warning");
         return;
