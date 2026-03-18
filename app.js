@@ -76,6 +76,21 @@ if (schoolNameElement) {
     schoolNameElement.textContent = CONFIG.SchoolName;
 }
 
+ //عند تحميل الصفحة، استرجاع القيم المحفوظة 
+ const savedRacord = localStorage.getItem("rememberRacord");
+ const savedUserType = localStorage.getItem("rememberUserType");
+
+    if(savedRacord && savedUserType){
+        racordInput.value = savedRacord;
+        userTypeSelect.value = savedUserType;
+        document.getElementById("rememberMeCheckbox").checked = true;
+
+        // 🔹 يمكن تسجيل الدخول مباشرة إذا أحببت
+        const user = usersMap.get(savedRacord);
+        if(user) openSession(savedUserType, user);
+    }
+
+  
  // 🔥 تفعيل مراقبة النشاط
     ["click", "mousemove", "keydown", "touchstart", "mouseover"].forEach(event => {
         document.addEventListener(event, resetSessionTimer);
@@ -452,10 +467,12 @@ lines.forEach(line => {
     hideLoader();
 });
 
+// ====================login  تسجيل الدخول ====================
 loginBtn.addEventListener("click", function(){
     const type = userTypeSelect.value;
     let racordInputValue = racordInput.value; // القيمة الخام من الحقل
-
+    const rememberMe = document.getElementById("rememberMeCheckbox").checked;
+  
    if(!type || type === "-- اختر --"){
     showToast("يرجى اختيار نوع المستخدم", "warning");
     showFieldError(userTypeSelect);
@@ -495,9 +512,17 @@ loginBtn.addEventListener("click", function(){
         return;
     }
 
-      
+     // 🔹 حفظ المعرف ونوع المستخدم إذا اختار Remember Me
+    if(rememberMe){
+        localStorage.setItem("rememberRacord", racordClean);
+        localStorage.setItem("rememberUserType", type);
+    } else {
+        localStorage.removeItem("rememberRacord");
+        localStorage.removeItem("rememberUserType");
+    }
+  
     // فتح الجلسة
-    localStorage.setItem("lastRacord", racordClean);
+    //localStorage.setItem("lastRacord", racordClean);
   
     openSession(type, user);
     resetSessionTimer();
