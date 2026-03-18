@@ -484,12 +484,15 @@ function openSession(type, user) {
 }
   
 
- // ==================== TOAST MESSAGE ====================
-function showToast(message){
+// ==================== SMART TOAST ====================
+function showToast(message, type = "info"){
 
     let toast = document.createElement("div");
-    toast.className = "toast-message";
-    toast.textContent = message;
+
+    // 🎯 إضافة النوع
+    toast.className = "toast-message toast-" + type;
+
+    toast.innerHTML = message;
 
     document.body.appendChild(toast);
 
