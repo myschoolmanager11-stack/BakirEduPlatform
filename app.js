@@ -415,7 +415,10 @@ lines.forEach(line => {
 
     } catch(err) {
         console.error(err);
-        alert("حدث خطأ أثناء تحميل المستخدمين");
+      
+        showToast("حدث خطأ أثناء تحميل المستخدمين", "error");
+        //alert("حدث خطأ أثناء تحميل المستخدمين");
+      
         loginBtn.disabled = true;
     }
 
@@ -425,10 +428,17 @@ lines.forEach(line => {
 loginBtn.addEventListener("click", function(){
     const type = userTypeSelect.value;
     let racordInputValue = racordInput.value; // القيمة الخام من الحقل
-    if(!type) return alert("يرجى اختيار نوع المستخدم");
-    if(!racordInputValue) return alert("يرجى إدخال المعرف");
+    if(!type) return
+   showToast("يرجى اختيار نوع المستخدم", "warning");   
+  //alert("يرجى اختيار نوع المستخدم");
+  
+    if(!racordInputValue) return 
+   showToast("يرجى إدخال المعرف", "warning");   
+  //alert("يرجى إدخال المعرف");
 
-    if(!USERS_LOADED) return alert("القائمة لم تُحمّل بعد، يرجى الانتظار");
+    if(!USERS_LOADED) return 
+   showToast("القائمة لم تُحمّل بعد، يرجى الانتظار", "warning");   
+ // alert("القائمة لم تُحمّل بعد، يرجى الانتظار");
 
     // 🔹 التعديل هنا: تنظيف المعرف من الفراغات قبل البحث
     const racordClean = racordInputValue
@@ -445,7 +455,10 @@ loginBtn.addEventListener("click", function(){
 
     console.log("محاولة تسجيل الدخول:", racordClean, user); // <-- تتبع المشكلة
 
-    if(!user) return alert("المعرف غير صحيح");
+    if(!user) return
+  
+  showToast("المعرف غير صحيح", "warning");   
+  //alert("المعرف غير صحيح");
 
     // فتح الجلسة
     localStorage.setItem("lastRacord", racordClean);
@@ -456,6 +469,7 @@ loginBtn.addEventListener("click", function(){
 // ==================== OPEN SESSION فتح الجلسة ====================
 
 function openSession(type, user) {
+  showToast("تم تسجيل الدخول بنجاح", "success"); 
    // alert("تم تسجيل الدخول بنجاح");
     console.log("فتح الجلسة للمستخدم:", type);
 
