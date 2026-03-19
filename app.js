@@ -12,26 +12,27 @@ const CONFIG = {
   "SchoolAdresse": "حي راس قلوش المدية",
   "SchoolMail": "YourMail@Gmail.com",
   "SchoolLink": "https://myschoolmanager11-stack.github.io/BakirEduPlatform/",
-  "School_Folder_ID": "1hW9f6QDQMFHTKpH8fI4wVM9subzojh-T",
-  "Documents_Folder_ID": "1Mhsx0yQJX3iooQ1s9yBCYvI7BDJ7p5x9",
-  "StudentsRecords_Folder_ID": "16JpBwOj_7iEF-CNdHwwpEW2S9p-IE0yh",
-  "School_Link_File_ID": "1DTW9n3-TggYOa0XcNdzRv8t1hSEvTcCW",
-  "ListeTeacher_File_ID": "1rjAcUud3-tgFUpJQiAN3RQuvZHSrvat5",
-  "ListeSupervisory_File_ID": "16DGPMRjpKE_55OeEXy68gve98sKhE5B4",
-  "ListeStudents_File_ID": "1uAYXlQGQOjdbY0FB2MWSR80VTCCo5fn_",
-  "ListePrinsipal_File_ID": "1Cg_lvQ-VvaT8UxS0p4obldKnYTC4yzsQ",
-  "Listepointage_File_ID": "1Oz7Ps0c-P47hz1V0lohhKaN2w4brwMyq",
-  "New_Absented_File_ID": "10ci-EC2rEKBikLOsXjE1Dr_j6OU8Pbpx",
-  "Old_Absented_File_ID": "1dNoGk6DUSlxFz8ptOY2MxgxsW0QjDgWL",
-  "ListeClasses_File_ID": "1yXIUX9rM6ILw8QnX4YtOTjyHenEpFRM-",
-  "Reception_Schedule_File_ID": "15IqM59K107ZcpoGxKOkQAHBA24-4RgAS",
-  "Weekly_Students_Timetable_File_ID": "1Lm9eHzneBtaScPTH1v0PwYsH3PKZwJBO",
-  "Teacher_Timetable_File_ID": "1h6zUDZReva03nI8uRz3Hh11eVCqzJp3y",
-  "Exams_Calendar_File_ID": "1Qb3CXV_4NnQSL04EJFi7OjCIa73F_z8z",
-  "Students_Documents_File_ID": "1fhsmmLCp2o5sG3R-5nrBaHLIDZ5IvXDa",
-  "Teacher_Documents_File_ID": "1c8igqdJAJerlqnT_Yni_C8PKd6B8WPBo",
-  "Supervisory_Documents_File_ID": "11Oe0DHFRzE-Ykptl_Q9T0peUVP3kS_s5",
-  "Announcements_File_ID": "1fdhianG-OnDNRAsa1gEzBgESHM1OStB_"
+  "School_Link_File_ID": "1QeclwBLWvBZ466oa8n4ZLnnPzyzQxOIm",
+  "School_Folder_ID": "1_9To1WzcaQ2jKeisWePs6YqxWeeNWfGi",
+  "Documents_Folder_ID": "1Ba1y0DZI4E_VFRGDsC6jomSznsSisS1p",
+  "StudentsRecords_Folder_ID": "1X6tju2WH3hvbOAcsqwwdQ1_2ReUJn2yl",
+  "Daily_absences_Folder_ID": "10nqLA6w-5LDe_YWzCznXp8M0j_DL7OkR",
+  "ListeTeacher_File_ID": "1l8IWYxTQtLksOoYumgr05uC5TnuSAA_T",
+  "ListeSupervisory_File_ID": "1ua7_qbqm_rdhuMM7II5Z324nT6pdxJAZ",
+  "ListeStudents_File_ID": "1hnroe0ab6iARWhtUjmxZj2IJp6NeCz0W",
+  "ListePrinsipal_File_ID": "1XI_mx8OXScdv68oHomjqEf90AWZLcsg0",
+  "Listepointage_File_ID": "1b5d2h0BB9lpur3opESbKjsfd9BhUmzGO",
+  "New_Absented_File_ID": "1B1UEqyx24R7IFdO2Ge27GjZCV80OMSRN",
+  "Old_Absented_File_ID": "1Qdj6jqyIiTLEu3wbF4dJr2_rw7HmJec3",
+  "ListeClasses_File_ID": "1jAjJmZFsvKYhZqWRNEtFPXNIZ5me7Lh8",
+  "Reception_Schedule_File_ID": "1ldv3U4uXjAEtv7D1bXYRuxQUkGI2ivPD",
+  "Weekly_Students_Timetable_File_ID": "1s9-jaZd8NGeCbHh5D3Ew-CdSZxoPjaHs",
+  "Teacher_Timetable_File_ID": "1uh7hgOAV8sEFL5_Rj2_9ZTnMj3McF_bT",
+  "Exams_Calendar_File_ID": "13_kwHVMN2u9nZA64y5Dbg_I9fg_WkHdr",
+  "Students_Documents_File_ID": "12skcyVehXbUZYp_YIwlSCc-BV7A7l7Iq",
+  "Teacher_Documents_File_ID": "1xx9x6JPrYzZTIqvWLG7z1o73I_McSjK5",
+  "Supervisory_Documents_File_ID": "1yXg-jof0cRegZrwY4uTvpjfXNRZ7VMPF",
+  "Announcements_File_ID": "1otU3kSbUvoEKWyvIsCU0JorW32vg1y1K"
 };
 
 // ==================== الملفات المرتبطة بالقائمة ====================
@@ -52,7 +53,7 @@ const FILE_ITEMS = {
 
 // ==================== Google Apps Script رابط ====================
 
-const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwr7Kcghg690YedKv5StWfF2SgiMV1NUZDks4N_sPQUjY6XLZvuV80cCBMS3T-TqDu_/exec";
+const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwFw73q7RW8M_GJb9y9a2sWr2SYX6yaZjH6z46a7mo4mcGYscrj82D47LA5QDgDTDw/exec";
 
 // ==================== متغيرات عامة ====================
 
