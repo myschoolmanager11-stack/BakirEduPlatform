@@ -126,15 +126,14 @@ const userTypeDisplay = document.getElementById("userTypeDisplay");
 
 // --- تسجيل الدخول ---
 const userTypeSelect = document.getElementById("userTypeSelect");
-// 🔥 حل مشكلة Firefox (إعادة تحميل المستخدم تلقائيا)
-if(userTypeSelect.value){
-    userTypeSelect.dispatchEvent(new Event("change"));
-}
- 
 const racordBlock = document.getElementById("racordBlock");
 const racordInput = document.getElementById("racordInput");
 const scanQRBtn = document.getElementById("scanQRBtn");
 const loginBtn = document.getElementById("loginBtn");
+
+  // 🔥 إجبار إعادة تعيين الحقول عند تحميل الصفحة
+userTypeSelect.value = "";
+racordInput.value = "";
   
 // --- عناصر OldAbsented ---
 const oldAbsSelect = document.getElementById("oldAbsClassFilter");
