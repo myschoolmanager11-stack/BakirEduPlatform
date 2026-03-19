@@ -76,31 +76,7 @@ if (schoolNameElement) {
     schoolNameElement.textContent = CONFIG.SchoolName;
 }
 
- // 🔥 Auto Login
-const savedSession = localStorage.getItem("sessionUser");
-
-if(savedSession){
-    try{
-        const session = JSON.parse(savedSession);
-
-        userTypeSelect.value = session.type;
-
-        // تحميل المستخدمين أولاً
-        await loadUsersByType(session.type);
-
-        const user = usersMap.get(session.racord);
-
-        if(user){
-            openSession(session.type, user);
-            return; // ⛔ يمنع إظهار login
-        }
-
-    }catch(err){
-        console.error("Session error:", err);
-    }
-}
-
-  
+   
 // ==================== DOM ELEMENTS تعريف عناصر الصفحة ====================
 
 // --- عناصر الصفحة ---
@@ -118,7 +94,7 @@ const menuBtn = document.getElementById("menuBtn");
 const dropdownMenu = document.getElementById("dropdownMenu");
 const itemDescription = document.getElementById("itemDescription");
 
-// 🔥 فتح/غلق القائمة
+// ߔŠفتح/غلق القائمة
 menuBtn.addEventListener("click", function () {
     if (dropdownMenu.style.display === "block") {
         dropdownMenu.style.display = "none";
@@ -137,7 +113,7 @@ document.addEventListener("click", function(e){
     // إذا ضغط داخل القائمة أو على زر القائمة → لا تغلق
     if(dropdownMenu.contains(e.target) || menuBtn.contains(e.target)) return;
 
-    // 🔥 غير ذلك → أغلق القائمة
+    // ߔŠغير ذلك → أغلق القائمة
     dropdownMenu.style.display = "none";
 });
   
@@ -155,7 +131,7 @@ const racordInput = document.getElementById("racordInput");
 const scanQRBtn = document.getElementById("scanQRBtn");
 const loginBtn = document.getElementById("loginBtn");
 
-  // 🔥 إجبار إعادة تعيين الحقول عند تحميل الصفحة
+  // ߔŠإجبار إعادة تعيين الحقول عند تحميل الصفحة
 userTypeSelect.value = "";
 racordInput.value = "";
   
@@ -415,12 +391,19 @@ if(saved){
 TEMP_SELECTED_ABS = JSON.parse(saved);
 }
   
-// ==================== دالة فصل تحميل المستخدمين من الجلسة المحفوضة====================
- async function loadUsersByType(type){
+
+// ====================USERS LOADING  اختيار المستخدم وتحميل القوائمم ====================
+
+loginBtn.disabled = true; // تعطيل الزر حتى يتم تحميل القوائم
+
+// عند تغيير نوع المستخدم
+userTypeSelect.addEventListener("change", async function() {
+    const type = this.value;
+    if(!type) return;
 
     showLoader();
+    loginBtn.disabled = true; // منع الضغط أثناء التحميل
     USERS_LOADED = false;
-    loginBtn.disabled = true;
 
     let fileId = "";
     if(type === "teacher") fileId = CONFIG.ListeTeacher_File_ID;
@@ -434,35 +417,39 @@ TEMP_SELECTED_ABS = JSON.parse(saved);
         memoryUsers[type] = [];
         usersMap.clear();
 
-        lines.forEach(line => {
-            let user = null;
-            if(type === "teacher") user = parseTeacherLine(line);
-            if(type === "consultation") user = parseSupervisoryLine(line);
-            if(type === "parent") user = parseStudentLine(line);
+lines.forEach(line => {
+    line = line.trim();
+    if(!line) return;
+    let user = null;
+    if(type === "teacher") user = parseTeacherLine(line);
+    if(type === "consultation") user = parseSupervisoryLine(line);
+    if(type === "parent") user = parseStudentLine(line);
 
-            if(user){
-                const key = user.racord.toString().trim().replace(/\s/g, "");
-                usersMap.set(key, user);
-            }
-        });
+    if(user){
+        memoryUsers[type].push(user);
+   const key = user.racord
+    .toString()
+    .trim()
+    .replace(/\s/g, "")
+    .replace(/\r/g, "")
+    .replace(/\n/g, "");
+
+     usersMap.set(key, user); // <-- تنظيف صارم
+    }
+});
 
         USERS_LOADED = true;
-        loginBtn.disabled = false;
+        loginBtn.disabled = false; // تفعيل الزر بعد التحميل
 
     } catch(err) {
-        showToast("خطأ في تحميل المستخدمين", "error");
+        console.error(err);
+      
+        showToast("حدث خطأ أثناء تحميل المستخدمين", "error");
+            
+        loginBtn.disabled = true;
     }
 
     hideLoader();
-}
-  
-// ====================USERS LOADING  اختيار المستخدم وتحميل القوائمم ====================
-
-loginBtn.disabled = true; // تعطيل الزر حتى يتم تحميل القوائم
-
-// عند تغيير نوع المستخدم
-userTypeSelect.addEventListener("change", async function() {
-       loadUsersByType(this.value);
 });
 
 // ====================login  تسجيل الدخول ====================
@@ -488,7 +475,7 @@ loginBtn.addEventListener("click", function(){
     return;
     } 
              
-    // 🔹 التعديل هنا: تنظيف المعرف من الفراغات قبل البحث
+    // ߔ٠التعديل هنا: تنظيف المعرف من الفراغات قبل البحث
     const racordClean = racordInputValue
     .toString()
     .trim()
@@ -509,12 +496,6 @@ loginBtn.addEventListener("click", function(){
         showFieldError(racordInput);
         return;
     }
-
-  // 🔐 حفظ الجلسة
-localStorage.setItem("sessionUser", JSON.stringify({
-    type: type,
-    racord: racordClean
-}));
   
   // فتح الجلسة
     openSession(type, user);
@@ -533,7 +514,7 @@ function openSession(type, user) {
     document.body.style.pointerEvents = "auto";
     
     loginModal.classList.remove("show");
-    loginModal.style.display = "none"; // 🔥 إجبار الإخفاء
+    loginModal.style.display = "none"; // ߔŠإجبار الإخفاء
 
     console.log("حالة المودال:", loginModal);
    
@@ -682,9 +663,7 @@ function logout() {
   
      // إغلاق أي معاينة مفتوحة
     document.getElementById("filePreviewPanel").style.display = "none";
-  
-    localStorage.removeItem("sessionUser");
-  
+
     showToast("تم تسجيل الخروج بنجاح", "success");
     console.log("تم تسجيل الخروج");
 }
