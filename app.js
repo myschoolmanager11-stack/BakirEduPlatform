@@ -53,7 +53,7 @@ const FILE_ITEMS = {
 
 // ==================== Google Apps Script رابط ====================
 
-const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwFw73q7RW8M_GJb9y9a2sWr2SYX6yaZjH6z46a7mo4mcGYscrj82D47LA5QDgDTDw/exec";
+const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx2_9AE3h-sOniB8WeXxFmQ7srjKzui5S7EN7ObIh6TU3FkN7BCsO871iyT12Av0arz/exec";
 
 // ==================== متغيرات عامة ====================
 
@@ -510,21 +510,32 @@ function openSession(type, user) {
   
     showToast("تم تسجيل الدخول بنجاح", "success"); 
 
-  // 👇 إرسال الإعدادات إلى Apps Script
-const data = new URLSearchParams();
+// 👇 إرسال الإعدادات مرة واحدة فقط
+if(!localStorage.getItem("configSent")){
 
-data.append("action", "saveConfig");
-data.append("School_Folder_ID", CONFIG.School_Folder_ID);
-data.append("SchoolName", CONFIG.SchoolName);
-data.append("New_Absented_File_ID", CONFIG.New_Absented_File_ID);
-data.append("Daily_absences_Folder_ID", CONFIG.Daily_absences_Folder_ID);
+  const data = new URLSearchParams();
 
-fetch("GAS_SCRIPT_URL", {
-  method: "POST",
-  body: data
-})
-.then(res => res.text())
-.then(res => console.log("رد السيرفر:", res));
+  data.append("action", "saveConfig");
+  data.append("School_Folder_ID", CONFIG.School_Folder_ID);
+  data.append("SchoolName", CONFIG.SchoolName);
+  data.append("New_Absented_File_ID", CONFIG.New_Absented_File_ID);
+  data.append("Daily_absences_Folder_ID", CONFIG.Daily_absences_Folder_ID);
+
+  fetch("GAS_SCRIPT_URL", {
+    method: "POST",
+    body: data
+  })
+  .then(res => res.text())
+  .then(res => {
+    console.log("رد السيرفر:", res);
+
+    // ✔ نخزن فقط إذا نجحت العملية
+    if(res === "CONFIG_SAVED"){
+      localStorage.setItem("configSent", "true");
+    }
+  })
+  .catch(err => console.error("خطأ:", err));
+}
 
   
     console.log("فتح الجلسة للمستخدم:", type);
