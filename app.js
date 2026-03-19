@@ -511,7 +511,7 @@ function openSession(type, user) {
     showToast("تم تسجيل الدخول بنجاح", "success"); 
 
 // 👇 إرسال الإعدادات مرة واحدة فقط
-if(!localStorage.getItem("configSent")){
+if(!localStorage.getItem("configSent_" + CONFIG.School_Folder_ID)){
 
   const data = new URLSearchParams();
 
@@ -521,20 +521,18 @@ if(!localStorage.getItem("configSent")){
   data.append("New_Absented_File_ID", CONFIG.New_Absented_File_ID);
   data.append("Daily_absences_Folder_ID", CONFIG.Daily_absences_Folder_ID);
 
-  fetch("GAS_SCRIPT_URL", {
+  fetch(GAS_SCRIPT_URL, { // ✅ بدون ""
     method: "POST",
     body: data
   })
   .then(res => res.text())
   .then(res => {
-    console.log("رد السيرفر:", res);
+    console.log("CONFIG RESPONSE:", res);
 
-    // ✔ نخزن فقط إذا نجحت العملية
     if(res === "CONFIG_SAVED"){
-      localStorage.setItem("configSent", "true");
+      localStorage.setItem("configSent_" + CONFIG.School_Folder_ID, "true");
     }
-  })
-  .catch(err => console.error("خطأ:", err));
+  });
 }
 
   
