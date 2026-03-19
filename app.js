@@ -76,14 +76,7 @@ if (schoolNameElement) {
     schoolNameElement.textContent = CONFIG.SchoolName;
 }
 
-  
-// ==================== استرجاع المعرفالمحفوظ ====================
-const savedRacord = localStorage.getItem("lastRacord");
-
-  if(savedRacord){
-    racordInput.value = savedRacord;
-}
-  
+   
 // ==================== DOM ELEMENTS تعريف عناصر الصفحة ====================
 
 // --- عناصر الصفحة ---
@@ -474,7 +467,8 @@ loginBtn.addEventListener("click", function(){
             
     if(!USERS_LOADED){
       showToast("يرجى الإنتضار جاري تحميل قائمة المستخدمين", "warning"); 
-         return;
+      userTypeSelect.dispatchEvent(new Event("change"));
+    return;
     } 
              
     // 🔹 التعديل هنا: تنظيف المعرف من الفراغات قبل البحث
@@ -500,8 +494,6 @@ loginBtn.addEventListener("click", function(){
     }
   
   // فتح الجلسة
-   localStorage.setItem("lastRacord", racordClean);
-  
     openSession(type, user);
     
 });
@@ -521,9 +513,7 @@ function openSession(type, user) {
     loginModal.style.display = "none"; // 🔥 إجبار الإخفاء
 
     console.log("حالة المودال:", loginModal);
-
-    localStorage.setItem("userType", type);
-    localStorage.setItem("userName", user.name);
+   
     if(type === "parent") localStorage.setItem("StudentRecords_Fille_ID", user.StudentRecords_Fille_ID);
 
     menuBtn.disabled = false;
@@ -651,9 +641,7 @@ function logout() {
       // إرجاع النص الترحيبي
     welcomeText.textContent = "مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.";
     itemDescription.textContent = "";
-  
-    localStorage.removeItem("userType");
-    localStorage.removeItem("userName");
+      
     localStorage.removeItem("StudentRecords_Fille_ID");
 
     memoryUsers = { teacher: [], consultation: [], parent: [] };
