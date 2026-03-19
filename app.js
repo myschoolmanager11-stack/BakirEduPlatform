@@ -76,7 +76,31 @@ if (schoolNameElement) {
     schoolNameElement.textContent = CONFIG.SchoolName;
 }
 
-   
+ // 🔥 Auto Login
+const savedSession = localStorage.getItem("sessionUser");
+
+if(savedSession){
+    try{
+        const session = JSON.parse(savedSession);
+
+        userTypeSelect.value = session.type;
+
+        // تحميل المستخدمين أولاً
+        await loadUsersByType(session.type);
+
+        const user = usersMap.get(session.racord);
+
+        if(user){
+            openSession(session.type, user);
+            return; // ⛔ يمنع إظهار login
+        }
+
+    }catch(err){
+        console.error("Session error:", err);
+    }
+}
+
+  
 // ==================== DOM ELEMENTS تعريف عناصر الصفحة ====================
 
 // --- عناصر الصفحة ---
@@ -391,19 +415,12 @@ if(saved){
 TEMP_SELECTED_ABS = JSON.parse(saved);
 }
   
-
-// ====================USERS LOADING  اختيار المستخدم وتحميل القوائمم ====================
-
-loginBtn.disabled = true; // تعطيل الزر حتى يتم تحميل القوائم
-
-// عند تغيير نوع المستخدم
-userTypeSelect.addEventListener("change", async function() {
-    const type = this.value;
-    if(!type) return;
+// ==================== دالة فصل تحميل المستخدمين من الجلسة المحفوضة====================
+ async function loadUsersByType(type){
 
     showLoader();
-    loginBtn.disabled = true; // منع الضغط أثناء التحميل
     USERS_LOADED = false;
+    loginBtn.disabled = true;
 
     let fileId = "";
     if(type === "teacher") fileId = CONFIG.ListeTeacher_File_ID;
@@ -417,39 +434,35 @@ userTypeSelect.addEventListener("change", async function() {
         memoryUsers[type] = [];
         usersMap.clear();
 
-lines.forEach(line => {
-    line = line.trim();
-    if(!line) return;
-    let user = null;
-    if(type === "teacher") user = parseTeacherLine(line);
-    if(type === "consultation") user = parseSupervisoryLine(line);
-    if(type === "parent") user = parseStudentLine(line);
+        lines.forEach(line => {
+            let user = null;
+            if(type === "teacher") user = parseTeacherLine(line);
+            if(type === "consultation") user = parseSupervisoryLine(line);
+            if(type === "parent") user = parseStudentLine(line);
 
-    if(user){
-        memoryUsers[type].push(user);
-   const key = user.racord
-    .toString()
-    .trim()
-    .replace(/\s/g, "")
-    .replace(/\r/g, "")
-    .replace(/\n/g, "");
-
-     usersMap.set(key, user); // <-- تنظيف صارم
-    }
-});
+            if(user){
+                const key = user.racord.toString().trim().replace(/\s/g, "");
+                usersMap.set(key, user);
+            }
+        });
 
         USERS_LOADED = true;
-        loginBtn.disabled = false; // تفعيل الزر بعد التحميل
+        loginBtn.disabled = false;
 
     } catch(err) {
-        console.error(err);
-      
-        showToast("حدث خطأ أثناء تحميل المستخدمين", "error");
-            
-        loginBtn.disabled = true;
+        showToast("خطأ في تحميل المستخدمين", "error");
     }
 
     hideLoader();
+}
+  
+// ====================USERS LOADING  اختيار المستخدم وتحميل القوائمم ====================
+
+loginBtn.disabled = true; // تعطيل الزر حتى يتم تحميل القوائم
+
+// عند تغيير نوع المستخدم
+userTypeSelect.addEventListener("change", async function() {
+       loadUsersByType(this.value);
 });
 
 // ====================login  تسجيل الدخول ====================
@@ -496,6 +509,12 @@ loginBtn.addEventListener("click", function(){
         showFieldError(racordInput);
         return;
     }
+
+  // 🔐 حفظ الجلسة
+localStorage.setItem("sessionUser", JSON.stringify({
+    type: type,
+    racord: racordClean
+}));
   
   // فتح الجلسة
     openSession(type, user);
@@ -663,7 +682,9 @@ function logout() {
   
      // إغلاق أي معاينة مفتوحة
     document.getElementById("filePreviewPanel").style.display = "none";
-
+  
+    localStorage.removeItem("sessionUser");
+  
     showToast("تم تسجيل الخروج بنجاح", "success");
     console.log("تم تسجيل الخروج");
 }
