@@ -511,24 +511,20 @@ function openSession(type, user) {
     showToast("تم تسجيل الدخول بنجاح", "success"); 
 
   // 👇 إرسال الإعدادات إلى Apps Script
-  const data = {
-    School_Folder_ID: CONFIG.School_Folder_ID,
-    SchoolName: CONFIG.SchoolName,
-    New_Absented_File_ID: CONFIG.New_Absented_File_ID,
-    Daily_absences_Folder_ID: CONFIG.Daily_absences_Folder_ID
-  };
+const data = new URLSearchParams();
 
-  if(!localStorage.getItem("configSent")){
+data.append("action", "saveConfig");
+data.append("School_Folder_ID", CONFIG.School_Folder_ID);
+data.append("SchoolName", CONFIG.SchoolName);
+data.append("New_Absented_File_ID", CONFIG.New_Absented_File_ID);
+data.append("Daily_absences_Folder_ID", CONFIG.Daily_absences_Folder_ID);
 
-  fetch("GAS_SCRIPT_URL", {
-    method: "POST",
-    body: JSON.stringify(data)
-  });
-
-  localStorage.setItem("configSent", "true");
-}
-
-  console.log("✅ تم إرسال إعدادات المؤسسة");
+fetch("GAS_SCRIPT_URL", {
+  method: "POST",
+  body: data
+})
+.then(res => res.text())
+.then(res => console.log("رد السيرفر:", res));
 
   
     console.log("فتح الجلسة للمستخدم:", type);
