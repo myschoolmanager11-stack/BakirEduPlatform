@@ -509,7 +509,28 @@ loginBtn.addEventListener("click", function(){
 function openSession(type, user) {
   
     showToast("تم تسجيل الدخول بنجاح", "success"); 
-   
+
+  // 👇 إرسال الإعدادات إلى Apps Script
+  const data = {
+    School_Folder_ID: CONFIG.School_Folder_ID,
+    SchoolName: CONFIG.SchoolName,
+    New_Absented_File_ID: CONFIG.New_Absented_File_ID,
+    Daily_absences_Folder_ID: CONFIG.Daily_absences_Folder_ID
+  };
+
+  if(!localStorage.getItem("configSent")){
+
+  fetch("GAS_SCRIPT_URL", {
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+
+  localStorage.setItem("configSent", "true");
+}
+
+  console.log("✅ تم إرسال إعدادات المؤسسة");
+
+  
     console.log("فتح الجلسة للمستخدم:", type);
 
     document.body.style.pointerEvents = "auto";
