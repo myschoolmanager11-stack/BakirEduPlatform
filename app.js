@@ -53,7 +53,7 @@ const FILE_ITEMS = {
 
 // ==================== Google Apps Script رابط ====================
 
-const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4YAJcvKa9e4zNJ3zpB34qk7QritDgTgNd7UXGoo2qLRgnFJDyHjJSsD96JXvMNjE/exec";
+const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzyXNUQ-Ci5gvhkzUFWYEkT25-mIpleFq3Exe3gq-Wlf9zLDWsBwuXENRzOFLFu4f8t/exec";
 
 // ==================== متغيرات عامة ====================
 
@@ -95,7 +95,7 @@ const menuBtn = document.getElementById("menuBtn");
 const dropdownMenu = document.getElementById("dropdownMenu");
 const itemDescription = document.getElementById("itemDescription");
 
-// ߔŠفتح/غلق القائمة
+// فتح/غلق القائمة
 menuBtn.addEventListener("click", function () {
     if (dropdownMenu.style.display === "block") {
         dropdownMenu.style.display = "none";
