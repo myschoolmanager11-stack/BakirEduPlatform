@@ -53,7 +53,7 @@ const FILE_ITEMS = {
 
 // ==================== Google Apps Script رابط ====================
 
-const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzYLN0d-JKWPk6tK3G738QMl3sphHrNJXXAVBgR9ZSJTYAyUyDFZhquBL5DN_t4yZnK/exec";
+const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0BZMcy1W77KFOc1VfJeTKIsVLarrhzJQrLD5I7o1jZgMjSOsz4K2buFV-dVpZK8Ah/exec";
 
 // ==================== متغيرات عامة ====================
 
