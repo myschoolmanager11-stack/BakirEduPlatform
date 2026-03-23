@@ -1222,6 +1222,13 @@ function DownloadNewAbsented() {
 // ====================SendAbsentedModal مودال إرسال الغيابات ====================
 window.openSendAbsentedModal = async function(){
 
+   //امسح قائمة الغيابات المؤقته مباشرة عند فتح مودال الإرسال إذا خارج التوقيت من 8 صباحا الى 17 مساءا
+    const hour = new Date().getHours();
+    if(hour < 8 || hour >= 17){
+    localStorage.removeItem("TEMP_SELECTED_ABS");
+    TEMP_SELECTED_ABS = [];
+   }
+  
     sendAbsModal.classList.add("show");
     showLoader();
 
