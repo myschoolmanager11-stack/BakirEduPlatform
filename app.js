@@ -379,17 +379,53 @@ autoClearAbsList();
   
 // ==================== دالة حفض التلاميذ المحددين للغياب في القائمة المؤقته ====================
 function saveTempAbs(){
-localStorage.setItem(
-"TEMP_SELECTED_ABS",
-JSON.stringify(TEMP_SELECTED_ABS)
-);
+const data = {
+date: new Date().toISOString().split("T")[0], // تاريخ اليوم
+list: TEMP_SELECTED_ABS
+};
+
+localStorage.setItem("TEMP_SELECTED_ABS", JSON.stringify(data));
+
 }
 
 // ==================== دالة تحميل قائمة التلاميذ المحددين للغياب من القائمة المؤقته ====================
+loadTempAbs();
+
+function loadTempAbs(){
+
 const saved = localStorage.getItem("TEMP_SELECTED_ABS");
 
-if(saved){
-TEMP_SELECTED_ABS = JSON.parse(saved);
+if(!saved) return;
+
+try{
+
+const data = JSON.parse(saved);
+
+const today = new Date().toISOString().split("T")[0];
+
+const hour = new Date().getHours();
+
+// ⛔ خارج توقيت العمل
+if(hour < 8 || hour >= 17){
+localStorage.removeItem("TEMP_SELECTED_ABS");
+TEMP_SELECTED_ABS = [];
+return;
+}
+
+// ⛔ يوم جديد
+if(data.date !== today){
+localStorage.removeItem("TEMP_SELECTED_ABS");
+TEMP_SELECTED_ABS = [];
+return;
+}
+
+// ✅ نفس اليوم
+TEMP_SELECTED_ABS = data.list || [];
+
+}catch(e){
+TEMP_SELECTED_ABS = [];
+}
+
 }
   
 
