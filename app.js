@@ -687,21 +687,24 @@ function startQRScan() {
 
     // ==================== التحقق من التوافق ====================
 
-    // 👨‍🎓 تلميذ
+    // ߑɢ
+ߎӠتلميذ
     if(validQR.startsWith("STD#") && type !== "teacher"){
         showToast("⚠️ هذا QR خاص بالتلاميذ فقط يرجى تحديد أولياء الأمر من القائمة", "warning");
         showFieldError(userTypeSelect);
         return;
     }
 
-      // 👨‍🎓 تلميذ
+      // ߑɢ
+ߎӠتلميذ
     if(validQR.startsWith("STD#") && type !== "consultation"){
         showToast("⚠️ هذا QR خاص بالتلاميذ فقط يرجى تحديد أولياء الأمر من القائمة", "warning");
         showFieldError(userTypeSelect);
         return;
     }
           
-    // 👨‍🏫 أستاذ أو إشراف
+    // ߑɢ
+ߏˠأستاذ أو إشراف
     if(validQR.startsWith("EMP#") && type === "parent"){
         showToast("⚠️ هذا QR خاص الإساتذة او الإشراف التربوي فقط يرجى تحديد الأساتذة او الإشراف التربوي من القائمة", "warning");
         showFieldError(userTypeSelect);
@@ -721,7 +724,7 @@ function startQRScan() {
         return;
     }
 
-    // 🚀 تسجيل الدخول مباشرة
+    // ߚ تسجيل الدخول مباشرة
     setTimeout(() => {
         loginBtn.click();
     }, 300);
@@ -1673,4 +1676,4 @@ function openFilePreview(fileId) {
 
   setTimeout(() => panel.style.opacity = 1, 50);
 }
-});
+})
