@@ -666,9 +666,55 @@ function startQRScan() {
         { facingMode: "environment" },
         { fps: 10, qrbox: 250 },
         qrCodeMessage => {
-            racordInput.value = qrCodeMessage;
-            stopQRScanner();
-        }
+
+    const validQR = validateQR(qrCodeMessage);
+
+    // ❌ QR غير صالح
+    if(!validQR){
+        showToast("⚠️ هذا QR غير تابع للنظام", "warning");
+        return;
+    }
+
+    const type = userTypeSelect.value;
+
+    // ❌ لم يتم اختيار نوع المستخدم
+    if(!type){
+        showToast("⚠️ يرجى اختيار نوع المستخدم أولا", "warning");
+        return;
+    }
+
+    // ==================== التحقق من التوافق ====================
+
+    // 👨‍🎓 تلميذ
+    if(validQR.startsWith("STD#") && type !== "parent"){
+        showToast("⚠️ هذا QR خاص بالتلاميذ فقط", "warning");
+        return;
+    }
+
+    // 👨‍🏫 أستاذ أو إشراف
+    if(validQR.startsWith("EMP#") && type === "parent"){
+        showToast("⚠️ هذا QR ليس خاص بالأولياء", "warning");
+        return;
+    }
+
+    // ==================== إذا كل شيء صحيح ====================
+
+    racordInput.value = validQR;
+
+    stopQRScanner();
+
+    // ⏳ تأكد أن القوائم محملة
+    if(!USERS_LOADED){
+        showToast("⏳ جاري تحميل المستخدمين...", "info");
+        userTypeSelect.dispatchEvent(new Event("change"));
+        return;
+    }
+
+    // 🚀 تسجيل الدخول مباشرة
+    setTimeout(() => {
+        loginBtn.click();
+    }, 300);
+}
     ).catch(err => {
       console.error("خطأ في QR Scanner:", err);
       
@@ -677,6 +723,27 @@ function startQRScan() {
     });
 }
 
+
+// ==================== التحقق من بنية QR  ====================
+function validateQR(qrText){
+
+    if(!qrText) return false;
+
+    const clean = qrText
+        .toString()
+        .trim()
+        .replace(/\s/g, "")
+        .replace(/\r/g, "")
+        .replace(/\n/g, "");
+
+    // ✅ تحقق من البداية
+    if(clean.startsWith("STD#") || clean.startsWith("EMP#")){
+        return clean;
+    }
+
+    return false;
+}
+  
 // ==================== stop QR SCANNER  ====================
 function stopQRScanner() {
     if(qrScanner){
