@@ -529,9 +529,10 @@ loginBtn.addEventListener("click", function(){
 
     
     if(!user){
-        showToast("المعرف غير صحيح", "error");
-        showFieldError(racordInput);
-        return;
+        showToast("المعرف غير صحيح يرجى التحقق من تحديد هويتك الصحيحة من قائمة المستخدمين", "error");
+       showFieldError(userTypeSelect);
+      showFieldError(racordInput);
+      return;
     }
   
   // فتح الجلسة
