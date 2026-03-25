@@ -47,7 +47,6 @@ h1, h2, h3 {
     display: flex;
     align-items: center;
     position: relative;
-    z-index: 10000;
     box-shadow: none;
 }
 
