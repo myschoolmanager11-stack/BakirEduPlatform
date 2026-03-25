@@ -680,20 +680,30 @@ function startQRScan() {
     // ❌ لم يتم اختيار نوع المستخدم
     if(!type){
         showToast("⚠️ يرجى اختيار نوع المستخدم أولا", "warning");
+        showFieldError(userTypeSelect);
         return;
     }
 
     // ==================== التحقق من التوافق ====================
 
     // 👨‍🎓 تلميذ
-    if(validQR.startsWith("STD#") && type !== "parent"){
-        showToast("⚠️ هذا QR خاص بالتلاميذ فقط", "warning");
+    if(validQR.startsWith("STD#") && type !== "teacher"){
+        showToast("⚠️ هذا QR خاص بالتلاميذ فقط يرجى تحديد أولياء الأمر من القائمة", "warning");
+        showFieldError(userTypeSelect);
         return;
     }
 
+      // 👨‍🎓 تلميذ
+    if(validQR.startsWith("STD#") && type !== "consultation"){
+        showToast("⚠️ هذا QR خاص بالتلاميذ فقط يرجى تحديد أولياء الأمر من القائمة", "warning");
+        showFieldError(userTypeSelect);
+        return;
+    }
+          
     // 👨‍🏫 أستاذ أو إشراف
     if(validQR.startsWith("EMP#") && type === "parent"){
-        showToast("⚠️ هذا QR ليس خاص بالأولياء", "warning");
+        showToast("⚠️ هذا QR خاص الإساتذة او الإشراف التربوي فقط يرجى تحديد الأساتذة او الإشراف التربوي من القائمة", "warning");
+        showFieldError(userTypeSelect);
         return;
     }
 
