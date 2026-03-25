@@ -91,12 +91,64 @@ h1, h2, h3 {
 }
 
 .modal-content{
-    background:rgba(255,255,255,0.75);
-    backdrop-filter:blur(10px);
-    -webkit-backdrop-filter:blur(10px);
+    background: linear-gradient(
+        135deg,
+        rgba(10, 20, 40, 0.65),
+        rgba(40, 10, 60, 0.65)
+    );
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    border: 1px solid rgba(255,255,255,0.15);
+
     padding:25px;
-    border-radius:16px;
-    box-shadow:0 15px 40px rgba(0,0,0,0.3);
+    border-radius:18px;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.5),
+        0 0 25px rgba(0,150,255,0.15),
+        0 0 15px rgba(150,0,255,0.15);
+
+    color: #e0f7ff;
+}
+
+.modal-content h2,
+.modal-content h3 {
+
+    color: #00d4ff;
+
+    text-shadow:
+        0 0 6px rgba(0,212,255,0.6),
+        0 0 12px rgba(0,212,255,0.4);
+
+}
+
+.modal-content::before{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background: linear-gradient(
+        120deg,
+        transparent 30%,
+        rgba(255,255,255,0.08),
+        transparent 70%
+    );
+
+    border-radius:18px;
+    pointer-events:none;
+}
+
+.modal-content.large{
+    background: linear-gradient(
+        135deg,
+        rgba(10, 20, 40, 0.7),
+        rgba(40, 10, 60, 0.7)
+    );
+
+    backdrop-filter: blur(14px);
+    color: #e0f7ff;
 }
 
 .login-field { margin-bottom: 14px; }
@@ -117,37 +169,23 @@ h1, h2, h3 {
 .login-btn,
 .contactSend-btn,
 .Attendance-btn {
-        
-    height:40px;
-    width:50%;
-    border:none;
-    border-radius:12px;
 
-    background: linear-gradient(135deg,#0197c3,#007da3);
-    color:white;
-    font-weight:bold;
+    background: linear-gradient(135deg,#00c6ff,#7b2cff);
 
-    cursor:pointer;
+    box-shadow:
+        0 0 10px rgba(0,198,255,0.6),
+        0 0 20px rgba(123,44,255,0.4);
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-
-    box-shadow:0 4px 10px rgba(0,0,0,0.2);
-    transition:0.25s;
 }
-
 
 .login-btn:hover,
 .contactSend-btn:hover,
 .Attendance-btn:hover{
-
-    transform: translateY(-2px);
-    box-shadow:0 6px 14px rgba(0,0,0,0.25);
-
-    background: linear-gradient(135deg,#00a8d6,#006a8a);
+    box-shadow:
+        0 0 15px rgba(0,198,255,0.9),
+        0 0 30px rgba(123,44,255,0.7);
 }
+
 
 #dropdownMenu {
     display: none;
@@ -192,10 +230,24 @@ h1, h2, h3 {
     transform: translateX(0);
 }
 
-.modal-content input, .modal-content textarea {
-    width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px;
-    border-radius: 8px; border: 1px solid #ccc; font-size: 14px; box-sizing: border-box;
+.modal-content input,
+.modal-content textarea,
+.modal-content select{
+
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(0,200,255,0.3);
+
+    color: #ffffff;
+
+    backdrop-filter: blur(6px);
+
 }
+
+.modal-content input::placeholder,
+.modal-content textarea::placeholder{
+    color: rgba(255,255,255,0.6);
+}
+
 .modal-content textarea { min-height: 100px; resize: vertical; }
 .modal-content button {
     width: 100%; padding: 12px; border: none; border-radius: 8px;
