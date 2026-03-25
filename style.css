@@ -546,14 +546,17 @@ h1, h2, h3 {
     background: rgba(1,151,195,0.05);
     font-weight: bold;
     color: #0197c3;
+     flex: 1;
+    position: relative;
+    overflow: hidden;
+    align-items: center;
 }
 
-.scanner-panel,
-#reader,
-video {
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
+/* مهم جداً للفيديو */
+#reader video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
 }
 
 .login-title {
