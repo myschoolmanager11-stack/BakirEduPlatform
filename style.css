@@ -1,11 +1,12 @@
-﻿html, body {
+html, body {
     height: 100%;
 }
 
 body{
     margin:0;
     font-family:"Segoe UI", Roboto, sans-serif;
-   /* background-image:url("background.png"); */
+
+    background-image:url("background.png");
     background-position:center;
     background-repeat:no-repeat;
     background-size:cover;
@@ -81,150 +82,22 @@ h1, h2, h3 {
 .modal {
     background: rgba(0,0,0,0.45);
     backdrop-filter: blur(3px);
-
     position: fixed;
     inset: 0;
-
     display: flex;
+    align-items: center;
     justify-content: center;
-
-    align-items: flex-start; /* 🔥 بدل center */
-
-    overflow-y: auto; /* 🔥 هذا هو الحل */
-    padding: 40px 10px; /* يعطي مساحة من الأعلى */
-    
     z-index: 9999;
 }
 
 .modal-content{
-    background: linear-gradient(
-        135deg,
-        rgba(10, 20, 40, 0.65),
-        rgba(40, 10, 60, 0.65)
-    );
-
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-
-    border: 1px solid rgba(255,255,255,0.15);
-
+    background:rgba(255,255,255,0.75);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
     padding:25px;
-    border-radius:18px;
-
-    box-shadow:
-        0 15px 40px rgba(0,0,0,0.5),
-        0 0 25px rgba(0,150,255,0.15),
-        0 0 15px rgba(150,0,255,0.15);
-
-    color: #e0f7ff;
+    border-radius:16px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.3);
 }
-
-.custom-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    display: none;
-    justify-content: center;
-    align-items: center;
-}
-
-.custom-modal.show {
-    display: flex;
-}
-
-.modal-content::before{
-    content:"";
-    position:absolute;
-    inset:0;
-
-    background: linear-gradient(
-        120deg,
-        transparent 30%,
-        rgba(255,255,255,0.08),
-        transparent 70%
-    );
-
-    border-radius:18px;
-    pointer-events:none;
-}
-
-.modal-content.large{
-    position: relative;
-
-    background: linear-gradient(
-        135deg,
-        rgba(10, 20, 40, 0.7),
-        rgba(40, 10, 60, 0.7)
-    );
-
-    width: 90%;
-    max-width: 900px;
-
-    max-height: 90vh; /* نخليها أكبر شوي */
-    
-    display: flex;
-    flex-direction: column;
-
-    border-radius: 18px;
-    overflow: hidden;
-
-    backdrop-filter: blur(14px);
-    color: #e0f7ff;
-}
-
-.modal-content.large::before{
-    content:"";
-    position:absolute;
-    inset:0;
-
-    background: linear-gradient(
-        120deg,
-        transparent 30%,
-        rgba(255,255,255,0.08),
-        transparent 70%
-    );
-
-    border-radius:18px;
-    pointer-events:none;
-}
-
-.modal-header {
-  background: #1e88e5;
-  color: #fff;
-
-  position: sticky;
-  top: 0;
-  z-index: 10; /* نخليها أعلى شوي */
-
-  padding: 12px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2); /* ✨ يعطي عمق */
-}
-
-/* جسم المودال */
-.modal-body {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-
-    overflow-y: auto; /* 🔥 بدل hidden */
-}
-
-.modal-content h2,
-.modal-content h3 {
-
-    color: #00d4ff;
-
-    text-shadow:
-        0 0 6px rgba(0,212,255,0.6),
-        0 0 12px rgba(0,212,255,0.4);
-
-}
-
 
 .login-field { margin-bottom: 14px; }
 .login-field label {
@@ -244,54 +117,36 @@ h1, h2, h3 {
 .login-btn,
 .contactSend-btn,
 .Attendance-btn {
+        
+    height:40px;
+    width:50%;
+    border:none;
+    border-radius:12px;
 
-    /* 🔹 الأبعاد الأصلية (مهم جداً) */
-    height: 40px;
-    width: 50%;
+    background: linear-gradient(135deg,#0197c3,#007da3);
+    color:white;
+    font-weight:bold;
 
-    /* 🔹 تحسين الشكل */
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 12px;
+    cursor:pointer;
 
-    background: linear-gradient(135deg, rgba(1,151,195,0.85), rgba(0,125,163,0.85));
-    color: #ffffff;
-    font-weight: bold;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-
-    cursor: pointer;
-
-    /* 🔹 تأثير الزجاج */
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-
-    /* 🔹 ظل احترافي */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-
-    transition: all 0.25s ease;
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    transition:0.25s;
 }
+
 
 .login-btn:hover,
 .contactSend-btn:hover,
-.Attendance-btn:hover {
+.Attendance-btn:hover{
 
-    transform: translateY(-2px) scale(1.02); /* خففنا scale باش ما يكبرش بزاف */
+    transform: translateY(-2px);
+    box-shadow:0 6px 14px rgba(0,0,0,0.25);
 
-    background: linear-gradient(135deg, rgba(0,168,214,0.95), rgba(0,106,138,0.95));
-
-    box-shadow: 0 6px 16px rgba(0,0,0,0.35),
-                0 0 10px rgba(1,151,195,0.5); /* glow */
-}
-
-.login-btn:active,
-.contactSend-btn:active,
-.Attendance-btn:active {
-
-    transform: scale(0.97);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    background: linear-gradient(135deg,#00a8d6,#006a8a);
 }
 
 #dropdownMenu {
@@ -337,59 +192,18 @@ h1, h2, h3 {
     transform: translateX(0);
 }
 
-.modal-content input,
-.modal-content textarea {
-
-    /* 🔹 الحفاظ على الأبعاد */
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    font-size: 14px;
-    border-radius: 8px;
-    box-sizing: border-box;
-
-    /* 🔹 الشكل الجديد (Glass) */
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(0,200,255,0.3);
-    color: #ffffff;
-
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+.modal-content input, .modal-content textarea {
+    width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px;
+    border-radius: 8px; border: 1px solid #ccc; font-size: 14px; box-sizing: border-box;
 }
-
-.modal-content textarea {
-    min-height: 100px;
-    resize: vertical;
+.modal-content textarea { min-height: 100px; resize: vertical; }
+.modal-content button {
+    width: 100%; padding: 12px; border: none; border-radius: 8px;
+    background: #0197c3; color: white; font-size: 15px; cursor: pointer; transition: 0.3s;
 }
+.modal-content button:hover { background: #007da3; }
+.modal-content .subtitle { text-align:center; margin-bottom:15px; color:#555; }
 
-.modal-content input::placeholder,
-.modal-content textarea::placeholder {
-    color: rgba(255,255,255,0.6);
-}
-
-.modal-content input:focus,
-.modal-content textarea:focus,
-.modal-content select:focus {
-
-    outline: none;
-    border-color: #00c8ff;
-
-    box-shadow: 0 0 6px rgba(0,200,255,0.5);
-}
-
-.modal-content select {
-    background: rgba(255,255,255,0.9); /* رجعناها واضحة */
-    color: #0197c3;
-
-    border: 1px solid rgba(0,200,255,0.4);
-}
-
-/* خيارات القائمة */
-.modal-content select option {
-    background: #ffffff;
-    color: #0197c3;
-}
 
 @keyframes fadeIn {
     from {opacity:0; transform:scale(0.95);}
@@ -435,46 +249,29 @@ h1, h2, h3 {
 }
 
 .preview-btn {
-  /* الحفاظ على الحجم */
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  min-height: 40px;
-
-  /* تصميم عصري */
-  background: linear-gradient(135deg, rgba(1,151,195,0.8), rgba(0,125,163,0.8));
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.25);
-  border-radius: 10px;
-
+  background: #0197c3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-
+  gap: 6px;
   cursor: pointer;
-
-  /* تأثير الزجاج */
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-
-  /* ظل ناعم */
-  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-
-  transition: all 0.25s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  transition: all 0.2s ease;
+  max-width: 40px;
+  max-height: 40px;
+  min-width: 40px; 
+  min-height: 40px;  
 }
 
 .preview-btn:hover {
-  transform: translateY(-2px) scale(1.05);
-
-  background: linear-gradient(135deg, rgba(0,168,214,0.9), rgba(0,106,138,0.9));
-
-  box-shadow: 0 6px 16px rgba(0,0,0,0.35),
-              0 0 8px rgba(1,151,195,0.5); /* glow خفيف */
-}
-
-.preview-btn:active {
-  transform: scale(0.95);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  background: #007da3;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
 }
 
 /* وضع ملء الشاشة */
@@ -544,6 +341,11 @@ h1, h2, h3 {
     justify-content: center;
     background: rgba(1,151,195,0.05);
     font-weight: bold;
+    color: #0197c3;
+}
+
+.modal-content h2,
+.modal-content h3 {
     color: #0197c3;
 }
 
@@ -652,6 +454,48 @@ h1, h2, h3 {
 @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+}
+
+.custom-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-modal.show {
+    display: flex;
+}
+
+.modal-content.large {
+    background: #fff;
+    width: 90%;
+    max-width: 900px;
+    max-height: 85vh;   /* ߔŠمهم جداً */
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+
+.modal-header {
+  background: #1e88e5;
+  color: #fff;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* جسم المودال */
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
 }
 
 /* حاوية الجدول */
