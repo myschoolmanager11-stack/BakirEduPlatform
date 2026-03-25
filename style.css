@@ -217,22 +217,54 @@ h1, h2, h3 {
 .contactSend-btn,
 .Attendance-btn {
 
-    background: linear-gradient(135deg,#00c6ff,#7b2cff);
+    /* 🔹 الأبعاد الأصلية (مهم جداً) */
+    height: 40px;
+    width: 50%;
 
-    box-shadow:
-        0 0 10px rgba(0,198,255,0.6),
-        0 0 20px rgba(123,44,255,0.4);
+    /* 🔹 تحسين الشكل */
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 12px;
 
+    background: linear-gradient(135deg, rgba(1,151,195,0.85), rgba(0,125,163,0.85));
+    color: #ffffff;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    cursor: pointer;
+
+    /* 🔹 تأثير الزجاج */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    /* 🔹 ظل احترافي */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+
+    transition: all 0.25s ease;
 }
 
 .login-btn:hover,
 .contactSend-btn:hover,
-.Attendance-btn:hover{
-    box-shadow:
-        0 0 15px rgba(0,198,255,0.9),
-        0 0 30px rgba(123,44,255,0.7);
+.Attendance-btn:hover {
+
+    transform: translateY(-2px) scale(1.02); /* خففنا scale باش ما يكبرش بزاف */
+
+    background: linear-gradient(135deg, rgba(0,168,214,0.95), rgba(0,106,138,0.95));
+
+    box-shadow: 0 6px 16px rgba(0,0,0,0.35),
+                0 0 10px rgba(1,151,195,0.5); /* glow */
 }
 
+.login-btn:active,
+.contactSend-btn:active,
+.Attendance-btn:active {
+
+    transform: scale(0.97);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
 
 #dropdownMenu {
     display: none;
