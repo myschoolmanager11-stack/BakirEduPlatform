@@ -18,12 +18,12 @@
     </button>
 
 <!-- زر حسابي -->
-<div id="userBtn" class="user-btn">
+<!-- <div id="userBtn" class="user-btn">
     👤 حسابي
-</div>
+</div>-->
     
 <!-- قائمة المستخدم المنبثقة -->
-<div id="userDropdown" class="user-dropdown">
+<!-- <div id="userDropdown" class="user-dropdown">
     <div class="user-info">
         <div id="userNameDisplay">
             <span class="material-icons">badge</span>
@@ -45,7 +45,7 @@
         <span class="material-icons">logout</span>
         تسجيل الخروج
     </div>
-</div>
+</div>-->
     
    <div class="app-title">
    <!--  <h2 id="selectedTitle">
@@ -62,7 +62,21 @@
     <div id="itemDescription" class="item-description"></div>
 </div>
 
-    <div class="dropdown-menu" id="dropdownMenu"></div>
+    <!--<div class="dropdown-menu" id="dropdownMenu"></div>-->
+
+<div class="dropdown-menu" id="dropdownMenu">
+  <!-- عناصر الحساب مدمجة -->
+  <div class="menu-section">
+    <div class="menu-item"><span class="material-icons">badge</span> اسم المستخدم : <span id="userNameDisplay"></span></div>
+    <div class="menu-item"><span class="material-icons">assignment_ind</span> نوع المستخدم : <span id="userTypeDisplay"></span></div>
+    <hr>
+    <div class="menu-item" id="userAnnouncements"><span class="material-icons">campaign</span> إعلانات</div>
+    <div class="menu-item" id="userContact"><span class="material-icons">call</span> اتصل بنا</div>
+    <div class="menu-item" id="userLogout"><span class="material-icons">logout</span> تسجيل الخروج</div>
+      <hr>
+  </div>
+  <!-- عناصر القائمة الأخرى تبقى كما هي -->
+</div>
     
 </header>
 
