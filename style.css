@@ -227,6 +227,27 @@ h1, h2, h3 {
 }
 
 
+.modal_QR {
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(3px);
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal_QR-content{
+    background:rgba(255,255,255,0.75);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    padding:25px;
+    border-radius:16px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.3);
+}
+
+
 .login-field { margin-bottom: 14px; }
 .login-field label {
     font-weight:600;
