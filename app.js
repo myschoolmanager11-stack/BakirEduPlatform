@@ -529,10 +529,9 @@ loginBtn.addEventListener("click", function(){
 
     
     if(!user){
-        showToast("المعرف غير صحيح يرجى التحقق من تحديد هويتك الصحيحة من قائمة المستخدمين", "error");
-       showFieldError(userTypeSelect);
-      showFieldError(racordInput);
-      return;
+        showToast("المعرف غير صحيح", "error");
+        showFieldError(racordInput);
+        return;
     }
   
   // فتح الجلسة
@@ -667,68 +666,9 @@ function startQRScan() {
         { facingMode: "environment" },
         { fps: 10, qrbox: 250 },
         qrCodeMessage => {
-
-    const validQR = validateQR(qrCodeMessage);
-
-    // ❌ QR غير صالح
-    if(!validQR){
-        showToast("⚠️ هذا QR غير تابع للنظام", "warning");
-        return;
-    }
-
-    const type = userTypeSelect.value;
-
-    // ❌ لم يتم اختيار نوع المستخدم
-    if(!type){
-        showToast("⚠️ يرجى اختيار نوع المستخدم أولا", "warning");
-        showFieldError(userTypeSelect);
-        return;
-    }
-
-    // ==================== التحقق من التوافق ====================
-
-    // ߑɢ
-ߎӠتلميذ
-    if(validQR.startsWith("STD#") && type !== "teacher"){
-        showToast("⚠️ هذا QR خاص بالتلاميذ فقط يرجى تحديد أولياء الأمر من القائمة", "warning");
-        showFieldError(userTypeSelect);
-        return;
-    }
-
-      // ߑɢ
-ߎӠتلميذ
-    if(validQR.startsWith("STD#") && type !== "consultation"){
-        showToast("⚠️ هذا QR خاص بالتلاميذ فقط يرجى تحديد أولياء الأمر من القائمة", "warning");
-        showFieldError(userTypeSelect);
-        return;
-    }
-          
-    // ߑɢ
-ߏˠأستاذ أو إشراف
-    if(validQR.startsWith("EMP#") && type === "parent"){
-        showToast("⚠️ هذا QR خاص الإساتذة او الإشراف التربوي فقط يرجى تحديد الأساتذة او الإشراف التربوي من القائمة", "warning");
-        showFieldError(userTypeSelect);
-        return;
-    }
-
-    // ==================== إذا كل شيء صحيح ====================
-
-    racordInput.value = validQR;
-
-    stopQRScanner();
-
-    // ⏳ تأكد أن القوائم محملة
-    if(!USERS_LOADED){
-        showToast("⏳ جاري تحميل المستخدمين...", "info");
-        userTypeSelect.dispatchEvent(new Event("change"));
-        return;
-    }
-
-    // ߚ تسجيل الدخول مباشرة
-    setTimeout(() => {
-        loginBtn.click();
-    }, 300);
-}
+            racordInput.value = qrCodeMessage;
+            stopQRScanner();
+        }
     ).catch(err => {
       console.error("خطأ في QR Scanner:", err);
       
@@ -737,27 +677,6 @@ function startQRScan() {
     });
 }
 
-
-// ==================== التحقق من بنية QR  ====================
-function validateQR(qrText){
-
-    if(!qrText) return false;
-
-    const clean = qrText
-        .toString()
-        .trim()
-        .replace(/\s/g, "")
-        .replace(/\r/g, "")
-        .replace(/\n/g, "");
-
-    // ✅ تحقق من البداية
-    if(clean.startsWith("STD#") || clean.startsWith("EMP#")){
-        return clean;
-    }
-
-    return false;
-}
-  
 // ==================== stop QR SCANNER  ====================
 function stopQRScanner() {
     if(qrScanner){
@@ -1676,4 +1595,4 @@ function openFilePreview(fileId) {
 
   setTimeout(() => panel.style.opacity = 1, 50);
 }
-})
+});
