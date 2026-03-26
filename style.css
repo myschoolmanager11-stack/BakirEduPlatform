@@ -359,6 +359,12 @@ h1, h2, h3 {
     transform: translateX(0);
 }
 
+#dropdownMenu hr {
+    border: none;
+    height: 1px;
+    background: #ddd;
+}
+
 .modal-content input,
 .modal-content textarea {
 
