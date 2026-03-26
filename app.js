@@ -640,49 +640,101 @@ function showFieldError(element){
   
 // ==================== QR SCANNER مسح QR ====================
 let qrScanner = null;
+let qrScanActive = false;
+let lastQR = "";
+
 function startQRScan() {
 
-  // ✅ تحقق من اختيار المستخدم
-    if(!userTypeSelect.value){
-      showToast("يرجى اختيار نوع المستخدم", "warning");
-      showFieldError(userTypeSelect);
-    return;
+    racordInput.value = ""; // 🧹 تنظيف الحقل
+    lastQR = ""; // 🔄 إعادة تعيين
+   
+  if(!userTypeSelect.value){
+        showToast("يرجى اختيار نوع المستخدم", "warning");
+        showFieldError(userTypeSelect);
+        return;
     }
 
-  
     const modal = document.getElementById("qrScannerModal");
     const qrReader = document.getElementById("qrReader");
 
-    if(!qrReader){
-      showToast("عنصر QR Reader غير موجود!", "warning");   
-      return;
-    }
-    
-  
     modal.style.display = "flex";
 
     qrScanner = new Html5Qrcode("qrReader");
+
+    qrScanActive = false;
+
+    setTimeout(() => {
+        qrScanActive = true;
+    }, 1000);
+
     qrScanner.start(
         { facingMode: "environment" },
         { fps: 10, qrbox: 250 },
+
         qrCodeMessage => {
-            racordInput.value = qrCodeMessage;
+
+            if(!qrScanActive) return;
+
+            const validQR = validateQR(qrCodeMessage);
+
+            if(!validQR){
+                showToast("⚠️ هذا QR غير تابع للنظام", "warning");
+                return;
+            }
+
+            // ⛔ منع التكرار
+            if(validQR === lastQR) return;
+            lastQR = validQR;
+
+            racordInput.value = validQR;
+
             stopQRScanner();
+
+            if(!USERS_LOADED){
+                showToast("⏳ جاري تحميل المستخدمين...", "info");
+                userTypeSelect.dispatchEvent(new Event("change"));
+                return;
+            }
+
+            setTimeout(() => {
+                loginBtn.click();
+            }, 300);
         }
     ).catch(err => {
-      console.error("خطأ في QR Scanner:", err);
-      
-      showToast("تعذر فتح الكاميرا", "warning");
-      
+        console.error("خطأ في QR Scanner:", err);
+        showToast("تعذر فتح الكاميرا", "warning");
     });
 }
 
+  // ==================== التحقق من بنية QR  ====================
+function validateQR(qrText){
+
+    if(!qrText) return false;
+
+    const clean = qrText
+        .toString()
+        .trim()
+        .replace(/\s/g, "")
+        .replace(/\r/g, "")
+        .replace(/\n/g, "");
+
+    // ✅ تحقق من البداية
+    if(clean.startsWith("STD#") || clean.startsWith("EMP#")){
+        return clean;
+    }
+
+    return false;
+}
+  
 // ==================== stop QR SCANNER  ====================
 function stopQRScanner() {
     if(qrScanner){
-        qrScanner.stop().catch(()=>{});
+        qrScanner.stop()
+        .then(() => qrScanner.clear())
+        .catch(()=>{});
         qrScanner = null;
     }
+
     const modal = document.getElementById("qrScannerModal");
     if(modal) modal.style.display = "none";
 }
