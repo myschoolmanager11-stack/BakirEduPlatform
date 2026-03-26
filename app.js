@@ -797,25 +797,25 @@ function logout() {
     showToast("تم تسجيل الخروج بنجاح", "success");
     console.log("تم تسجيل الخروج");
 }
-  
-// ==================== التحكم بالقائمة المنبثقة الخاصة بالمستخدم ====================
-  
-// --- تحديث معلومات المستخدم ---
-//function updateUserDropdown(userType, userName) {
-   // const userNameDisplay = document.getElementById("userNameDisplay");
-  //  const userTypeDisplay = document.getElementById("userTypeDisplay");
 
-   // userNameDisplay.textContent = userName || "المستخدم";
-  //  userTypeDisplay.textContent = (userType === "parent") ? "ولي تلميذ" :
-                                 // (userType === "teacher") ? "أستاذ" :
-                                //  "إشراف تربوي";
+// ==================== معلومات المستخدم ====================
+function updateUserDropdown(userType, userName) {
+    const userNameDisplay = document.getElementById("userNameDisplay");
+    const userTypeDisplay = document.getElementById("userTypeDisplay");
 
-  
+    userNameDisplay.textContent = userName || "المستخدم";
+    userTypeDisplay.textContent = (userType === "parent") ? "ولي تلميذ" :
+                                  (userType === "teacher") ? "أستاذ" :
+                                  "إشراف تربوي";
+}
+   
 // ==================== تحميل عناصر القائمة fillMenu حسب المستخدم وربطها بالأحداث ====================
   function fillMenu(type) {
     dropdownMenu.innerHTML = "";
     const MENUS = {
       parent: [
+        {header: true, label: userName || "المستخدم", subLabel: userType}, // ← اسم المستخدم + النوع
+        {divider: true},   // ← هذا العنصر يمثل خط فاصل
         {icon:"people", label:"فضاء أولياء التلاميذ", desc:"مرحبا بكم في فضاء أولياء التلاميذ"},
         {icon:"assignment", label:"سجل الغيابات و المراسلات الإدارية", desc:"عرض سجل الغيابات و المراسلات الإدارية"},
         {icon:"event", label:"جدول استقبال الأولياء", desc:"مواعيد استقبال الأولياء من قبل الإدارة"},
@@ -828,6 +828,8 @@ function logout() {
         {icon:"logout", label:"تسجيل الخروج", desc:"تسجيل الخروج"},
       ],
       teacher: [
+        {header: true, label: userName || "المستخدم", subLabel: userType}, // ← اسم المستخدم + النوع
+        {divider: true},   // ← هذا العنصر يمثل خط فاصل
         {icon:"person", label:"فضاء الأساتذة", desc:"مرحبا بكم في الأرضية الرقمية - فضاء الأساتذة"},
         {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
         {icon:"description", label:"قوائم صب النقاط", desc:"إدخال ومتابعة صب النقاط"},
@@ -843,6 +845,8 @@ function logout() {
         {icon:"logout", label:"تسجيل الخروج", desc:"تسجيل الخروج"},
       ],
       consultation: [
+        {header: true, label: userName || "المستخدم", subLabel: userType}, // ← اسم المستخدم + النوع
+        {divider: true},   // ← هذا العنصر يمثل خط فاصل
         {icon:"qr_code_2", label:"نظام الحضور الذكي", desc:"تسجيل حضور التلاميذ بالباركود"},
         {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
         {icon:"hourglass_top", label:"قائمة التلاميذ الغائبون قبل اليوم", desc:"قائمة التلاميذ الغائبين قبل اليوم"},
@@ -858,6 +862,7 @@ function logout() {
       ]
     };
 
+    
     MENUS[type].forEach((item, idx) => {
       let div = document.createElement("div");
       let span = document.createElement("span"); 
