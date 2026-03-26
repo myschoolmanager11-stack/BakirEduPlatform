@@ -642,13 +642,23 @@ function showFieldError(element){
 let qrScanner = null;
 let qrScanActive = false;
 let lastQR = "";
+let firstScanIgnored = false;
 
-function startQRScan() {
+async function startQRScan() {
 
-    racordInput.value = ""; // 🧹 تنظيف الحقل
-    lastQR = ""; // 🔄 إعادة تعيين
-   
-  if(!userTypeSelect.value){
+    // 🧹 تنظيف القيم
+    racordInput.value = "";
+    lastQR = "";
+    firstScanIgnored = false;
+
+    // ⛔ إيقاف أي سكانر قديم (مهم جدًا)
+    if(qrScanner){
+        await qrScanner.stop().catch(()=>{});
+        qrScanner = null;
+    }
+
+    // ✅ التحقق من اختيار المستخدم
+    if(!userTypeSelect.value){
         showToast("يرجى اختيار نوع المستخدم", "warning");
         showFieldError(userTypeSelect);
         return;
@@ -663,9 +673,10 @@ function startQRScan() {
 
     qrScanActive = false;
 
+    // ⏳ تأخير لتفادي القراءة الوهمية
     setTimeout(() => {
         qrScanActive = true;
-    }, 1000);
+    }, 1500);
 
     qrScanner.start(
         { facingMode: "environment" },
@@ -673,7 +684,14 @@ function startQRScan() {
 
         qrCodeMessage => {
 
+            // ⛔ تجاهل أي قراءة قبل التفعيل
             if(!qrScanActive) return;
+
+            // ⛔ تجاهل أول قراءة (مشكلة الكاميرا في الكمبيوتر)
+            if(!firstScanIgnored){
+                firstScanIgnored = true;
+                return;
+            }
 
             const validQR = validateQR(qrCodeMessage);
 
@@ -696,6 +714,7 @@ function startQRScan() {
                 return;
             }
 
+            // 🚀 تسجيل الدخول التلقائي
             setTimeout(() => {
                 loginBtn.click();
             }, 300);
