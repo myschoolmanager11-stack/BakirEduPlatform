@@ -120,8 +120,6 @@ document.addEventListener("click", function(e){
   
   
 // --- تعريف عناصر قائمة المستخدم ---
-const userBtn = document.getElementById("userBtn");
-const userDropdown = document.getElementById("userDropdown");
 const userNameDisplay = document.getElementById("userNameDisplay");
 const userTypeDisplay = document.getElementById("userTypeDisplay");
 
@@ -802,44 +800,15 @@ function logout() {
   
 // ==================== التحكم بالقائمة المنبثقة الخاصة بالمستخدم ====================
   
-// عرض / إخفاء القائمة عند الضغط على الزر
-userBtn.addEventListener("click", () => {
-    if(userDropdown.style.display === "block") userDropdown.style.display = "none";
-    else userDropdown.style.display = "block";
-});
-
-// إغلاق القائمة عند الضغط خارجها
-document.addEventListener("click", (e) => {
-    if(userDropdown.style.display !== "block") return;
-    if(userDropdown.contains(e.target) || userBtn.contains(e.target)) return;
-    userDropdown.style.display = "none";
-});
-
-// تعبئة معلومات المستخدم عند تسجيل الدخول
+// --- تحديث معلومات المستخدم ---
 function updateUserDropdown(userType, userName) {
+    const userNameDisplay = document.getElementById("userNameDisplay");
+    const userTypeDisplay = document.getElementById("userTypeDisplay");
+
     userNameDisplay.textContent = userName || "المستخدم";
     userTypeDisplay.textContent = (userType === "parent") ? "ولي تلميذ" :
-                                   (userType === "teacher") ? "أستاذ" :
-                                   "إشراف تربوي";
-}
-
-// ربط العناصر بالأحداث
-document.getElementById("userAnnouncements").addEventListener("click", () => {
-    openFilePreview(CONFIG.Announcements_File_ID);
-    userDropdown.style.display = "none";
-   itemDescription.textContent = "عرض آخر الإعلانات الصادرة عن الإدارة"
-});
-
-document.getElementById("userContact").addEventListener("click", () => {
-    document.getElementById("contactModal").style.display = "flex";
-    userDropdown.style.display = "none";
-  itemDescription.textContent = "إرسال رسالة مباشرة لإدارة البوابة"
-});
-
-document.getElementById("userLogout").addEventListener("click", () => {
-    logout();
-    userDropdown.style.display = "none";
-});
+                                  (userType === "teacher") ? "أستاذ" :
+                                  "إشراف تربوي";
 
   
 // ==================== تحميل عناصر القائمة fillMenu حسب المستخدم وربطها بالأحداث ====================
@@ -847,12 +816,17 @@ document.getElementById("userLogout").addEventListener("click", () => {
     dropdownMenu.innerHTML = "";
     const MENUS = {
       parent: [
+       // {divider: true},   // ← هذا العنصر يمثل خط فاصل
         {icon:"people", label:"فضاء أولياء التلاميذ", desc:"مرحبا بكم في فضاء أولياء التلاميذ"},
         {icon:"assignment", label:"سجل الغيابات و المراسلات الإدارية", desc:"عرض سجل الغيابات و المراسلات الإدارية"},
         {icon:"event", label:"جدول استقبال الأولياء", desc:"مواعيد استقبال الأولياء من قبل الإدارة"},
         {icon:"calendar_today", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"عرض التوقيت الأسبوعي للتلاميذ"},
         {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
         {icon:"folder", label:"استمارات ووثائق مختلفة للتلاميذ", desc:"تحميل الاستمارات والوثائق المخصصة للتلاميذ"},
+        {divider: true},   // ← هذا العنصر يمثل خط فاصل
+        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
+        {icon:"call", label:"إتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
+        {icon:"logout", label:"تسجيل الخروج", desc:"تسجيل الخروج"},
       ],
       teacher: [
         {icon:"person", label:"فضاء الأساتذة", desc:"مرحبا بكم في الأرضية الرقمية - فضاء الأساتذة"},
@@ -864,6 +838,10 @@ document.getElementById("userLogout").addEventListener("click", () => {
         {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
         {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات للفترة الحالية"},
         {icon:"folder", label:"استمارات ووثائق مختلفة للأساتذة", desc:"تحميل استمارات ووثائق مختلفة للأساتذة"},
+        {divider: true},   // ← هذا العنصر يمثل خط فاصل
+        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
+        {icon:"call", label:"إتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
+        {icon:"logout", label:"تسجيل الخروج", desc:"تسجيل الخروج"},
       ],
       consultation: [
         {icon:"qr_code_2", label:"نظام الحضور الذكي", desc:"تسجيل حضور التلاميذ بالباركود"},
@@ -874,6 +852,10 @@ document.getElementById("userLogout").addEventListener("click", () => {
         {icon:"calendar_view_week", label:"جدول التوقيت الأسبوعي للتلاميذ", desc:"جدول التلاميذ الأسبوعي"},
         {icon:"description", label:"رزنامة الفروض والاختبارات", desc:"رزنامة الفروض والاختبارات"},
         {icon:"folder", label:"استمارات ووثائق مختلفة للإشراف التربوي", desc:"تحميل استمارات ووثائق مختلفة للإشراف التربوي"},
+        {divider: true},   // ← هذا العنصر يمثل خط فاصل
+        {icon:"campaign", label:"إعلانات", desc:"عرض آخر الإعلانات الصادرة عن الإدارة"},
+        {icon:"call", label:"إتصل بنا", desc:"إرسال رسالة مباشرة لإدارة البوابة"},
+        {icon:"logout", label:"تسجيل الخروج", desc:"تسجيل الخروج"},
       ]
     };
 
@@ -946,6 +928,28 @@ if(item.label === "إرسال غيابات اليوم"){
     dropdownMenu.style.display = "none";
     return;
 }
+
+//إعلانات
+if(item.label === "إعلانات"){
+    openFilePreview(CONFIG.Announcements_File_ID);
+    dropdownMenu.style.display = "none";
+    return;
+}
+      
+//إتصل بنا
+if(item.label === "إتصل بنا"){
+    document.getElementById("contactModal").style.display = "flex";
+    dropdownMenu.style.display = "none";
+    return;
+}
+//تسجيل الخروج
+if(item.label === "تسجيل الخروج"){
+    logout();
+    dropdownMenu.style.display = "none";
+    return;
+}
+   
+
       
 if(FILE_ITEMS[item.label]) {
     openFilePreview(FILE_ITEMS[item.label]);
