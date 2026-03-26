@@ -529,9 +529,8 @@ loginBtn.addEventListener("click", function(){
 
     
     if(!user){
-       showToast("المعرف غير صحيح يرجى التحقق من تحديد هويتك من قائمة المستخدمين", "error");
-       showFieldError(userTypeSelect);
-       showFieldError(racordInput);
+        showToast("المعرف غير صحيح", "error");
+        showFieldError(racordInput);
         return;
     }
   
@@ -666,10 +665,10 @@ function startQRScan() {
     qrScanner.start(
         { facingMode: "environment" },
         { fps: 10, qrbox: 250 },
-       qrCodeMessage => {
-          racordInput.value = qrCodeMessage;
-           stopQRScanner();
-     }
+        qrCodeMessage => {
+            racordInput.value = qrCodeMessage;
+            stopQRScanner();
+        }
     ).catch(err => {
       console.error("خطأ في QR Scanner:", err);
       
@@ -677,7 +676,7 @@ function startQRScan() {
       
     });
 }
-  
+
 // ==================== stop QR SCANNER  ====================
 function stopQRScanner() {
     if(qrScanner){
