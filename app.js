@@ -814,7 +814,7 @@ function updateUserDropdown(userType, userName) {
     dropdownMenu.innerHTML = "";
     const MENUS = {
       parent: [
-        {header: true, label: userName || "المستخدم", subLabel: userType}, // ← اسم المستخدم + النوع
+        {header:true, label: userName || "المستخدم", subLabel:"ولي تلميذ"},
         {divider: true},   // ← هذا العنصر يمثل خط فاصل
         {icon:"people", label:"فضاء أولياء التلاميذ", desc:"مرحبا بكم في فضاء أولياء التلاميذ"},
         {icon:"assignment", label:"سجل الغيابات و المراسلات الإدارية", desc:"عرض سجل الغيابات و المراسلات الإدارية"},
@@ -828,7 +828,7 @@ function updateUserDropdown(userType, userName) {
         {icon:"logout", label:"تسجيل الخروج", desc:"تسجيل الخروج"},
       ],
       teacher: [
-        {header: true, label: userName || "المستخدم", subLabel: userType}, // ← اسم المستخدم + النوع
+        {header:true, label: userName || "المستخدم", subLabel:"أستاذ"},
         {divider: true},   // ← هذا العنصر يمثل خط فاصل
         {icon:"person", label:"فضاء الأساتذة", desc:"مرحبا بكم في الأرضية الرقمية - فضاء الأساتذة"},
         {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
@@ -845,7 +845,7 @@ function updateUserDropdown(userType, userName) {
         {icon:"logout", label:"تسجيل الخروج", desc:"تسجيل الخروج"},
       ],
       consultation: [
-        {header: true, label: userName || "المستخدم", subLabel: userType}, // ← اسم المستخدم + النوع
+        {header:true, label: userName || "المستخدم", subLabel:"إشراف تربوي"},
         {divider: true},   // ← هذا العنصر يمثل خط فاصل
         {icon:"qr_code_2", label:"نظام الحضور الذكي", desc:"تسجيل حضور التلاميذ بالباركود"},
         {icon:"assignment", label:"القوائم الإسمية للتلاميذ", desc:"عرض القوائم الإسمية للتلاميذ"},
@@ -863,110 +863,73 @@ function updateUserDropdown(userType, userName) {
     };
 
     
-    MENUS[type].forEach((item, idx) => {
-      let div = document.createElement("div");
-      let span = document.createElement("span"); 
-      span.className="material-icons"; 
-      span.textContent=item.icon;
-      div.appendChild(span);
+ // --- بناء عناصر القائمة ---
+        MENUS[type].forEach((item, idx) => {
 
-      let label = document.createElement("span"); 
-      label.textContent=item.label; 
-      div.appendChild(label);
+            // --- عنصر header ---
+            if(item.header){
+                const headerDiv = document.createElement("div");
+                headerDiv.className = "menu-header";
+                headerDiv.innerHTML = `<strong>${item.label}</strong><br><small>${item.subLabel}</small>`;
+                dropdownMenu.appendChild(headerDiv);
+                return;
+            }
 
-// حدث الضغط الواحد لكل div
-    div.addEventListener('click', function(){
+            // --- خط فاصل ---
+            if(item.divider){
+                const hr = document.createElement("hr");
+                hr.className = "menu-divider";
+                dropdownMenu.appendChild(hr);
+                return;
+            }
 
-  itemDescription.textContent = item.desc || "";
+            // --- بقية العناصر ---
+            const div = document.createElement("div");
+            div.className = "menu-item";
 
-  // رابط فضاء الأساتذة
- if(item.label === "فضاء الأساتذة") {
-    window.open("https://ostad.education.dz/auth", "_blank");
-    dropdownMenu.style.display = "none";
-    return;
+            const span = document.createElement("span"); 
+            span.className = "material-icons"; 
+            span.textContent = item.icon;
+            div.appendChild(span);
+
+            const label = document.createElement("span"); 
+            label.textContent = item.label; 
+            div.appendChild(label);
+
+            div.addEventListener('click', function(){
+                itemDescription.textContent = item.desc || "";
+
+                // --- روابط وأحداث خاصة ---
+                switch(item.label){
+                    case "فضاء الأساتذة": window.open("https://ostad.education.dz/auth", "_blank"); break;
+                    case "فضاء أولياء التلاميذ": window.open("https://awlyaa.education.dz/", "_blank"); break;
+                    case "نظام الحضور الذكي": document.getElementById("attendanceModal").style.display="flex"; break;
+                    case "سجل الغيابات و المراسلات الإدارية":
+                        const id = localStorage.getItem("SijileAbsence_Fille_ID");
+                        if(id) openFilePreview(id);
+                        else showToast("لم يتم العثور على ملف سجل الغيابات و المراسلات الإدارية", "warning");
+                        break;
+                    case "قائمة التلاميذ الغائبون قبل اليوم": openOldAbsentedModal(); break;
+                    case "متابعة غيابات اليوم": openNewAbsentedModal(); break;
+                    case "إرسال غيابات اليوم": openSendAbsentedModal(); break;
+                    case "إعلانات": openFilePreview(CONFIG.Announcements_File_ID); break;
+                    case "إتصل بنا": document.getElementById("contactModal").style.display="flex"; break;
+                    case "تسجيل الخروج": logout(); break;
+                    default:
+                        if(FILE_ITEMS[item.label]) openFilePreview(FILE_ITEMS[item.label]);
+                        break;
+                }
+
+                dropdownMenu.style.display = "none";
+            });
+
+            dropdownMenu.appendChild(div);
+            setTimeout(()=> div.classList.add("show"), idx*80);
+        });
+    }
+
+    fillMenu(userType);
 }
-
-//رابط فضاء أولياء التلاميذ
-  if(item.label === "فضاء أولياء التلاميذ") {
-    window.open("https://awlyaa.education.dz/", "_blank");
-      dropdownMenu.style.display = "none";
-    return;
-}
-
-// مودال نظام الحضور الذكي
-  if(item.label === "نظام الحضور الذكي") {
-    document.getElementById("attendanceModal").style.display = "flex";
-      dropdownMenu.style.display = "none";
-    return;
-}
-
-// سجل الغيابات و المراسلات الإدارية
-  if(item.label==="سجل الغيابات و المراسلات الإدارية" && type==="parent"){
-    const id = localStorage.getItem("SijileAbsence_Fille_ID");
-    if(id) openFilePreview(id);
-    else 
-      
-       showToast("لم يتم العثور على ملف سجل الغيابات و المراسلات الإدارية", "warning"); 
-          
-    dropdownMenu.style.display = "none";
-    return;
-}
-
-//قائمة التلاميذ الغائبون قبل اليوم
-if(item.label === "قائمة التلاميذ الغائبون قبل اليوم"){
-    openOldAbsentedModal();
-    dropdownMenu.style.display = "none";
-    return;
-}
-
-//متابعة غيابات اليوم
-if(item.label === "متابعة غيابات اليوم"){
-    openNewAbsentedModal();
-    dropdownMenu.style.display = "none";
-    return;
-}
-
-//إرسال غيابات اليوم
-if(item.label === "إرسال غيابات اليوم"){
-    openSendAbsentedModal();
-    dropdownMenu.style.display = "none";
-    return;
-}
-
-//إعلانات
-if(item.label === "إعلانات"){
-    openFilePreview(CONFIG.Announcements_File_ID);
-    dropdownMenu.style.display = "none";
-    return;
-}
-      
-//إتصل بنا
-if(item.label === "إتصل بنا"){
-    document.getElementById("contactModal").style.display = "flex";
-    dropdownMenu.style.display = "none";
-    return;
-}
-//تسجيل الخروج
-if(item.label === "تسجيل الخروج"){
-    logout();
-    dropdownMenu.style.display = "none";
-    return;
-}
-   
-
-      
-if(FILE_ITEMS[item.label]) {
-    openFilePreview(FILE_ITEMS[item.label]);
-    dropdownMenu.style.display = "none";
-    return;
-}
-     
-});
-
-      dropdownMenu.appendChild(div);
-      setTimeout(()=> div.classList.add("show"), idx*80);
-    });
-  }
 
 // ==================== دالة اتصل بنا ====================
   document.getElementById("closeContactModal").addEventListener("click", function(){
