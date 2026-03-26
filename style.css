@@ -359,6 +359,51 @@ h1, h2, h3 {
     transform: translateX(0);
 }
 
+.user-btn {
+    cursor: pointer;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 6px;
+    display: inline-block;
+    user-select: none;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 50px; /* عدّل حسب مكان الزر */
+    right: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    min-width: 200px;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    z-index: 999;
+}
+
+.user-dropdown .user-info {
+    padding: 10px;
+    font-weight: bold;
+    text-align: right;
+}
+
+.user-dropdown hr {
+    margin: 5px 0;
+    border: 0.5px solid #ddd;
+}
+
+.user-item {
+    padding: 10px;
+    cursor: pointer;
+    text-align: right;
+    transition: background 0.2s;
+}
+
+.user-item:hover {
+    background-color: #f0f0f0;
+}
+
 .modal-content input,
 .modal-content textarea {
 
@@ -969,50 +1014,7 @@ transition: background 0.2s;
     background: #3498db;
 }
 
-.user-btn {
-    cursor: pointer;
-    padding: 8px 12px;
-    background-color: #007bff;
-    color: white;
-    border-radius: 6px;
-    display: inline-block;
-    user-select: none;
-}
 
-.user-dropdown {
-    position: absolute;
-    top: 50px; /* عدّل حسب مكان الزر */
-    right: 10px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    min-width: 200px;
-    display: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    border-radius: 8px;
-    z-index: 999;
-}
-
-.user-dropdown .user-info {
-    padding: 10px;
-    font-weight: bold;
-    text-align: right;
-}
-
-.user-dropdown hr {
-    margin: 5px 0;
-    border: 0.5px solid #ddd;
-}
-
-.user-item {
-    padding: 10px;
-    cursor: pointer;
-    text-align: right;
-    transition: background 0.2s;
-}
-
-.user-item:hover {
-    background-color: #f0f0f0;
-}
 
 /* ==================== ERROR STYLE ==================== */
 .input-error {
