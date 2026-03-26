@@ -667,59 +667,15 @@ function startQRScan() {
         { facingMode: "environment" },
         { fps: 10, qrbox: 250 },
        qrCodeMessage => {
-
-    const validQR = validateQR(qrCodeMessage);
-
-    // ❌ QR غير صالح
-    if(!validQR){
-        showToast("⚠️ هذا QR غير تابع للنظام", "warning");
-        return;
-    }
-
-    // ✅ QR صالح
-    racordInput.value = validQR;
-
-    stopQRScanner();
-
-    // ⏳ تأكد أن القوائم محملة
-    if(!USERS_LOADED){
-        showToast("⏳ جاري تحميل المستخدمين...", "info");
-        userTypeSelect.dispatchEvent(new Event("change"));
-        return;
-    }
-
-    // 🚀 تسجيل الدخول مباشرة
-    setTimeout(() => {
-        loginBtn.click();
-    }, 300);
-}
+          racordInput.value = qrCodeMessage;
+           stopQRScanner();
+     }
     ).catch(err => {
       console.error("خطأ في QR Scanner:", err);
       
       showToast("تعذر فتح الكاميرا", "warning");
       
     });
-}
-
-
-// ==================== التحقق من بنية QR  ====================
-function validateQR(qrText){
-
-    if(!qrText) return false;
-
-    const clean = qrText
-        .toString()
-        .trim()
-        .replace(/\s/g, "")
-        .replace(/\r/g, "")
-        .replace(/\n/g, "");
-
-    // ✅ تحقق من البداية
-    if(clean.startsWith("STD#") || clean.startsWith("EMP#")){
-        return clean;
-    }
-
-    return false;
 }
   
 // ==================== stop QR SCANNER  ====================
