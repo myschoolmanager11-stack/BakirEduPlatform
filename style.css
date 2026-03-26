@@ -328,30 +328,46 @@ h1, h2, h3 {
     position: absolute;
     top: 60px;
     right: 10px;
-     background: rgba(255,255,255,0.95);
-    border-radius: 12px;
+
     min-width: 260px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    border-radius: 16px;
+
+    /* ✨ Glass Effect */
+    background: rgba(20, 30, 60, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border: 1px solid rgba(255,255,255,0.15);
+
+    box-shadow: 
+        0 10px 25px rgba(0,0,0,0.35),
+        0 0 10px rgba(0,150,255,0.15);
+
     display: none;
-    z-index: 1100; /* أكبر من file-preview-panel */
+    z-index: 1100;
+
     overflow: hidden;
-    }
+    padding: 8px 0;
+}
 
 .dropdown-menu div {
     padding: 10px 16px;
     cursor: pointer;
+
     display: flex;
     align-items: center;
     gap: 10px;
-    opacity: 0;
-    transform: translateX(20px);
-    transition: all 0.4s ease;
-    color: #0197c3;
+
+    color: #e0f7ff;
     font-weight: 600;
+
+    transition: all 0.25s ease;
 }
 
+/* Hover احترافي */
 .dropdown-menu div:hover {
-    background: rgba(1, 151, 195, 0.1);
+    background: rgba(0,200,255,0.15);
+    transform: translateX(-3px);
 }
 
 .dropdown-menu div.show {
@@ -648,11 +664,6 @@ h1, h2, h3 {
     border-radius:50%;
     animation: spin 1s linear infinite;
 }
-
-@keyframes spin{
-    to{ transform: rotate(360deg); }
-}
-
 
 /* ================= Loader داخل نافذة المعاينة ================= */
 
@@ -975,50 +986,45 @@ transition: background 0.2s;
     background: #3498db;
 }
 
-.user-btn {
-    cursor: pointer;
-    padding: 8px 12px;
-    background-color: #007bff;
-    color: white;
-    border-radius: 6px;
-    display: inline-block;
-    user-select: none;
+.user-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 12px;
+
+    background: rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-.user-dropdown {
-    position: absolute;
-    top: 50px; /* عدّل حسب مكان الزر */
-    right: 10px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    min-width: 200px;
-    display: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    border-radius: 8px;
-    z-index: 999;
+/* صورة المستخدم */
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    border: 2px solid rgba(0,200,255,0.6);
 }
 
-.user-dropdown .user-info {
-    padding: 10px;
+/* اسم المستخدم */
+.user-name {
     font-weight: bold;
-    text-align: right;
+    color: #00d4ff;
+
+    text-shadow:
+        0 0 6px rgba(0,212,255,0.6);
 }
 
-.user-dropdown hr {
-    margin: 5px 0;
-    border: 0.5px solid #ddd;
+.user-item.logout {
+    color: #ff6b6b;
 }
 
-.user-item {
-    padding: 10px;
-    cursor: pointer;
-    text-align: right;
-    transition: background 0.2s;
+.user-item.logout:hover {
+    background: rgba(255,0,0,0.15);
 }
 
-.user-item:hover {
-    background-color: #f0f0f0;
-}
 
 /* ==================== ERROR STYLE ==================== */
 .input-error {
