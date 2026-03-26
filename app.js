@@ -801,14 +801,14 @@ function logout() {
 // ==================== التحكم بالقائمة المنبثقة الخاصة بالمستخدم ====================
   
 // --- تحديث معلومات المستخدم ---
-function updateUserDropdown(userType, userName) {
-    const userNameDisplay = document.getElementById("userNameDisplay");
-    const userTypeDisplay = document.getElementById("userTypeDisplay");
+//function updateUserDropdown(userType, userName) {
+   // const userNameDisplay = document.getElementById("userNameDisplay");
+  //  const userTypeDisplay = document.getElementById("userTypeDisplay");
 
-    userNameDisplay.textContent = userName || "المستخدم";
-    userTypeDisplay.textContent = (userType === "parent") ? "ولي تلميذ" :
-                                  (userType === "teacher") ? "أستاذ" :
-                                  "إشراف تربوي";
+   // userNameDisplay.textContent = userName || "المستخدم";
+  //  userTypeDisplay.textContent = (userType === "parent") ? "ولي تلميذ" :
+                                 // (userType === "teacher") ? "أستاذ" :
+                                //  "إشراف تربوي";
 
   
 // ==================== تحميل عناصر القائمة fillMenu حسب المستخدم وربطها بالأحداث ====================
@@ -816,7 +816,6 @@ function updateUserDropdown(userType, userName) {
     dropdownMenu.innerHTML = "";
     const MENUS = {
       parent: [
-       // {divider: true},   // ← هذا العنصر يمثل خط فاصل
         {icon:"people", label:"فضاء أولياء التلاميذ", desc:"مرحبا بكم في فضاء أولياء التلاميذ"},
         {icon:"assignment", label:"سجل الغيابات و المراسلات الإدارية", desc:"عرض سجل الغيابات و المراسلات الإدارية"},
         {icon:"event", label:"جدول استقبال الأولياء", desc:"مواعيد استقبال الأولياء من قبل الإدارة"},
