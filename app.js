@@ -120,6 +120,8 @@ document.addEventListener("click", function(e){
   
   
 // --- تعريف عناصر قائمة المستخدم ---
+const userBtn = document.getElementById("userBtn");
+const userDropdown = document.getElementById("userDropdown");
 const userNameDisplay = document.getElementById("userNameDisplay");
 const userTypeDisplay = document.getElementById("userTypeDisplay");
 
@@ -644,7 +646,7 @@ let firstScanIgnored = false;
 
 async function startQRScan() {
 
-    // 🧹 تنظيف القيم
+    // ߧ٠تنظيف القيم
     racordInput.value = "";
     lastQR = "";
     firstScanIgnored = false;
@@ -712,7 +714,7 @@ async function startQRScan() {
                 return;
             }
 
-            // 🚀 تسجيل الدخول التلقائي
+            // ߚ تسجيل الدخول التلقائي
             setTimeout(() => {
                 loginBtn.click();
             }, 300);
@@ -799,84 +801,50 @@ function logout() {
 }
   
 // ==================== التحكم بالقائمة المنبثقة الخاصة بالمستخدم ====================
+  
+// عرض / إخفاء القائمة عند الضغط على الزر
+userBtn.addEventListener("click", () => {
+    if(userDropdown.style.display === "block") userDropdown.style.display = "none";
+    else userDropdown.style.display = "block";
+});
+
+// إغلاق القائمة عند الضغط خارجها
+document.addEventListener("click", (e) => {
+    if(userDropdown.style.display !== "block") return;
+    if(userDropdown.contains(e.target) || userBtn.contains(e.target)) return;
+    userDropdown.style.display = "none";
+});
+
+// تعبئة معلومات المستخدم عند تسجيل الدخول
+function updateUserDropdown(userType, userName) {
+    userNameDisplay.textContent = userName || "المستخدم";
+    userTypeDisplay.textContent = (userType === "parent") ? "ولي تلميذ" :
+                                   (userType === "teacher") ? "أستاذ" :
+                                   "إشراف تربوي";
+}
 
 // ربط العناصر بالأحداث
 document.getElementById("userAnnouncements").addEventListener("click", () => {
     openFilePreview(CONFIG.Announcements_File_ID);
-    itemDescription.textContent = "عرض آخر الإعلانات الصادرة عن الإدارة"
+    userDropdown.style.display = "none";
+   itemDescription.textContent = "عرض آخر الإعلانات الصادرة عن الإدارة"
 });
 
 document.getElementById("userContact").addEventListener("click", () => {
     document.getElementById("contactModal").style.display = "flex";
-   itemDescription.textContent = "إرسال رسالة مباشرة لإدارة البوابة"
+    userDropdown.style.display = "none";
+  itemDescription.textContent = "إرسال رسالة مباشرة لإدارة البوابة"
 });
 
 document.getElementById("userLogout").addEventListener("click", () => {
     logout();
-   });
+    userDropdown.style.display = "none";
+});
 
   
 // ==================== تحميل عناصر القائمة fillMenu حسب المستخدم وربطها بالأحداث ====================
   function fillMenu(type) {
-     dropdownMenu.innerHTML = "";
-
-    // ✅ عناصر المستخدم (الآن داخل القائمة الرئيسية)
-    const userMenuItems = [
-        {icon:"badge", label:"اسم المستخدم", action:"name"},
-        {icon:"assignment_ind", label:"نوع المستخدم", action:"type"},
-        {divider:true},
-        {icon:"campaign", label:"إعلانات", action:"announcements"},
-        {icon:"call", label:"اتصل بنا", action:"contact"},
-        {icon:"logout", label:"تسجيل الخروج", action:"logout"},
-        {divider:true}
-    ];
-
-    // ================== عرض عناصر المستخدم ==================
-    userMenuItems.forEach(item => {
-
-        // فاصل
-        if(item.divider){
-            let hr = document.createElement("hr");
-            hr.style.margin = "8px 0";
-            dropdownMenu.appendChild(hr);
-            return;
-        }
-
-        let div = document.createElement("div");
-
-        let icon = document.createElement("span");
-        icon.className = "material-icons";
-        icon.textContent = item.icon;
-
-        let label = document.createElement("span");
-        label.textContent = item.label;
-
-        div.appendChild(icon);
-        div.appendChild(label);
-
-        // 🔹 الأحداث
-        div.addEventListener("click", function(){
-
-            if(item.action === "announcements"){
-                openFilePreview(CONFIG.Announcements_File_ID);
-            }
-
-            if(item.action === "contact"){
-                contactModal.classList.add("show");
-            }
-
-            if(item.action === "logout"){
-                logout();
-            }
-
-            dropdownMenu.style.display = "none";
-        });
-
-        dropdownMenu.appendChild(div);
-    });
-
-    // ================== عناصر القائمة المشتركة ==================
-    
+    dropdownMenu.innerHTML = "";
     const MENUS = {
       parent: [
         {icon:"people", label:"فضاء أولياء التلاميذ", desc:"مرحبا بكم في فضاء أولياء التلاميذ"},
@@ -993,14 +961,10 @@ if(FILE_ITEMS[item.label]) {
   }
 
 // ==================== دالة اتصل بنا ====================
-const closeContactBtn = document.getElementById("closeContactModal");
-const contactModalEl = document.getElementById("contactModal");
-
-if(closeContactBtn && contactModalEl){
-    closeContactBtn.addEventListener("click", function(){
-        contactModalEl.style.display = "none";
-    });
-}
+  document.getElementById("closeContactModal").addEventListener("click", function(){
+    document.getElementById("contactModal").style.display="none";
+    itemDescription.textContent = "";
+  });
 
   document.getElementById("contactSendBtn").addEventListener("click", function(){
     const email = document.getElementById("contactEmail").value.trim();
