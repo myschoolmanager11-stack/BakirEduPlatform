@@ -1,418 +1,1058 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<link rel="icon" type="image/png" href="favicon.png">
-<title>الفضاء الرقمي الموحد</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-</head>
+﻿html, body {
+    height: 100%;
+}
 
-<body>
+body{
+    margin:0;
+    font-family:"Segoe UI", Roboto, sans-serif;
 
-<header class="top-bar">
-<!-- زر القائمة -->
-    <button class="menu-btn" id="menuBtn" disabled>
-        <span class="material-icons">menu</span>
-    </button>
+    background-image:url("background.png");
+    background-position:center;
+    background-repeat:no-repeat;
+    background-size:cover;
+    background-attachment:fixed;
 
-<!-- زر حسابي -->
-<div id="userBtn" class="user-btn">
-    حسابي
-</div>
+    direction:rtl;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,0.25);
+
+    z-index:-1;
+}
+
+h1, h2, h3 {
+    color: #007da3;
+}
+
+.container {
+    flex: 1;
+    padding: 20px;
+}
+
+.top-bar {
+    background: rgba(255, 255, 255, 0);
+    color: #026b8a;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    box-shadow: none;
+}
+
+.top-bar, .top-bar * {
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.menu-btn {
+    background: #ff9800;
+    border: none;
+    color: white;
+    font-size: 18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+.menu-btn:hover {
+    background: #e68900;
+}
+
+.app-title { flex: 1; text-align: center; }
+
+.welcome-text {
+    font-size: 14px;
+    font-weight: bold;
+    color: #0197c3;
+    opacity: 0.95;
+}
+
+.modal {
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(3px);
+
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+
+    align-items: flex-start; /* ߔŠبدل center */
+
+    overflow-y: auto; /* ߔŠهذا هو الحل */
+    padding: 40px 10px; /* يعطي مساحة من الأعلى */
     
-<!-- قائمة المستخدم المنبثقة -->
-<div id="userDropdown" class="user-dropdown">
-    <div class="user-info">
-        <div id="userNameDisplay">
-            <span class="material-icons">badge</span>
-            اسم المستخدم : 
-        </div>
-        <div id="userTypeDisplay">
-            <span class="material-icons">assignment_ind</span>
-            نوع المستخدم : 
-        </div>
-    </div>
-    <hr>
-    <div class="user-item" id="userAnnouncements">
-        <span class="material-icons">campaign</span>
-        إعلانات</div>
-    <div class="user-item" id="userContact">
-        <span class="material-icons">call</span>
-        اتصل بنا</div>
-    <div class="user-item" id="userLogout">
-        <span class="material-icons">logout</span>
-        تسجيل الخروج
-    </div>
-</div>
+    z-index: 9999;
+}
+
+.modal-content{
+    background: linear-gradient(
+        135deg,
+        rgba(10, 20, 40, 0.65),
+        rgba(40, 10, 60, 0.65)
+    );
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    border: 1px solid rgba(255,255,255,0.15);
+
+    padding:25px;
+    border-radius:18px;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.5),
+        0 0 25px rgba(0,150,255,0.15),
+        0 0 15px rgba(150,0,255,0.15);
+
+    color: #e0f7ff;
+}
+
+.custom-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-modal.show {
+    display: flex;
+}
+
+.modal-content::before{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background: linear-gradient(
+        120deg,
+        transparent 30%,
+        rgba(255,255,255,0.08),
+        transparent 70%
+    );
+
+    border-radius:18px;
+    pointer-events:none;
+}
+
+.modal-content.large{
+    position: relative;
+
+    background: linear-gradient(
+        135deg,
+        rgba(10, 20, 40, 0.7),
+        rgba(40, 10, 60, 0.7)
+    );
+
+    width: 90%;
+    max-width: 900px;
+
+    max-height: 90vh; /* نخليها أكبر شوي */
     
-   <div class="app-title">
-   <!--  <h2 id="selectedTitle">
-       <span class="material-icons">school</span>
-        <span id="schoolName"></span>
-    </h2> -->
-
-    <p class="welcome-text" id="welcomeText">
-        <span class="material-icons">school</span>
-        مرحبًا بك! الرجاء تسجيل الدخول للمتابعة.
-    </p>
-
-<!-- عنوان فرعي ديناميكي -->
-    <div id="itemDescription" class="item-description"></div>
-</div>
-
-    <div class="dropdown-menu" id="dropdownMenu"></div>
-    
-</header>
-
-<main class="container">
-
-<!-- ==================== Login Modal نافذة تسجيل الدخول ==================== -->
-<div id="loginModal" class="modal">
-
-    <div class="modal-content login-content">
-
-        <h3>
-            <span class="material-icons">login</span>
-            تسجيل الدخول
-        </h3>
-
-        <!-- نوع المستخدم -->
-        <div class="login-field">
-
-            <label>نوع المستخدم</label>
-
-            <select id="userTypeSelect">
-                <option value="" disabled selected>-- اختر --</option>
-                <option value="teacher">الأساتذة</option>
-                <option value="consultation">الإشراف التربوي</option>
-                <option value="parent">أولياء الأمور</option>
-            </select>
-
-        </div>
-
-<!-- معرف المستخدم -->
-   <div id="racordBlock">
-      <div class="login-field">
-          <label>معرف المستخدم</label>
-           <div class="racord-row">
-<textarea 
-    id="racordInput"
-    rows="2"
-    placeholder="أدخل المعرف أو امسح QR">
-</textarea>
-    </div>
-           
-    </div>
-</div>
-    
-<div class="preview-header">
-    <button  id="scanQRBtn" class="preview-btn"  title="وجّه الكاميرا نحو رمز QR">
-        <span class="material-icons">qr_code_scanner</span>
-    </button>  
-    
-    <button id="loginBtn" class="login-btn" title="تسجيل الدخول">
-        <span class="material-icons">login</span>
-        تسجيل الدخول
-        </button>
-        </div>
-    </div>
-    </div>
-</div>
-
-<!-- ============= لوحة معاينة الملفات العامة ============ -->
-<div id="filePreviewPanel" class="file-preview-panel" style="display:none;">
-
-    <div class="preview-header">
-
-        <button class="preview-btn" id="previewClose" title="إغلاق">
-            <span class="material-icons">close</span>
-        </button>
-
-        <button class="preview-btn" id="previewDownload" title="تحميل">
-            <span class="material-icons">download</span>
-        </button>
-
-        <button class="preview-btn" id="previewOpen" title="فتح في صفحة جديدة">
-            <span class="material-icons">open_in_new</span>
-        </button>
-        
-    <!-- زر تكبير/تصغير -->
-    <button class="preview-btn" id="previewToggle" title="تكبير/تصغير">
-        <span class="material-icons">fullscreen</span>
-    </button>
-
-    </div>
-
-     <div id="previewLoader" class="preview-loader">
-        <div class="loader-content">
-            <div class="spinner"></div>
-            <div class="loader-text">
-                ⏳ جاري تحميل الملف، يرجى الإنتظار...
-            </div>
-        </div>
-    </div>
-
-    <iframe id="filePreviewFrame"></iframe>
-</div>
-
-<!-- مودال اتصل بنا -->
-<div id="contactModal" class="modal" style="display:none;">
-    <div class="modal-content">
-              <h2>
-                <span class="material-icons">contact_mail</span>  
-                  اتصل بنا
-              </h2>
-        
-        <p class="subtitle">يمكنك إرسال استفسارك مباشرة إلى إدارة المؤسسة.</p>
-
-        <label>البريد الإلكتروني</label>
-        <input type="email" id="contactEmail" placeholder="example@email.com">
-
-        <label>نص الرسالة</label>
-        <textarea id="contactMessage" placeholder="اكتب رسالتك هنا..."></textarea>
-
-        <div class="preview-header">
-            <button id="contactSendBtn" class="contactSend-btn">
-              <span class="material-icons">send</span>
-                إرسال</button>
-
-          <button id="closeContactModal" class="preview-btn" style="align-self:flex-end;">
-            <span class="material-icons">close</span>
-        </button>
-            
-        </div>
-        
-        <div id="contactResult"></div>
-    </div>
-</div>
-
-<!-- ============= مودال نظام الحضور الذكي ============ -->
-<div id="attendanceModal" class="modal" style="display:none;">
-
-  <div class="modal-content attendance-content">
-
-    <div class="attendance-header">
-      <h3>
-        <span class="material-icons">qr_code_2</span>
-        امسح بطاقة التلميذ بالكاميرا ليتم تسجيل الحضور
-      </h3>
-
-      <button id="closeAttendanceModal" class="Attendance-btn">
-        <span class="material-icons">close</span>
-      </button>
-    </div>
-
-    <div class="scanner-panel" id="scannerPanel">
-      <!-- هنا سيتم وضع ماسح الباركود لاحقاً -->
-    </div>
-
-  </div>
-</div>
-
-      
-<!-- مودال مسح QR -->
-<div id="qrScannerModal" class="modal_QR" style="display:none;">
-    <div class="modal-content attendance-content">
-        <h3>
-         <span class="material-icons">qr_code_scanner</span>
-            وجّه الكاميرا نحو رمز QR
-            </h3>
-        
-        <div class="attendance-header">
-            <div id="qrReader" class="scanner-panel"></div> 
-        </div>
-           <button id="closeQrModal" class="preview-btn"  title="إغلاق">
-                <span class="material-icons">close</span>
-             </button>
-       </div>
-</div>
-    
-  <div id="globalLoader" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:9999;">
-  <div style="color:white;font-size:20px;">⏳ جاري تحميل البيانات...</div>
-</div>
-
-<!-- مدال استعراض قائمة التلاميذ الغائبين قبل اليوم --> 
-<div id="ModalOldAbsented" class="custom-modal">
-
-  <div class="modal-content large">
-
-    <!-- العنوان فقط بدون شريط أزرق -->
-    <h3 class="modal-title">
-      ߓˠقائمة التلاميذ الغائبون قبل اليوم
-    </h3>
-
-    <div class="modal-body">
-
-      <!-- صف الفلترة + زر الإغلاق في نفس المستوى -->
-      <div class="oldabs-toolbar">
-
-          <select id="oldAbsClassFilter" class="styled-select">
-          <option value="" disabled selected>-- اختر القسم --</option>
-                 </select>
-         
-        <button id="DownloadOldAbsented"
-                class="preview-btn"
-                onclick="DownloadOldAbsented()"  title="تحميل">
-          <span class="material-icons">download</span>
-        </button>
-          
-        <button id="CloseModalOldAbsented"
-                class="preview-btn"
-                onclick="closeOldAbsentedModal()"  title="إغلاق">
-          <span class="material-icons">close</span>
-        </button>
-      </div>
-
-<!-- حاوية سكرول للجدول -->
-      <div class="table-container">
-        <table id="oldAbsTable" class="styled-table">
-          <thead>
-            <tr>
-              <th class="Count-col">الرقم</th>
-              <th class="name-col">اللقب والإسم</th>
-              <th class="Classe-col">القسم</th>
-              <th class="Hore-col">الساعات</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============= مودال متابعة الغيابات اليومية ============ -->
-<div id="ModalNewAbsented" class="custom-modal">
-
-  <div class="modal-content large">
-
-    <!-- العنوان -->
-    <h3 class="modal-title">
-      ߓˠمتابعة الغيابات اليومية
-    </h3>
-
-    <div class="modal-body">
-
-      <!-- صف الفلترة + زر الإغلاق -->
-      <div class="newabs-toolbar">
-
-        <select id="newAbsClassFilter" class="styled-select">
-          <option value="" disabled selected>-- اختر القسم --</option>
-        </select>
-
-        <button id="DownloadNewAbsented"
-                class="preview-btn"
-                onclick="DownloadNewAbsented()" title="تحميل">
-          <span class="material-icons">download</span>
-        </button>
-
-        <button id="CloseModalNewAbsented"
-                class="preview-btn"
-                onclick="closeNewAbsentedModal()" title="إغلاق">
-          <span class="material-icons">close</span>
-        </button>
-
-      </div>
-
-      <!-- حاوية الجدول -->
-      <div class="table-container">
-        <table id="newAbsTable" class="styled-table">
-          <thead>
-            <tr>
-                <th class="Count-col">الرقم</th>
-                <th class="name-col">اللقب والإسم</th>
-                <th class="Classe-col">القسم</th>
-                <th class="Checkbox-col">سا8</th>
-                <th class="Checkbox-col">سا9</th>
-                <th class="Checkbox-col">سا10</th>
-                <th class="Checkbox-col">سا11</th>
-                <th class="Checkbox-col">سا13</th>
-                <th class="Checkbox-col">سا14</th>
-                <th class="Checkbox-col">سا15</th>
-                <th class="Checkbox-col">سا16</th>
-                <th class="Hore-col">الساعات</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-    
-<!-- ============= مودال إرسال الغيابات ============ -->
-<div id="SendAbsentedModal" class="custom-modal">
-
-  <div class="modal-content large">
-
-    <!-- العنوان -->
-    <h3 class="modal-title">
-      إرسال الغيابات
-    </h3>
-
-    <div class="modal-body">
-
-      <!-- شريط الأدوات -->
-      <div class="Sendabs-toolbar">
-
-        <select id="sendAbsClassFilter" class="styled-select">
-          <option value="" disabled selected>-- اختر القسم --</option>
-        </select>
-
-        <button id="checkAllBtn"
-            class="preview-btn" title="تحديد الكل">
-          <span class="material-icons">checklist</span>
-        </button>
-          
-        <button id="SendAbsenceBtn"
-                class="preview-btn" title="إرسال">
-          <span class="material-icons">send</span>
-        </button>
-
-
-        <button id="CloseSendAbsModal"
-                class="preview-btn"
-                onclick="closeSendAbsentedModal()" title="إغلاق">
-          <span class="material-icons">close</span>
-        </button>
-
-      </div>
-
-      <!-- الجدول -->
-      <div class="table-container">
-        <table id="sendAbsTable" class="styled-table">
-
-          <thead>
-            <tr>
-              <th class="Count-col">الرقم</th>
-              <th class="name-col">اللقب والإسم</th>
-              <th class="Classe-col">القسم</th>
-              <th class="Checkbox-col">تحديد</th>
-            </tr>
-          </thead>
-
-          <tbody></tbody>
-
-        </table>
-      </div>
-
-    </div>
-  </div>
-</div>
-    
-    <!-- محتوى إضافي مستقبلي -->
-    <div id="mainContent"></div>
-
-</main>
-
-<footer class="app-footer">
-    <div class="footer-marquee">
-        Myschoolmanager | © – Designed by Latreche Abdelkader
-    </div>
-</footer>
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-<script src="app.js"></script>
-</body>
-</html>
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 18px;
+    overflow: hidden;
+
+    backdrop-filter: blur(14px);
+    color: #e0f7ff;
+}
+
+.modal-content.large::before{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background: linear-gradient(
+        120deg,
+        transparent 30%,
+        rgba(255,255,255,0.08),
+        transparent 70%
+    );
+
+    border-radius:18px;
+    pointer-events:none;
+}
+
+.modal-header {
+  background: #1e88e5;
+  color: #fff;
+
+  position: sticky;
+  top: 0;
+  z-index: 10; /* نخليها أعلى شوي */
+
+  padding: 12px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2); /* ✨ يعطي عمق */
+}
+
+/* جسم المودال */
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    overflow-y: auto; /* ߔŠبدل hidden */
+}
+
+.modal-content h2,
+.modal-content h3 {
+
+    color: #00d4ff;
+
+    text-shadow:
+        0 0 6px rgba(0,212,255,0.6),
+        0 0 12px rgba(0,212,255,0.4);
+
+}
+
+
+.modal_QR {
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(3px);
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal_QR-content{
+    background:rgba(255,255,255,0.75);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    padding:25px;
+    border-radius:16px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.3);
+}
+
+
+.login-field { margin-bottom: 14px; }
+.login-field label {
+    font-weight:600;
+    color:#3f51b5;
+    margin-bottom:4px;
+    display:block;
+}
+.login-field input, .login-field select {
+    border:1px solid #0197c3;
+    background: rgba(255,255,255,0.9);
+    width: 100%;
+    padding:9px;
+    border-radius:10px;
+   }
+
+.login-btn,
+.contactSend-btn,
+.Attendance-btn {
+
+    /* ߔ٠الأبعاد الأصلية (مهم جداً) */
+    height: 40px;
+    width: 50%;
+
+    /* ߔ٠تحسين الشكل */
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 12px;
+
+    background: linear-gradient(135deg, rgba(1,151,195,0.85), rgba(0,125,163,0.85));
+    color: #ffffff;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    cursor: pointer;
+
+    /* ߔ٠تأثير الزجاج */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    /* ߔ٠ظل احترافي */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+
+    transition: all 0.25s ease;
+}
+
+.login-btn:hover,
+.contactSend-btn:hover,
+.Attendance-btn:hover {
+
+    transform: translateY(-2px) scale(1.02); /* خففنا scale باش ما يكبرش بزاف */
+
+    background: linear-gradient(135deg, rgba(0,168,214,0.95), rgba(0,106,138,0.95));
+
+    box-shadow: 0 6px 16px rgba(0,0,0,0.35),
+                0 0 10px rgba(1,151,195,0.5); /* glow */
+}
+
+.login-btn:active,
+.contactSend-btn:active,
+.Attendance-btn:active {
+
+    transform: scale(0.97);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+#dropdownMenu {
+    display: none;
+}
+
+#dropdownMenu.show {
+    display: block;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 60px;
+    right: 10px;
+     background: rgba(255,255,255,0.95);
+    border-radius: 12px;
+    min-width: 260px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    display: none;
+    z-index: 1100; /* أكبر من file-preview-panel */
+    overflow: hidden;
+    }
+
+.dropdown-menu div {
+    padding: 10px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.4s ease;
+    color: #0197c3;
+    font-weight: 600;
+}
+
+.dropdown-menu div:hover {
+    background: rgba(1, 151, 195, 0.1);
+}
+
+.dropdown-menu div.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.modal-content input,
+.modal-content textarea {
+
+    /* ߔ٠الحفاظ على الأبعاد */
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    border-radius: 8px;
+    box-sizing: border-box;
+
+    /* ߔ٠الشكل الجديد (Glass) */
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(0,200,255,0.3);
+    color: #ffffff;
+
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.modal-content textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.modal-content input::placeholder,
+.modal-content textarea::placeholder {
+    color: rgba(255,255,255,0.6);
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus,
+.modal-content select:focus {
+
+    outline: none;
+    border-color: #00c8ff;
+
+    box-shadow: 0 0 6px rgba(0,200,255,0.5);
+}
+
+.modal-content select {
+    background: rgba(255,255,255,0.9); /* رجعناها واضحة */
+    color: #0197c3;
+
+    border: 1px solid rgba(0,200,255,0.4);
+}
+
+/* خيارات القائمة */
+.modal-content select option {
+    background: #ffffff;
+    color: #0197c3;
+}
+
+@keyframes fadeIn {
+    from {opacity:0; transform:scale(0.95);}
+    to {opacity:1; transform:scale(1);}
+}
+
+.file-preview-panel {
+    position: fixed;
+    top: 70px;
+    left: 50px;
+    width: calc(100% - 100px);
+    height: calc(100% - 140px);
+    background: rgba(255,255,255,0.97);
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 600px) {
+    .attendance-content, .modal-content {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .file-preview-panel {
+        top: 10px;
+        left: 10px;
+        width: calc(100% - 20px);
+        height: calc(100% - 20px);
+    }
+}
+
+/* شريط الأزرار */
+.preview-header {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.preview-btn {
+  /* الحفاظ على الحجم */
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+
+  /* تصميم عصري */
+  background: linear-gradient(135deg, rgba(1,151,195,0.8), rgba(0,125,163,0.8));
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  /* تأثير الزجاج */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  /* ظل ناعم */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+
+  transition: all 0.25s ease;
+}
+
+.preview-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+
+  background: linear-gradient(135deg, rgba(0,168,214,0.9), rgba(0,106,138,0.9));
+
+  box-shadow: 0 6px 16px rgba(0,0,0,0.35),
+              0 0 8px rgba(1,151,195,0.5); /* glow خفيف */
+}
+
+.preview-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* وضع ملء الشاشة */
+.file-preview-panel.fullscreen {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 10px;
+}
+
+.preview-header { cursor: grab; }
+
+.file-preview-panel, .preview-header {
+    touch-action: none; /* منع تمرير الصفحة أثناء السحب */
+}
+
+.file-preview-panel iframe {
+    width: 100%;
+    height: 100%; /* يملأ كامل اللوحة */
+    border: none;
+    border-radius: 6px;
+}
+
+/* ================= مودال الحضور الذكي ================= */
+
+.attendance-content {
+    width: 500px;
+    max-width: 95%;
+    border-radius: 18px;
+    padding: 20px;
+    animation: slideDown 0.35s ease;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.attendance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    color: #0197c3;
+}
+
+.icon-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #0197c3;
+    font-size: 20px;
+}
+
+.icon-close:hover {
+    color: #d32f2f;
+}
+
+.scanner-panel{
+    width: 100%;
+    height: 100%;
+    border: 2px dashed #0197c3;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(1,151,195,0.05);
+    font-weight: bold;
+    color: #0197c3;
+     flex: 1;
+    position: relative;
+    overflow: hidden;
+    align-items: center;
+}
+
+/* مهم جداً للفيديو */
+#reader video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+}
+
+.login-title {
+    color: #0197c3;
+    text-align: center;
+}
+
+.login-field select {
+    background: white;
+    color: #0197c3;
+    font-weight: 600;
+    border: 1px solid #0197c3;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login-field select:focus {
+    outline: none;
+    border-color: #007da3;
+    box-shadow: 0 0 5px rgba(1,151,195,0.3);
+}
+
+.login-field option {
+    color: #0197c3;
+    font-weight: 600;
+}
+
+.student-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.small-btn{
+    width:38px;
+    height:38px;
+    padding:0;
+}
+
+.mini-spinner{
+    font-size:13px;
+    color:#ff0036;
+    margin-top:8px;
+}
+
+#globalLoader{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(3px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loader-spinner{
+    width:50px;
+    height:50px;
+    border:5px solid #eee;
+    border-top:5px solid #1976d2;
+    border-radius:50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin{
+    to{ transform: rotate(360deg); }
+}
+
+
+/* ================= Loader داخل نافذة المعاينة ================= */
+
+.preview-loader {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.95);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.loader-content {
+    text-align: center;
+    color: #3f51b5;
+    font-weight: bold;
+}
+
+.loader-text {
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+/* سبينر احترافي */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #d0d6ff;
+    border-top: 4px solid #3f51b5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* حاوية الجدول */
+/* حاوية الجدول للتمرير الأفقي */
+.table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* الجدول */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse; /* مهم لإظهار الحدود المشتركة بين الخلايا */
+    min-width: 900px; /* تأكد من أن جميع الأعمدة تظهر على الهاتف */
+    border: 1px solid #ccc; /* حد خارجي للجدول */
+}
+
+/* رأس الأعمدة */
+.styled-table th {
+    background: #0197c3;
+    color: white;
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* خلايا الجدول */
+.styled-table td {
+    background: #ffffff;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* تحسين الهواتف */
+@media (max-width: 768px) {
+    .styled-table th,
+    .styled-table td {
+        font-size: 14px;
+        padding: 6px 8px;
+    }
+}
+
+.Count-col {
+  width: 05%;
+}
+
+.name-col {
+  width: 35%;
+}
+
+.Classe-col {
+  width: 10%;
+}
+
+.Hore-col {
+  width: 10%;
+}
+
+.Checkbox-col {
+    width: 05%;
+    text-align: center;
+}
+
+.Checkbox-col input {
+    transform: scale(1.1);
+}
+
+#oldAbsTable td:first-child {
+    font-weight: 600;
+    text-align: right;
+}
+
+#newAbsTable td:first-child {
+    font-weight: 600;
+    text-align: right;
+}
+
+
+.styled-select{
+    width:100%;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    font-size:14px;
+    background:#fff;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.styled-select:focus{
+    outline:none;
+    border-color:#1976d2;
+    box-shadow:0 0 5px rgba(25,118,210,0.4);
+}
+
+.oldabs-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* مسافة بين الزر والكمبوبكس */
+    margin-bottom: 15px;
+}
+
+.oldabs-toolbar select {
+    flex: 1;
+}
+
+#CloseModalOldAbsented {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#DownloadOldAbsented {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.newabs-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* مسافة بين الزر والكمبوبكس */
+    margin-bottom: 15px;
+}
+
+.newabs-toolbar select {
+    flex: 1;
+}
+
+.Sendabs-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* مسافة بين الزر والكمبوبكس */
+    margin-bottom: 15px; 
+}
+
+.Sendabs-toolbar select {
+  flex: 1; 
+}
+
+
+#CloseModalNewAbsented {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#DownloadNewAbsented {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#SendAbsenceBtn,
+#CloseSendAbsModal {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.selected-row{
+background: rgba(1,151,195,0.15) !important;
+transition: background 0.2s;
+}
+
+/* ==================== Racord Login ==================== */
+
+.racord-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.racord-row input{
+
+    flex:1;
+    padding:10px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    font-size:14px;
+
+}
+
+.racord-row input:focus{
+
+    outline:none;
+    border-color:#1976d2;
+    box-shadow:0 0 3px rgba(25,118,210,0.4);
+
+}
+
+#racordInput{
+
+    direction: ltr;      /* الكتابة من اليسار */
+    text-align: left;
+    min-height:40px;
+    resize: vertical;
+}
+
+
+
+.login-content{
+
+    width:320px;
+    padding:20px;
+}
+
+.login-field{
+
+    margin-bottom:15px;
+}
+
+.login-field label{
+
+    display:block;
+    margin-bottom:5px;
+    font-size:14px;
+    font-weight:bold;
+
+}
+
+/* ==================== TOAST BASE ==================== */
+.toast-message {
+    position: fixed;
+    bottom: 30px;
+    right: 50%;
+    transform: translateX(50%) translateY(20px);
+
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+
+    opacity: 0;
+    transition: 0.3s;
+    z-index: 99999;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ✨ ظهور */
+.toast-message.show {
+    opacity: 1;
+    transform: translateX(50%) translateY(0);
+}
+
+/* ❌ خطأ */
+.toast-error {
+    background: #e74c3c;
+}
+
+/* ⚠️ تنبيه */
+.toast-warning {
+    background: #f39c12;
+}
+
+/* ✅ نجاح */
+.toast-success {
+    background: #2ecc71;
+}
+
+/* ℹ️ معلومات (افتراضي) */
+.toast-info {
+    background: #3498db;
+}
+
+.user-btn {
+    cursor: pointer;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 6px;
+    display: inline-block;
+    user-select: none;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 50px; /* عدّل حسب مكان الزر */
+    right: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    min-width: 200px;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    z-index: 999;
+}
+
+.user-dropdown .user-info {
+    padding: 10px;
+    font-weight: bold;
+    text-align: right;
+}
+
+.user-dropdown hr {
+    margin: 5px 0;
+    border: 0.5px solid #ddd;
+}
+
+.user-item {
+    padding: 10px;
+    cursor: pointer;
+    text-align: right;
+    transition: background 0.2s;
+}
+
+.user-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* ==================== ERROR STYLE ==================== */
+.input-error {
+    border: 2px solid #e74c3c !important;
+    background-color: #fdecea;
+}
+
+/* ==================== SHAKE ANIMATION ==================== */
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+
+.shake {
+    animation: shake 0.3s;
+}
+
+.app-footer {
+    background: rgba(255, 255, 255, 0);
+    color:#007da3;
+    padding: 10px 0;
+    overflow: hidden;
+    font-weight: 600;
+}
+
+.footer-marquee {
+    display: inline-block;
+    white-space: nowrap;
+    padding-left: 100%;
+    animation: marqueeRTL 17s linear infinite;
+    color: #0197c3;
+    font-weight: bold;
+}
+
+.app-footer, .app-footer * { text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+
+@keyframes marqueeRTL { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
+
+
