@@ -330,7 +330,7 @@ h1, h2, h3 {
 }
 
 .dropdown-menu {
-    position: absolute;
+    position: relative;
     top: 60px;
     right: 10px;
      background: rgba(255,255,255,0.95);
