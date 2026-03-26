@@ -862,7 +862,7 @@ document.getElementById("userLogout").addEventListener("click", () => {
             }
 
             if(item.action === "contact"){
-                document.getElementById("contactModal").style.display = "flex";
+                contactModal.classList.add("show");
             }
 
             if(item.action === "logout"){
@@ -994,9 +994,9 @@ if(FILE_ITEMS[item.label]) {
 
 // ==================== دالة اتصل بنا ====================
   document.getElementById("closeContactModal").addEventListener("click", function(){
-    document.getElementById("contactModal").style.display="none";
+    contactModal.classList.remove("show");
     itemDescription.textContent = "";
-  });
+});
 
   document.getElementById("contactSendBtn").addEventListener("click", function(){
     const email = document.getElementById("contactEmail").value.trim();
