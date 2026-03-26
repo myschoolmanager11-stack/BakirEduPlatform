@@ -993,10 +993,14 @@ if(FILE_ITEMS[item.label]) {
   }
 
 // ==================== دالة اتصل بنا ====================
-  document.getElementById("closeContactModal").addEventListener("click", function(){
-    contactModal.classList.remove("show");
-    itemDescription.textContent = "";
-});
+const closeContactBtn = document.getElementById("closeContactModal");
+const contactModalEl = document.getElementById("contactModal");
+
+if(closeContactBtn && contactModalEl){
+    closeContactBtn.addEventListener("click", function(){
+        contactModalEl.style.display = "none";
+    });
+}
 
   document.getElementById("contactSendBtn").addEventListener("click", function(){
     const email = document.getElementById("contactEmail").value.trim();
