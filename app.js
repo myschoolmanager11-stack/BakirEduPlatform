@@ -585,7 +585,7 @@ if(!localStorage.getItem("configSent_" + CONFIG.School_Folder_ID)){
 
     if(type === "parent") welcomeText.textContent = `مرحبًا بك ${userName} في الفضاء الرقمي`;
     else if(type === "teacher") welcomeText.textContent = `مرحبًا بك الأستاذ.(ة) ${userName} في الفضاء الرقمي`;
-    else welcomeText.textContent = `مرحبًا بك ${userName} في الفضاء الرقمي`;
+    else welcomeText.textContent = `مرحبًا بك السيد.(ة) ${userName} في الفضاء الرقمي`;
 
     fillMenu(type);
   
