@@ -55,19 +55,60 @@ h1, h2, h3 {
 }
 
 .menu-btn {
-    background: #ff9800;
-    border: none;
-    color: white;
-    font-size: 18px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.25);
+
+    background: linear-gradient(
+        135deg,
+        rgba(1,151,195,0.85),
+        rgba(0,125,163,0.85)
+    );
+
+    color: #fff;
+    font-size: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     cursor: pointer;
-    transition: 0.3s;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+
+    transition: all 0.25s ease;
 }
+
 .menu-btn:hover {
-    background: #e68900;
+    transform: translateY(-2px) scale(1.05);
+
+    background: linear-gradient(
+        135deg,
+        rgba(0,168,214,0.95),
+        rgba(0,106,138,0.95)
+    );
+
+    box-shadow: 
+        0 6px 16px rgba(0,0,0,0.35),
+        0 0 10px rgba(1,151,195,0.5);
+}
+
+.menu-btn:active {
+    transform: scale(0.95);
+}
+
+.menu-divider {
+    height: 1px;
+    margin: 10px 15px;
+
+    background: rgba(0,200,255,0.4);
+
+    box-shadow: 0 0 6px rgba(0,200,255,0.5);
 }
 
 .app-title { flex: 1; text-align: center; }
@@ -374,6 +415,14 @@ h1, h2, h3 {
 .dropdown-menu div.show {
     opacity: 1;
     transform: translateX(0);
+}
+
+.dropdown-menu div:not(.menu-divider) {
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.dropdown-menu div:last-child {
+    border-bottom: none;
 }
 
 .modal-content input,
