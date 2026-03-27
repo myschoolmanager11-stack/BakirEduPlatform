@@ -573,7 +573,7 @@ if(!localStorage.getItem("configSent_" + CONFIG.School_Folder_ID)){
     document.body.style.pointerEvents = "auto";
     
     loginModal.classList.remove("show");
-    loginModal.style.display = "none"; // ߔŠإجبار الإخفاء
+    loginModal.style.display = "none"; // إجبار الإخفاء
 
     console.log("حالة المودال:", loginModal);
    
@@ -583,9 +583,9 @@ if(!localStorage.getItem("configSent_" + CONFIG.School_Folder_ID)){
     menuBtn.style.display = "block";
     const userName = user.name || "المستخدم";
 
-    if(type === "parent") welcomeText.textContent = `مرحبًا بك ${userName} في فضاء أولياء التلاميذ`;
-    else if(type === "teacher") welcomeText.textContent = `مرحبًا بك الأستاذ ${userName}`;
-    else welcomeText.textContent = `مرحبًا بك ${userName} في فضاء الإشراف التربوي`;
+    if(type === "parent") welcomeText.textContent = `مرحبًا بك ${userName} في الفضاء الرقمي`;
+    else if(type === "teacher") welcomeText.textContent = `مرحبًا بك الأستاذ.(ة) ${userName} في الفضاء الرقمي`;
+    else welcomeText.textContent = `مرحبًا بك ${userName} في الفضاء الرقمي`;
 
     fillMenu(type);
   
