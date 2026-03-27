@@ -328,30 +328,47 @@ h1, h2, h3 {
     position: absolute;
     top: 60px;
     right: 10px;
-     background: rgba(255,255,255,0.95);
-    border-radius: 12px;
+
     min-width: 260px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    border-radius: 16px;
+
+    /* ✨ Glass Effect */
+    background: rgba(20, 30, 60, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border: 1px solid rgba(255,255,255,0.15);
+
+    box-shadow: 
+        0 10px 25px rgba(0,0,0,0.35),
+        0 0 10px rgba(0,150,255,0.15);
+
     display: none;
-    z-index: 1100; /* أكبر من file-preview-panel */
+    z-index: 1100;
+
     overflow: hidden;
-    }
+    padding: 8px 0;
+}
+
 
 .dropdown-menu div {
     padding: 10px 16px;
     cursor: pointer;
+
     display: flex;
     align-items: center;
     gap: 10px;
-    opacity: 0;
-    transform: translateX(20px);
-    transition: all 0.4s ease;
-    color: #0197c3;
+
+    color: #e0f7ff;
     font-weight: 600;
+
+    transition: all 0.25s ease;
 }
 
+/* Hover احترافي */
 .dropdown-menu div:hover {
-    background: rgba(1, 151, 195, 0.1);
+    background: rgba(0,200,255,0.15);
+    transform: translateX(-3px);
 }
 
 .dropdown-menu div.show {
