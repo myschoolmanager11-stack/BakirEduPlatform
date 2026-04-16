@@ -1545,6 +1545,11 @@ function buildAbsenceLine(student){
     return cols.join(";");
 }
 
+//دالة التحقق من الإيميل
+  function isValidEmail(email){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
   //دالة استخراج الإيميل لمراسلة الولي
   function getStudentEmail(record){
 
@@ -1556,21 +1561,31 @@ function buildAbsenceLine(student){
     if(!student) return null;
 
     const parts = student.split(";");
-    return parts[3]?.trim() || null;
+
+    const email = parts[3]?.trim();
+
+    if(!isValidEmail(email)) return null;
+
+    return email;
 }
 
 //دالة الإشعارات  
-function sendAbsenceNotifications(){
+function getStudentEmail(record){
 
-    TEMP_SELECTED_ABS.forEach(student=>{
-
-        const email = getStudentEmail(student.record);
-
-        if(email){
-            sendEmailNotification(email, student.name, student.classe);
-        }
-
+    const student = STUDENTS_LIST.find(line=>{
+        const p = line.split(";");
+        return p[2]?.trim() === record;
     });
+
+    if(!student) return null;
+
+    const parts = student.split(";");
+
+    const email = parts[3]?.trim();
+
+    if(!isValidEmail(email)) return null;
+
+    return email;
 }
   
 //الدالة الرئيسية للإرسال
@@ -1634,27 +1649,20 @@ async function updateFile(fileId, content) {
       body: formData
     });
 
-    const result = await response.text();
+    console.log("HTTP Status:", response.status);
 
-    console.log("رد السيرفر:", result);
-
-    if (result.trim() === "OK") {
-      return true;
-    }
-
-    return false;
+    // نعتمد على نجاح الطلب HTTP فقط
+    return response.ok;
 
   } catch (err) {
 
     console.error("فشل تحديث الملف:", err);
     return false;
-
   }
-
 }
 
 //دالة الإرسال (GAS أو mailto)
-async function sendEmailNotification(email, name, classe){
+function sendEmailNotification(email, name, classe){
 
     const data = new URLSearchParams();
 
@@ -1666,6 +1674,13 @@ async function sendEmailNotification(email, name, classe){
     fetch(GAS_SCRIPT_URL, {
         method: "POST",
         body: data
+    })
+    .then(res => res.text())
+    .then(res => {
+        console.log("Email sent:", email, res);
+    })
+    .catch(err => {
+        console.error("Email error:", err);
     });
 }
   
