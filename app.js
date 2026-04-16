@@ -322,7 +322,7 @@ function parseStudentLine(line){
         classe: parts[1] || "",
         racord: parts[2] || "",
         email: parts[3] || "",
-        StudentRecords_Fille_ID: parts[4] || ""
+        SijileAbsence_Fille_ID: parts[4] || ""
     };
 }
 
