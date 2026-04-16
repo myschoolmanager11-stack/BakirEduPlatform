@@ -578,7 +578,9 @@ if(!localStorage.getItem("configSent_" + CONFIG.School_Folder_ID)){
 
     console.log("حالة المودال:", loginModal);
    
-    if(type === "parent") localStorage.setItem("StudentRecords_Fille_ID", user.StudentRecords_Fille_ID);
+    if(type === "parent"){
+    localStorage.setItem("SijileAbsence_Fille_ID", user.SijileAbsence_Fille_ID);
+}
 
     menuBtn.disabled = false;
     menuBtn.style.display = "block";
