@@ -54,7 +54,7 @@ const FILE_ITEMS = {
 
 // ==================== Google Apps Script رابط ====================
 
-const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyHfs3UqN2_F5GVN1WsFmlQuAwRA-o8RPN-QR_XgW73sJigxu_yqxI7ts7YRcP9ntFq/exec";
+const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvIDU_naHqiQzFZGK4iF9GeZ5CUbWVx-B_kjCPwz3luJr201tvNgF-EMzf3QUBP9jU/exec";
 
 // ==================== متغيرات عامة ====================
 
@@ -1545,62 +1545,6 @@ function buildAbsenceLine(student){
     return cols.join(";");
 }
 
-//دالة التحقق من الإيميل
-  function isValidEmail(email){
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-  //دالة استخراج الإيميل لمراسلة الولي
-  function getStudentEmail(record){
-
-    const student = STUDENTS_LIST.find(line=>{
-        const p = line.split(";");
-        return p[2]?.trim() === record;
-    });
-
-    if(!student) return null;
-
-    const parts = student.split(";");
-
-    const email = parts[3]?.trim();
-
-    if(!isValidEmail(email)) return null;
-
-    return email;
-}
-
-//دالة الإشعارات  
-function getStudentEmail(record){
-
-    const student = STUDENTS_LIST.find(line=>{
-        const p = line.split(";");
-        return p[2]?.trim() === record;
-    });
-
-    if(!student) return null;
-
-    const parts = student.split(";");
-
-    const email = parts[3]?.trim();
-
-    if(!isValidEmail(email)) return null;
-
-    return email;
-}
-
-//دالة الإشعارات
-async function sendAbsenceNotifications() {
-
-    for (const student of TEMP_SELECTED_ABS) {
-
-        const email = getStudentEmail(student.record);
-
-        if (email) {
-            await sendEmailNotification(email, student.name, student.classe);
-        }
-    }
-}
-  
 //الدالة الرئيسية للإرسال
 async function SendAbsence() {
 
@@ -1636,10 +1580,7 @@ async function SendAbsence() {
     if(success){
       
        showToast("تم إرسال الغيابات بنجاح", "success"); 
-      
-    // 🔥 إرسال التنبيهات
-    await sendAbsenceNotifications();
-      
+        
     }else{
       
        showToast("فشلت عملية ارسال الغيابات", "error"); 
@@ -1662,43 +1603,26 @@ async function updateFile(fileId, content) {
       body: formData
     });
 
-    console.log("HTTP Status:", response.status);
+    const result = await response.text();
 
-    // نعتمد على نجاح الطلب HTTP فقط
-    return response.ok;
+    console.log("رد السيرفر:", result);
+
+    if (result.trim() === "OK") {
+      return true;
+    }
+
+    return false;
 
   } catch (err) {
 
     console.error("فشل تحديث الملف:", err);
     return false;
+
   }
-}
 
-//دالة الإرسال (GAS أو mailto)
-async function sendEmailNotification(email, name, classe) {
-
-    const data = new URLSearchParams();
-    data.append("action", "sendAbsenceEmail");
-    data.append("email", email);
-    data.append("name", name);
-    data.append("classe", classe);
-
-    try {
-        const res = await fetch(GAS_SCRIPT_URL, {
-            method: "POST",
-            body: data
-        });
-
-        const text = await res.text();
-        console.log("Email sent:", email, text);
-
-        return true;
-    } catch (err) {
-        console.error("Email error:", err);
-        return false;
-    }
 }
   
+
 // ====================SendAbsentedModal نهاية مودال إرسال الغيابات ====================
 
   
