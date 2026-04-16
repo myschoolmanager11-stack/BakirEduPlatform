@@ -54,7 +54,7 @@ const FILE_ITEMS = {
 
 // ==================== Google Apps Script رابط ====================
 
-const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzlIUpDvPhj_OQ78inFvY6fnGFVZNaZYO2yM6k6CmjnD-ueIWtfKeb7TZDckwbYSx4q/exec";
+const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyHfs3UqN2_F5GVN1WsFmlQuAwRA-o8RPN-QR_XgW73sJigxu_yqxI7ts7YRcP9ntFq/exec";
 
 // ==================== متغيرات عامة ====================
 
@@ -1545,6 +1545,34 @@ function buildAbsenceLine(student){
     return cols.join(";");
 }
 
+  //دالة استخراج الإيميل لمراسلة الولي
+  function getStudentEmail(record){
+
+    const student = STUDENTS_LIST.find(line=>{
+        const p = line.split(";");
+        return p[2]?.trim() === record;
+    });
+
+    if(!student) return null;
+
+    const parts = student.split(";");
+    return parts[3]?.trim() || null;
+}
+
+//دالة الإشعارات  
+function sendAbsenceNotifications(){
+
+    TEMP_SELECTED_ABS.forEach(student=>{
+
+        const email = getStudentEmail(student.record);
+
+        if(email){
+            sendEmailNotification(email, student.name, student.classe);
+        }
+
+    });
+}
+  
 //الدالة الرئيسية للإرسال
 async function SendAbsence() {
 
@@ -1580,7 +1608,10 @@ async function SendAbsence() {
     if(success){
       
        showToast("تم إرسال الغيابات بنجاح", "success"); 
-        
+      
+    // 🔥 إرسال التنبيهات
+    sendAbsenceNotifications();
+      
     }else{
       
        showToast("فشلت عملية ارسال الغيابات", "error"); 
@@ -1621,8 +1652,23 @@ async function updateFile(fileId, content) {
   }
 
 }
-  
 
+//دالة الإرسال (GAS أو mailto)
+async function sendEmailNotification(email, name, classe){
+
+    const data = new URLSearchParams();
+
+    data.append("action", "sendAbsenceEmail");
+    data.append("email", email);
+    data.append("name", name);
+    data.append("classe", classe);
+
+    fetch(GAS_SCRIPT_URL, {
+        method: "POST",
+        body: data
+    });
+}
+  
 // ====================SendAbsentedModal نهاية مودال إرسال الغيابات ====================
 
   
