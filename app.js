@@ -1544,6 +1544,29 @@ function buildAbsenceLine(student){
     return cols.join(";");
 }
 
+  //إرسال طلب ارسال البريد الى الأولياء
+  async function sendAbsenceNotifications(){
+
+  const data = new URLSearchParams();
+
+  data.append("action", "queueAbsenceEmails");
+
+  data.append("schoolName", CONFIG.SchoolName);
+  data.append("studentsFileId", CONFIG.ListeStudents_File_ID);
+  data.append("absFileId", CONFIG.New_Absented_File_ID);
+  data.append("schoolId", CONFIG.School_Folder_ID);
+
+  fetch(GAS_SCRIPT_URL, {
+    method: "POST",
+    body: data
+  })
+  .then(res => res.text())
+  .then(res => {
+    console.log("QUEUED:", res);
+  });
+
+}
+  
 //الدالة الرئيسية للإرسال
 async function SendAbsence() {
 
