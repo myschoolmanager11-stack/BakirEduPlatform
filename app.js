@@ -53,8 +53,7 @@ const FILE_ITEMS = {
 };
 
 // ==================== Google Apps Script رابط ====================
-
-const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_G7vvpN-8eD7eX2fp52WOVHLR116RWXz4RnnCccfoLkHVG3D_jZeApGldUMyK_t39/exec";
+const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwo5ILL5P08CMHBvbsIPyPri82maqzS62-GdeVjM7yhK2T2pFR0xUmXV3MMsYYtwVRQ/exec";
 
 // ==================== متغيرات عامة ====================
 
@@ -1546,42 +1545,40 @@ function buildAbsenceLine(student){
 }
 
   // دالة إرسال إيميل لولي الأمر
-  async function sendAbsenceNotifications(){
+function sendAbsenceNotifications(){
 
-    const emailsList = TEMP_SELECTED_ABS.map(student => {
+    const emailsList = [];
+
+    TEMP_SELECTED_ABS.forEach(student=>{
 
         const email = getStudentEmail(student.record);
 
-        return {
-            email: email,
-            name: student.name,
-            classe: student.classe
-        };
+        if(email){
+            emailsList.push({
+                email: email,
+                name: student.name,
+                classe: student.classe
+            });
+        }
+    });
 
-    }).filter(x => x.email);
-
-    if(emailsList.length === 0) return;
+    if(emailsList.length === 0){
+        console.log("⚠️ لا يوجد إيميلات");
+        return;
+    }
 
     const data = new URLSearchParams();
 
     data.append("action", "sendAbsenceEmails");
     data.append("emails", JSON.stringify(emailsList));
 
-    try{
-
-        const res = await fetch(GAS_SCRIPT_URL, {
-            method: "POST",
-            body: data
-        });
-
-        const text = await res.text();
-
-        console.log("Emails result:", text);
-
-    }catch(err){
-
-        console.error("Email error:", err);
-    }
+    fetch(GAS_SCRIPT_URL, {
+        method: "POST",
+        body: data
+    })
+    .then(res => res.text())
+    .then(res => console.log("EMAIL RESPONSE:", res))
+    .catch(err => console.error("EMAIL ERROR:", err));
 }
   
 //الدالة الرئيسية للإرسال
@@ -1590,9 +1587,7 @@ async function SendAbsence() {
     console.log("Start sending absence");
 
     if(TEMP_SELECTED_ABS.length === 0){
-      
-       showToast("لم يتم تحديد أي تلميذ", "warning"); 
-          
+        showToast("لم يتم تحديد أي تلميذ", "warning"); 
         return;
     }
 
@@ -1604,9 +1599,7 @@ async function SendAbsence() {
 
     if(newLines.length === 0){
         hideLoader();
-      
-       showToast("هذه الغيابات مسجلة مسبقا او تحقق من ساعة ارسال الغياب", "warning"); 
-        
+        showToast("هذه الغيابات مسجلة مسبقا او تحقق من ساعة ارسال الغياب", "warning"); 
         return;
     }
 
@@ -1617,16 +1610,17 @@ async function SendAbsence() {
     hideLoader();
 
     if(success){
-      
-       showToast("تم إرسال الغيابات بنجاح", "success"); 
-        // إرسال الإيميلات بعد نجاح التحديث
-    await sendAbsenceNotifications();
+
+        showToast("تم إرسال الغيابات بنجاح", "success"); 
+        
+        // 🔥 هنا الحل الصحيح
+        sendAbsenceNotifications();
+
     }else{
-      
-       showToast("فشلت عملية ارسال الغيابات", "error"); 
+
+        showToast("فشلت عملية ارسال الغيابات", "error"); 
         
     }
-
 }
 
  //دالة updateFile التي ترسل البيانات إلى Google Apps Script 
