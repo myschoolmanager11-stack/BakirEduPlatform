@@ -11,7 +11,7 @@ const CONFIG = {
   "SchoolPhone": "0000000000",
   "SchoolAdresse": "حي راس قلوش المدية",
   "SchoolMail": "YourMail@Gmail.com",
-  "SchoolLink": "NOT_SET",
+  "SchoolLink": "https://myschoolmanager11-stack.github.io/BakirEduPlatform/",
   "School_Link_File_ID": "122NNg8HMZt0dBZIXniydDENKLvl5iB-f",
   "School_Folder_ID": "1ZyBe50czfCOmJ6g7WvwF1j8PKaYAzVu4",
   "Documents_Folder_ID": "1u98xeCpGWrQ240oyM8c4IH0xRTIL-qX1",
